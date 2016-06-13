@@ -23,7 +23,6 @@ public class AnnotationListener {
 
         if(event.getMessage().getChannel().getName().equals("bot")){
             builder.withChannel(event.getMessage().getChannel());
-            System.out.println("Client spoke in bot channel");
 
             String message = event.getMessage().getContent();
             String clientName = event.getMessage().getClient().getOurUser().getName();
