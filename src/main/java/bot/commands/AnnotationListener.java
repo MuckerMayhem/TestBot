@@ -25,9 +25,9 @@ public class AnnotationListener {
             builder.withChannel(event.getMessage().getChannel());
 
             String message = event.getMessage().getContent();
-            String clientName = event.getMessage().getClient().getOurUser().getName();
+            String clientName = event.getMessage().getAuthor().getName();
 
-            String response = DefaultResponses.getResponseFor(message);
+            String response = DefaultResponses.getResponseFor(message.replaceAll("[.!?']+", ""));
 
             if(response != null){
                 response = response.replaceAll("\\{SENDER\\}", clientName);

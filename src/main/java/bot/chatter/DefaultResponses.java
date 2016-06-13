@@ -3,9 +3,9 @@ package bot.chatter;
 import java.util.Random;
 
 public enum DefaultResponses{
-    HELLO(new String[] {"hello", "hello!", "hi", "hi!"}, new String[] {"Hi there!", "Hey!", "fak u bich"}),
-    SUP(new String[] {"what's up?"}, new String[] {"Nothing much.", "Just bot stuff.", "ur mom"}),
-    NAME(new String[] {"what's your name?", "what is your name?"}, new String[] {"I have no name.", "My name is {SENDER}"});
+    HELLO(new String[] {"hello","hi","hey"}, new String[] {"Hi there!", "Hey!", "Hello, {SENDER}!"}),
+    SUP(new String[] {"whats up"}, new String[] {"Nothing much.", "Just bot stuff.", "ur mom"}),
+    NAME(new String[] {"whats your name", "what is your name"}, new String[] {"I have no name.", "My name is {SENDER}"});
 
     private String[] triggers;
     private String[] responses;
