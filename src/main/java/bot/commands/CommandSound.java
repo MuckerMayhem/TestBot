@@ -109,5 +109,4 @@ public class CommandSound extends Command
             bot.say(message.getChannel(), "You are not in a voice channel!");
         }
     }
-
 }

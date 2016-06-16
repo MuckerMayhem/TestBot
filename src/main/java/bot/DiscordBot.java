@@ -13,10 +13,10 @@ import sx.blah.discord.util.*;
 
 public class DiscordBot{
 
-    public static final String GUILD_ID = "189563086418608130";//"Guild" (server) the bot occupies
-    public static final String NAME = "Mucker is Bae";//Nickname of the bot
-    public static final String GAME = "under Mucker's bed";//Game the bot will be displayed as playing
-    public static final String HOME = "bot"; //Channel the bot will speak in
+    public static final String GUILD_ID = BotParameters.GUILD_ID;
+    public static final String NAME = BotParameters.NAME;
+    public static final String GAME = BotParameters.GAME;
+    public static final String HOME = BotParameters.HOME;
 
     private static final String TOKEN = "MTkxMzk3NDkzNDE2Nzg3OTY4.CkPSLA.sDU5W0NbZn32gl3eDtFzIhmYV6Q";//Login token
 
