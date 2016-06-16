@@ -24,6 +24,10 @@ public class BotAttitude{
 
     private ArrayList<ResponseType> previousQueries = new ArrayList<ResponseType>(5);
 
+    static{
+        schedule(2000L);
+    }
+
     /**
      * Creates a new bot attitude for a user with a default mood
      * The bot will maintain this attitude when speaking with the specified user
@@ -38,8 +42,6 @@ public class BotAttitude{
         if(NewBot.getClient().getUserByID(user) != null){
             attitudes.put(user, this);
         }
-
-        schedule();
     }
 
     /**
@@ -56,8 +58,6 @@ public class BotAttitude{
         if(NewBot.getClient().getUserByID(user) != null){
             attitudes.put(user, this);
         }
-
-        schedule();
     }
 
     public static boolean botExistsFor(String user){
@@ -66,6 +66,55 @@ public class BotAttitude{
 
     public static BotAttitude getBotFor(String user){
         return attitudes.get(user);
+    }
+
+    //Update all attitudes after a certain period
+    private static void schedule(Long period){
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run(){
+                tick();
+            }
+        };
+        new Timer().schedule(task, 0L, period);
+    }
+
+    private static void tick(){
+        float happinessSum = GLOBAL.happiness;
+        float annoyanceSum = GLOBAL.annoyance;
+
+        for(BotAttitude b : attitudes.values()){
+            float happinessDiff = b.defaultMood.getHappiness() - b.happiness;
+            float annoyanceDiff = b.defaultMood.getAnnoyance() - b.annoyance;
+            if(happinessDiff != 0){
+                b.happiness += (happinessDiff / Math.abs(happinessDiff) / 100);
+            }
+
+            if(annoyanceDiff != 0){
+                b.annoyance += (annoyanceDiff / Math.abs(annoyanceDiff) / 50);
+            }
+
+            GLOBAL.cheer((-boredom / 0.6F) * 0.1F);
+            GLOBAL.annoy((-boredom / 0.6F) * 0.2F);
+
+            if(boredom < 1.0F) boredom += 0.05F;
+
+            b.cheer(-0.05F * boredom / 0.15F);
+            b.annoy(boredom / 0.05F);
+
+            if(boredom >= 0.6F){
+                NewBot.say(Response.getBoredomMessage(GLOBAL));
+                boredom = 0.0F;
+            }
+
+            happinessSum += b.happiness;
+            annoyanceSum += b.annoyance;
+        }
+
+        //Set global happiness to average happiness of all users
+        GLOBAL.happiness = (happinessSum / (attitudes.size() + 1));
+        //Set global annoyance to average annoyance of all users
+        GLOBAL.annoyance = (annoyanceSum / (attitudes.size() + 1));
     }
 
     private void assignBotToUser(String user, BotAttitude personality){
@@ -78,7 +127,7 @@ public class BotAttitude{
         ResponseType type = ResponseType.generateType(input);
         cheer(type.getHappiness());
         annoy(type.getAnnoyance());
-        this.boredom = 0;
+        boredom = 0;
         return Response.getResponseFor(input, this);
 //        return DefaultResponses.getResponseFor(input.replaceAll("[.!?']+", ""));
     }
@@ -128,40 +177,5 @@ public class BotAttitude{
 
         if(this.happiness > 1.0F) this.happiness = 1.0F;
         if(this.happiness < 0.0F) this.happiness = 0.0F;
-    }
-
-    private void schedule(){
-        TimerTask task = new TimerTask(){
-            @Override
-            public void run(){
-                tick();
-            }
-        };
-        new Timer().schedule(task, 0L, 30000);//1200000
-    }
-
-    private void tick(){
-        float happinessDiff = this.defaultMood.getHappiness() - this.happiness;
-        float annoyanceDiff = this.defaultMood.getAnnoyance() - this.annoyance;
-        if(happinessDiff != 0){
-            this.happiness += (happinessDiff / Math.abs(happinessDiff) / 100);
-        }
-
-        if(annoyanceDiff != 0){
-            this.annoyance += (annoyanceDiff / Math.abs(annoyanceDiff) / 50);
-        }
-
-        GLOBAL.cheer((-boredom / 0.6F) * 0.1F);
-        GLOBAL.annoy((-boredom / 0.6F) * 0.2F);
-
-        if(boredom < 1.0F) boredom += 0.05F;
-
-        cheer(-0.05F * boredom / 0.15F);
-        annoy(boredom / 0.05F);
-
-        if(boredom >= 0.6F){
-            NewBot.say(Response.getBoredomMessage(GLOBAL));
-            boredom = 0.0F;
-        }
     }
 }
