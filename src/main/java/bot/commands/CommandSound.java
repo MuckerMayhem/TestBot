@@ -14,6 +14,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,12 +22,13 @@ public class CommandSound extends Command
 {
     @Override
     public void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        if(args.length == 0){
-            bot.respond("No sound specified!");
-            return;
-        }
 
-        Sound sound = Sound.get(args[0]);
+        Sound sound;
+        if(args.length == 0){
+            sound = Sound.values()[new Random().nextInt(Sound.values().length)];
+        }
+        else sound = Sound.get(args[0]);
+
         if(sound == null){
             bot.respond("Invalid sound '" + args[0] + "'");
             return;
