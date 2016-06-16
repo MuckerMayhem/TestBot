@@ -13,6 +13,8 @@ import java.util.List;
 
 public class CommandHandler{
 
+    private static ArrayList<Command> global_commands = new ArrayList<>();
+
     private ArrayList<Command> commands = new ArrayList<>();
     private String commandPrefix = "!";
 
@@ -23,6 +25,13 @@ public class CommandHandler{
     public CommandHandler(DiscordBot bot){
         this.bot = bot;
         bot.getClient().getDispatcher().registerListener(this);
+    }
+
+    /**
+     * @return a list containing all registered commands for every CommandHandler instance
+     */
+    public static List<Command> getAllRegisteredCommands(){
+        return global_commands;
     }
 
     /**
@@ -58,8 +67,10 @@ public class CommandHandler{
             instance.name = name;
             instance.description = description;
             instance.aliases = aliases;
+            instance.commandHandler = this;
 
             this.commands.add(instance);
+            global_commands.add(instance);
         }
         catch(InstantiationException | IllegalAccessException e){
             return false;
@@ -71,7 +82,7 @@ public class CommandHandler{
     }
 
     /**
-     * @return a list containing all registered commands
+     * @return a list containing all registered commands for this CommandHandler instance
      */
     public List<Command> getRegisteredCommands(){
         return commands;

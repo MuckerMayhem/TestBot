@@ -52,6 +52,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class);//( ͡° ͜ʖ ͡°)
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
+        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);

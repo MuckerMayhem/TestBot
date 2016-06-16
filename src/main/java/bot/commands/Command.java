@@ -12,6 +12,8 @@ public abstract class Command{
     String description;
     String[] aliases;
 
+    CommandHandler commandHandler;
+    
     Class<? extends Command> mainClass;
 
     abstract void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;

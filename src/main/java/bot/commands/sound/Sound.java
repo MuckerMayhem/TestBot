@@ -8,7 +8,10 @@ public enum Sound{
 
     QUACK("quack", new File("C:\\Users\\wiize\\Downloads\\quack.mp3"), "duck"),
     BOOTY("booty", new File("C:\\Users\\wiize\\Downloads\\booty.mp3"), "(͡°͜ʖ͡°)"),
-    HIGHNOON("highnoon", new File("C:\\Users\\wiize\\Downloads\\highnoon.mp3"), "whattimeisit");
+    HIGHNOON("highnoon", new File("C:\\Users\\wiize\\Downloads\\highnoon.mp3"), "whattimeisit"),
+    LOL("lol", new File("C:\\Users\\wiize\\Downloads\\lol.mp3")),
+    SOGOOD("sogood", new File("C:\\Users\\wiize\\Downloads\\sogood.mp3")),
+    ALLAHU("allahuakbar", new File("C:\\Users\\wiize\\Downloads\\allahuakbar.mp3"), "jihad", "allahu");
 
     private String name;
     private String[] aliases;
