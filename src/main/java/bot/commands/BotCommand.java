@@ -8,8 +8,6 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 import java.util.Arrays;
 
 public abstract class BotCommand{
@@ -20,11 +18,10 @@ public abstract class BotCommand{
 
     abstract String getDescription();
 
-    abstract void onCommand(IDiscordClient client, IMessage message, String[] args) throws IOException, UnsupportedAudioFileException, RateLimitException, DiscordException, MissingPermissionsException;
+    abstract void onCommand(IDiscordClient client, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
 
     @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event) throws IOException, UnsupportedAudioFileException, RateLimitException, DiscordException, MissingPermissionsException
-    {
+    public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException{
         String message = event.getMessage().getContent();
         if(message.startsWith(COMMAND_PREFIX + getName())){
             String[] split = message.split(" ");

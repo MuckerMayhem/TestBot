@@ -94,6 +94,11 @@ public class BotAttitude{
                 b.annoyance += (annoyanceDiff / Math.abs(annoyanceDiff) / 50);
             }
 
+            //Set global happiness to average happiness of all users
+            GLOBAL.happiness = (happinessSum / (attitudes.size() + 1));
+            //Set global annoyance to average annoyance of all users
+            GLOBAL.annoyance = (annoyanceSum / (attitudes.size() + 1));
+
             GLOBAL.cheer((-boredom / 0.6F) * 0.1F);
             GLOBAL.annoy((-boredom / 0.6F) * 0.2F);
 
@@ -103,18 +108,13 @@ public class BotAttitude{
             b.annoy(boredom / 0.05F);
 
             if(boredom >= 0.6F){
-                NewBot.say(Response.getBoredomMessage(GLOBAL));
+//                NewBot.say(Response.getBoredomMessage(GLOBAL));
                 boredom = 0.0F;
             }
 
             happinessSum += b.happiness;
             annoyanceSum += b.annoyance;
         }
-
-        //Set global happiness to average happiness of all users
-        GLOBAL.happiness = (happinessSum / (attitudes.size() + 1));
-        //Set global annoyance to average annoyance of all users
-        GLOBAL.annoyance = (annoyanceSum / (attitudes.size() + 1));
     }
 
     private void assignBotToUser(String user, BotAttitude personality){

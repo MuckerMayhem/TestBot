@@ -23,6 +23,7 @@ public class CommandTest extends BotCommand{
 
     @Override
     public void onCommand(IDiscordClient client, IMessage message, String[] args){
+        System.out.println(message.getAuthor().getVoiceChannel().get().getName());
         MessageBuilder builder = new MessageBuilder(client).withChannel(message.getChannel());
         try{
             builder.appendContent("Hello, " + message.getAuthor().getName() + " (" + String.join(", ", Arrays.asList(args)) + ")").build();
