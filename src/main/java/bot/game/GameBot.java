@@ -20,7 +20,9 @@ public class GameBot extends DiscordBot implements IListener<MessageReceivedEven
         String last = getHome().getMessages().get(0).getContent();
         String next = last;
         while(next.equals(last)){
-            next = getHome().getMessages().get(0).getContent();
+            if(!getHome().getMessages().get(0).getAuthor().isBot()){
+                next = getHome().getMessages().get(0).getContent();
+            }
         }
         return next;
     }

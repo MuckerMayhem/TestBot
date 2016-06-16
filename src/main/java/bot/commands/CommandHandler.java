@@ -107,19 +107,21 @@ public class CommandHandler{
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException{
         String message = event.getMessage().getContent();
+        String[] split = message.split(" ");
+
         for(Command c : commands){
             boolean alias = false;
             for(String s : c.aliases){
-                if(message.startsWith(this.commandPrefix + s)){
+                if((this.commandPrefix + s).equalsIgnoreCase(split[0])){
                     alias = true;
                     break;
                 }
             }
-            if(alias || message.startsWith(commandPrefix + c.getName())){
+            if(alias || split[0].equalsIgnoreCase(commandPrefix + c.getName())){
                 this.bot.lastEvent = event;
-                String[] split = message.split(" ");
-                c.onCommand(this.bot, event.getMessage(), Arrays.copyOfRange(split, 1, split.length));
-                System.out.println("Command " + c.name + " run with aliases " + Arrays.toString(Arrays.copyOfRange(split, 1, split.length)));
+                String[] args = Arrays.copyOfRange(split, 1, split.length);
+                c.onCommand(this.bot, event.getMessage(), args);
+                System.out.printf("Command %s run by %s with arguments: %s\n", c.name, event.getMessage().getAuthor().getName(), String.join(", ", args));
                 return;
             }
         }
