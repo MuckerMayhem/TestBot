@@ -1,6 +1,6 @@
 package bot.chatter;
 
-import bot.NewBot;
+import bot.DiscordBot;
 import bot.behavior.BotAttitude;
 import bot.behavior.Mood;
 
@@ -15,7 +15,7 @@ public class Response{
         Mood mood = Mood.findClosestMood(attitude.getHappiness(), attitude.getAnnoyance());
         int size = RESPONSES.get(type)[mood.ordinal()].length;
         String response = RESPONSES.get(type)[mood.ordinal()][new Random().nextInt(size)];
-        return response.replaceAll("\\{NAME\\}", attitude.getUser()).replaceAll("\\{BOT\\}", NewBot.getClient().getOurUser().getName());
+        return response.replaceAll("\\{NAME\\}", attitude.getUser()).replaceAll("\\{BOT\\}", DiscordBot.instance.getUsername());
     }
 
     public static String getBoredomMessage(BotAttitude attitude){

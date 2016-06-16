@@ -1,6 +1,6 @@
 package bot.behavior;
 
-import bot.NewBot;
+import bot.DiscordBot;
 import bot.chatter.ResponseType;
 import bot.chatter.Response;
 
@@ -39,7 +39,7 @@ public class BotAttitude{
         this.defaultMood = defaultMood;
         setMood(this.defaultMood);
 
-        if(NewBot.getClient().getUserByID(user) != null){
+        if(DiscordBot.instance.getClient().getUserByID(user) != null){
             attitudes.put(user, this);
         }
     }
@@ -52,10 +52,10 @@ public class BotAttitude{
     public BotAttitude(String user){
         this.userId = user;
         this.defaultMood = Mood.values()[new Random().nextInt(Mood.values().length)];
-        System.out.println("User: " + NewBot.getClient().getUserByID(user).getName() + ", Mood: " + this.defaultMood.name());
+        System.out.println("User: " + DiscordBot.instance.getClient().getUserByID(user).getName() + ", Mood: " + this.defaultMood.name());
         setMood(this.defaultMood);
 
-        if(NewBot.getClient().getUserByID(user) != null){
+        if(DiscordBot.instance.getClient().getUserByID(user) != null){
             attitudes.put(user, this);
         }
     }
@@ -133,7 +133,7 @@ public class BotAttitude{
     }
 
     public String getUser(){
-        return NewBot.getClient().getUserByID(this.userId).getName();
+        return DiscordBot.instance.getClient().getUserByID(this.userId).getName();
     }
 
     public float getHappiness(){

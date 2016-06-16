@@ -1,13 +1,11 @@
 package bot.commands;
 
-import bot.NewBot;
+import bot.DiscordBot;
 import bot.commands.sound.Sound;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.audio.AudioPlayer;
@@ -19,32 +17,18 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandSound extends BotCommand
+public class CommandSound extends Command
 {
     @Override
-    public String getName()
-    {
-        return "sound";
-    }
-
-    @Override
-    public String getDescription()
-    {
-        return "Play a sound";
-    }
-
-    @Override
-    public void onCommand(IDiscordClient client, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    public void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length == 0){
-            new MessageBuilder(NewBot.getClient()).withChannel(message.getChannel())
-                    .appendContent("No sound specified!").build();
+            bot.respond("No sound specified!");
             return;
         }
 
         Sound sound = Sound.get(args[0]);
         if(sound == null){
-            new MessageBuilder(NewBot.getClient()).withChannel(message.getChannel())
-                    .appendContent("Invalid sound '" + args[0] + "'").build();
+            bot.respond("Invalid sound '" + args[0] + "'");
             return;
         }
 
@@ -86,6 +70,7 @@ public class CommandSound extends BotCommand
 
             AudioPlayer player = new AudioPlayer(message.getGuild());
             try{
+
                 for(int i = 0;i< times;i++){
                     if(sound.getPath() == null){
                         player.queue(sound.getUrl());
@@ -108,8 +93,7 @@ public class CommandSound extends BotCommand
             new Timer().schedule(task, (duration * times) + 400L);
         }
         else{
-            new MessageBuilder(NewBot.getClient()).withChannel(message.getChannel())
-                    .appendContent("You are not in a voice channel!").build();
+            bot.say(message.getChannel(), "You are not in a voice channel!");
         }
     }
 

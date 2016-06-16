@@ -7,8 +7,8 @@ import java.net.URL;
 public enum Sound{
 
     QUACK("quack", new File("C:\\Users\\wiize\\Downloads\\quack.mp3"), "duck"),
-    BOOTY("booty", new File("C:\\Users\\wiize\\Downloads\\booty.mp3")),
-    HIGHNOON("highnoon", new File("C:\\Users\\wiize\\Downloads\\highnoon.mp3"), "whatimeisit");
+    BOOTY("booty", new File("C:\\Users\\wiize\\Downloads\\booty.mp3"), "(͡°͜ʖ͡°)"),
+    HIGHNOON("highnoon", new File("C:\\Users\\wiize\\Downloads\\highnoon.mp3"), "whattimeisit");
 
     private String name;
     private String[] aliases;
@@ -18,8 +18,8 @@ public enum Sound{
 
     Sound(String name, String url, String... aliases){
         this.name = name;
-        this.aliases = aliases;
         this.url = url;
+        this.aliases = aliases;
     }
 
     @Deprecated
