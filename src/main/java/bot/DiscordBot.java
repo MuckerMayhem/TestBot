@@ -111,7 +111,7 @@ public class DiscordBot{
             }
             catch(RateLimitException e){
                 try{
-                    Thread.sleep(10L);//Delay
+                    Thread.sleep(10L);//Try again in 10 millis if rate limited
                 }
                 catch(InterruptedException e1){
                     e1.printStackTrace();

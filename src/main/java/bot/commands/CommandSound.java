@@ -39,6 +39,16 @@ public class CommandSound extends Command
             }
             catch(NumberFormatException ignored){}
         }
+        if(times <= 0) return;
+
+        float volume = 1.0F;
+        if(args.length >= 3){
+            try{
+                volume = Integer.parseInt(args[2]) / 100F;
+            }
+            catch(NumberFormatException ignored){}
+        }
+        if(volume > 3.0F) volume = 3.0F;
 
         if(message.getAuthor().getVoiceChannel().isPresent()){
             AudioFileFormat format;
@@ -69,6 +79,7 @@ public class CommandSound extends Command
             channel.join();
 
             AudioPlayer player = new AudioPlayer(message.getGuild());
+            player.setVolume(volume);
             try{
 
                 for(int i = 0;i< times;i++){
