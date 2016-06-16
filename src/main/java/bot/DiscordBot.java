@@ -48,7 +48,7 @@ public class DiscordBot{
 
         instance.commandHandler = new CommandHandler(instance);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
-        instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class);
+        instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
         instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class);//( ͡° ͜ʖ ͡°)
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);

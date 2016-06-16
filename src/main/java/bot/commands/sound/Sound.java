@@ -15,6 +15,7 @@ public enum Sound
     ALLAHU("allahuakbar", new File("C:\\Users\\wiize\\Downloads\\allahuakbar.mp3"), "jihad", "allahu"),
     YEAH("raymanyeah", new File("C:\\Users\\Owner\\IdeaProjects\\Test Bot\\raymanyeah.mp3")),
     DUMMY("dummy", new File("dummy.mp3"));
+
     private String name;
     private String[] aliases;
 
