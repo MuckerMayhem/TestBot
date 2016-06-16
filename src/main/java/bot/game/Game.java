@@ -12,5 +12,9 @@ public abstract class Game{
         return this.bot;
     }
 
+    public static String getInstructions(){
+        return null;
+    }
+
     public abstract void start();
 }

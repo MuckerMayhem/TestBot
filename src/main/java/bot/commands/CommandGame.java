@@ -27,15 +27,23 @@ public class CommandGame extends Command{
         if(args.length == 0){
             gameBot.say("Which game would you like to play with me? Available games:\n" +
                     "1. Tic-tac-toe");
-            gameBot.say("Just enter the number of the game you would like to play.");
+            gameBot.say("Just enter the number of the game you would like to play.\n" +
+                    "Enter \"instructions\" after the number to show instructions for that game");
 
+            boolean played = true;
             switch(gameBot.nextLine()){
                 case "1":
                     gameBot.say("Okay! Here we go!");
                     gameBot.playGame(new TicTacToe(gameBot, 3));
+                    break;
+                case "1 instructions":
+                    gameBot.say("Here are the instructions for Tic-tac-toe:\n" + TicTacToe.getInstructions());
+                    played = false;
+                    break;
             }
 
-            gameBot.say("Thanks for playing!");
+            if(played)
+                gameBot.say("Thanks for playing!");
         }
     }
 }

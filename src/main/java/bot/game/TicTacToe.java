@@ -20,6 +20,17 @@ public class TicTacToe extends Game{
         this.size = 3;
     }
 
+    public static String getInstructions(){
+        return "Take turns playing tic-tac-toe with the bot.\n" +
+                "You choose whether to go first or not.\n" +
+                "When prompted with a yes or no question, anything\n" +
+                "that starts with a 'y' is counted as yes. Anything else\n" +
+                "is counted as a no.\n" +
+                "When it is your turn, enter the row and column, separated\n" +
+                "by a space (Such as \"1 3\" for first row, third column).\n" +
+                "When the game ends, you can choose to play again.";
+    }
+
     public void start(){
         String input = "";
         do{
