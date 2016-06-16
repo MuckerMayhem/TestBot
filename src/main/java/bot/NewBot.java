@@ -2,13 +2,14 @@ package bot;
 
 import bot.chatter.ConversationListener;
 import bot.commands.CommandAttitude;
-import bot.commands.CommandTest;
+import bot.commands.CommandLeave;
+import bot.commands.CommandSound;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.HTTP429Exception;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
 
 
 public class NewBot
@@ -17,12 +18,13 @@ public class NewBot
 
     private static IDiscordClient client;
 
-    public static void main(String[] args) throws DiscordException, HTTP429Exception{
-        client = new ClientBuilder().withToken("MTkxMzk3NDkzNDE2Nzg3OTY4.Cj5sTg.-gE8kl3iH_c7NSUp17zwzJ9-K-w").login();
-
+    public static void main(String[] args) throws DiscordException, RateLimitException{
+        client = new ClientBuilder().withToken("MTkxNjgyMTU3ODUxMzEyMTM4.CkKaXQ.55yjkyEIqjp0R84WCJdN8lexMVI").login();
         client.getDispatcher().registerListener(new ConversationListener()); //Conversation listener
-        client.getDispatcher().registerListener(new CommandTest()); //Test command
+        //client.getDispatcher().registerListener(new CommandTest()); //Test command
         client.getDispatcher().registerListener(new CommandAttitude());//Display bot attitude towards user
+        client.getDispatcher().registerListener(new CommandSound());
+        client.getDispatcher().registerListener(new CommandLeave());
     }
 
     public static IDiscordClient getClient(){
@@ -33,7 +35,7 @@ public class NewBot
         try{
             new MessageBuilder(client).withChannel("191670114121285632").withContent(message).build();
         }
-        catch(DiscordException | HTTP429Exception | MissingPermissionsException e){
+        catch(DiscordException | RateLimitException | MissingPermissionsException e){
             e.printStackTrace();
         }
     }
