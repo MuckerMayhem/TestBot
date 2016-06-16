@@ -50,7 +50,7 @@ public class CommandSound extends Command
         }
         if(volume > 3.0F) volume = 3.0F;
 
-        if(message.getAuthor().getVoiceChannel().isPresent()){
+        if(message.getAuthor().getConnectedVoiceChannels().get(0).isConnected()){
             AudioFileFormat format;
             long length;
 
@@ -70,12 +70,12 @@ public class CommandSound extends Command
 
             long duration;
             if(format instanceof TAudioFileFormat){
-                Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
+                Long micros = (Long) format.properties().get("duration");
                 duration = micros / 1000;
             }
             else return;
 
-            IVoiceChannel channel = message.getAuthor().getVoiceChannel().get();
+            IVoiceChannel channel = message.getAuthor().getConnectedVoiceChannels().get(0);
             channel.join();
 
             AudioPlayer player = new AudioPlayer(message.getGuild());
