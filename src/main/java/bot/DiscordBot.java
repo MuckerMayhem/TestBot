@@ -10,7 +10,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.*;
 
-
 public class DiscordBot{
 
     public static final String GUILD_ID = BotParameters.GUILD_ID;
@@ -29,6 +28,10 @@ public class DiscordBot{
 
     private String home;
 
+    /**
+     * Creates a new DiscordBot wrapper for an {@link sx.blah.discord.api.IDiscordClient}<br>
+     * @param client IDiscordClient holding login for the bot
+     */
     public DiscordBot(IDiscordClient client){
         this.client = client;
     }
@@ -36,6 +39,7 @@ public class DiscordBot{
     public static void main(String[] args){
         IDiscordClient client;
         try{
+            System.out.println("Client logging in...");
             client = login(TOKEN);
         }
         catch(DiscordException e){
@@ -43,9 +47,10 @@ public class DiscordBot{
             return;
         }
 
+        System.out.println("Client successfully logged in");
+
         instance = new DiscordBot(client);
         instance.getClient().getDispatcher().registerListener(instance);
-
         instance.commandHandler = new CommandHandler(instance);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
@@ -56,9 +61,6 @@ public class DiscordBot{
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
-
-            gameBot.getClient().getDispatcher().registerListener(gameBot);
-
             gameBot.setCommandHandler(new CommandHandler(gameBot));
             gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, "play");
         });
@@ -134,9 +136,9 @@ public class DiscordBot{
     }
 
     /**
-     * Sends a message from this bot in the last channel a user executed</br>
-     * a valid command in. Valid commands are commands that are passed by</br>
-     * this bot's {@link bot.commands.CommandHandler}
+     * Sends a message from this bot in the last channel a user executed<br>
+     * a valid command in. Valid commands are commands that are passed<br>
+     * by this bot's {@link bot.commands.CommandHandler}
      * @param message Message to send
      */
     public void respond(String message){
@@ -190,8 +192,28 @@ public class DiscordBot{
             System.out.println("Users will be unable to play games and some features will be unavailable");
         }
 
-        System.out.println("Client initialized.");
+        System.out.println("Bot initialized.");
     }
+
+    /*Maybe used for logging later?
+    public enum Level{
+
+        INFO("\u001B[0m"),
+        WARN("\u001B[33m"),
+        ERROR("\u001B[31m"),
+        DEBUG("\u001B[32m");
+
+        private String prefix;
+
+        Level(String prefix){
+            this.prefix = prefix;
+        }
+
+        private String getPrefix(){
+            return this.prefix;
+        }
+    }
+    */
 }
 
 

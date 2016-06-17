@@ -73,6 +73,7 @@ public class CommandHandler{
             global_commands.add(instance);
         }
         catch(InstantiationException | IllegalAccessException e){
+            System.err.print("Failed to register command '" + name + "': " + e.getClass().getSimpleName());
             return false;
         }
 
@@ -121,7 +122,7 @@ public class CommandHandler{
                 this.bot.lastEvent = event;
                 String[] args = Arrays.copyOfRange(split, 1, split.length);
                 c.onCommand(this.bot, event.getMessage(), args);
-                System.out.printf("Command %s run by %s with arguments: %s\n", c.name, event.getMessage().getAuthor().getName(), String.join(", ", args));
+                System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, event.getMessage().getAuthor().getName(), String.join(", ", args));
                 return;
             }
         }

@@ -2,14 +2,11 @@ package bot.game;
 
 import bot.DiscordBot;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.IListener;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 
-public class GameBot extends DiscordBot implements IListener<MessageReceivedEvent>{
+public class GameBot extends DiscordBot{
 
     public GameBot(IDiscordClient client){
         super(client);
-        client.getDispatcher().registerListener(this);
     }
 
     public void playGame(Game game){
@@ -25,10 +22,5 @@ public class GameBot extends DiscordBot implements IListener<MessageReceivedEven
             }
         }
         return next;
-    }
-
-    @Override
-    public void handle(MessageReceivedEvent event){
-
     }
 }
