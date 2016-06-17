@@ -2,6 +2,7 @@ package bot.commands;
 
 import bot.DiscordBot;
 import bot.game.GameBot;
+import bot.game.GameScramble;
 import bot.game.TicTacToe;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
@@ -38,6 +39,14 @@ public class CommandGame extends Command{
                     break;
                 case "1 instructions":
                     gameBot.say("Here are the instructions for Tic-tac-toe:\n" + TicTacToe.getInstructions());
+                    played = false;
+                    break;
+                case "2":
+                    gameBot.say("You found the secret game!");
+                    gameBot.playGame(new GameScramble(gameBot));
+                    break;
+                case "2 instructions":
+                    gameBot.say("Here are the instructions for Scramble:\n" + GameScramble.getInstructions());
                     played = false;
                     break;
             }

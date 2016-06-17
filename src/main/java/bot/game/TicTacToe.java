@@ -31,17 +31,13 @@ public class TicTacToe extends Game{
                 "When the game ends, you can choose to play again.";
     }
 
-    public void start(){
-        String input = "";
-        do{
-            playGame();
-            bot.say("Want to play again?");
-            input = this.bot.nextLine();
-        }
-        while(input.toLowerCase().startsWith("y"));
+    @Override
+    public boolean isReplayable(){
+        return true;
     }
 
-    public void playGame(){
+    @Override
+    public void play(){
         this.board = new int[this.size][this.size];
 
         int x = 0;

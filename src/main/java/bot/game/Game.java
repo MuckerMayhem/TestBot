@@ -12,9 +12,24 @@ public abstract class Game{
         return this.bot;
     }
 
+    /*
     public static String getInstructions(){
         return null;
     }
+    */
 
-    public abstract void start();
+    public void start(){
+        String input = "";
+        do{
+            play();
+            if(!isReplayable()) return;
+            this.bot.say("Want to play again?");
+            input = this.bot.nextLine();
+        }
+        while(input.toLowerCase().startsWith("y"));
+    }
+
+    public abstract void play();
+
+    public abstract boolean isReplayable();
 }
