@@ -2,3 +2,6 @@ target/
 src/main/java/bot/BotParameters.java
 bot_log.txt
 .idea/*
+modules/
+src/main/resources/
+src/test/
