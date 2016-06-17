@@ -18,6 +18,9 @@ public class OnLeaveListener
     @EventSubscriber
     public void onUserLeaveEvent(UserVoiceChannelLeaveEvent event) throws MissingPermissionsException, RateLimitException, DiscordException
     {
+        if(event.getUser().isBot())
+            return;
+
         MessageBuilder builder = new MessageBuilder(DiscordBot.instance.getClient());
         ZonedDateTime zdt = ZonedDateTime.now();
 

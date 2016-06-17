@@ -18,6 +18,10 @@ public class OnJoinListener
     @EventSubscriber
     public void onJoinEvent(UserVoiceChannelJoinEvent event) throws MissingPermissionsException, RateLimitException, DiscordException
     {
+        if(event.getUser().isBot())
+            return;
+
+
         ZonedDateTime zdt = ZonedDateTime.now();
         int hour = 0;
         String s = "";
