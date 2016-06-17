@@ -9,7 +9,7 @@ import sx.blah.discord.util.RateLimitException;
 public class CommandHelp extends Command{
 
     @Override
-    void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         StringBuilder builder = new StringBuilder("\n");
 
         for(Command c : CommandHandler.getAllRegisteredCommands()){

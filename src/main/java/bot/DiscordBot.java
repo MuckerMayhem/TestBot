@@ -1,6 +1,8 @@
 package bot;
 
 import bot.commands.*;
+import bot.function.BotFunction;
+import bot.function.FunctionAnnounceNoon;
 import bot.game.GameBot;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -10,6 +12,8 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.*;
 
+import java.util.ArrayList;
+
 public class DiscordBot{
 
     public static DiscordBot instance;//Main instance of the bot
@@ -18,6 +22,8 @@ public class DiscordBot{
 
     private IDiscordClient client;
     private CommandHandler commandHandler;
+
+    private ArrayList<BotFunction> functions = new ArrayList<BotFunction>();
 
     private String home;
 
@@ -51,6 +57,8 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
+
+        instance.addFunction(new FunctionAnnounceNoon());
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
@@ -92,6 +100,10 @@ public class DiscordBot{
             if(c.getName().equals(BotParameters.HOME)) return c;
         }
         return null;
+    }
+
+    public ArrayList<BotFunction> getFunctions(){
+        return this.functions;
     }
 
     /**
@@ -138,6 +150,10 @@ public class DiscordBot{
         say(lastEvent.getMessage().getChannel(), message);
     }
 
+    public void executeCommand(String name, String[] args){
+        getCommandHandler().executeCommand(name, args);
+    }
+
     /**
      * Sets username of the client attached to this bot.</br>
      * This affects all bot instances
@@ -173,6 +189,11 @@ public class DiscordBot{
         this.commandHandler = commandHandler;
     }
 
+    public void addFunction(BotFunction function){
+        this.functions.add(function);
+        function.bot = this;
+    }
+
     @EventSubscriber
     public void onReady(ReadyEvent event) throws RateLimitException, DiscordException{
         setAvatar(Image.forUrl("png", "https://cdn3.iconfinder.com/data/icons/fruits-flat-icon-set/256/icon-banana-128.png"));
@@ -186,6 +207,8 @@ public class DiscordBot{
         }
 
         System.out.println("Bot initialized.");
+
+        this.functions.forEach(BotFunction::activate);
     }
 
     /*Maybe used for logging later?

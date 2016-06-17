@@ -20,8 +20,58 @@ import java.util.TimerTask;
 
 public class CommandSound extends Command
 {
+    public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
+
+        AudioFileFormat format;
+        long length;
+
+        try{
+            if(sound.getPath() == null){
+                format = AudioSystem.getAudioFileFormat(sound.getUrl());
+
+            }
+            else{
+                format = AudioSystem.getAudioFileFormat(sound.getPath());
+            }
+        }
+        catch(IOException | UnsupportedAudioFileException e){
+            System.err.printf("Failed to load sound '%s': %s", sound.getName(), e.getClass().getSimpleName());
+            return;
+        }
+
+        long duration;
+        if(format instanceof TAudioFileFormat){
+            Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
+            duration = micros / 1000;
+        }
+        else return;
+
+        channel.join();
+
+        AudioPlayer player = new AudioPlayer(channel.getGuild());
+        try{
+            if(sound.getPath() == null){
+                player.queue(sound.getUrl());
+            }
+            else player.queue(sound.getPath());
+            player.provide();
+        }
+        catch(UnsupportedAudioFileException | IOException e){
+            e.printStackTrace();
+        }
+
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run(){
+                channel.leave();
+            }
+        };
+
+        new Timer().schedule(task, duration + 400L);
+    }
+
     @Override
-    public void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
 
         Sound sound;
         if(args.length == 0){

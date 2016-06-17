@@ -13,9 +13,9 @@ public class CommandBooty extends Command{
     private static String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
 
     @Override
-    void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length < 3) return;
 
-        if(Arrays.equals(theBooty, args)) new CommandSound().onCommand(bot, message, new String[] {"booty"});
+        if(Arrays.equals(theBooty, args)) new CommandSound().onExecute(bot, message, new String[] {"booty"});
     }
 }

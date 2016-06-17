@@ -98,6 +98,12 @@ public class CommandHandler{
         return commandPrefix;
     }
 
+    public void executeCommand(String name, String[] args){
+        for(Command c : commands){
+
+        }
+    }
+
     /**
      * Sets the prefix used to execute commands. Defaults to "!"
      * @param newPrefix - New prefix to use
@@ -128,7 +134,7 @@ public class CommandHandler{
             }
             if(alias || command.equalsIgnoreCase(c.getName())){
                 this.bot.lastEvent = event;
-                c.onCommand(this.bot, event.getMessage(), args);
+                c.onExecute(this.bot, event.getMessage(), args);
                 System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, event.getMessage().getAuthor().getName(), String.join(", ", args));
                 return;
             }

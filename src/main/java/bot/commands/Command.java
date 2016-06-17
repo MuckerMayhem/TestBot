@@ -13,10 +13,10 @@ public abstract class Command{
     String[] aliases;
 
     CommandHandler commandHandler;
-    
+
     Class<? extends Command> mainClass;
 
-    abstract void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
+    abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
 
     public String getName(){
         return this.name;

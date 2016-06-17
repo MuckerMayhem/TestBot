@@ -24,7 +24,7 @@ public class CommandLeave extends Command
     }
 
     @Override
-    void onCommand(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException
+    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException
     {
         bot.getClient().getConnectedVoiceChannels().get(0).leave();
     }
