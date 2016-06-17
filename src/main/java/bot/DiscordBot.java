@@ -4,6 +4,8 @@ import bot.commands.*;
 import bot.function.BotFunction;
 import bot.function.FunctionAnnounceNoon;
 import bot.game.GameBot;
+import bot.listeners.OnJoinListener;
+import bot.listeners.OnLeaveListener;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -50,6 +52,8 @@ public class DiscordBot{
 
         instance = new DiscordBot(client);
         instance.getClient().getDispatcher().registerListener(instance);
+        instance.getClient().getDispatcher().registerListener(new OnLeaveListener());
+        instance.getClient().getDispatcher().registerListener(new OnJoinListener());
         instance.commandHandler = new CommandHandler(instance);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
