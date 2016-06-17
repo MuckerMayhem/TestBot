@@ -66,7 +66,7 @@ public class CommandSound extends Command
                 }
             }
             catch(IOException | UnsupportedAudioFileException e){
-                System.out.printf("Failed to load sound '%s': %s", args[1], e.getClass().getSimpleName());
+                System.err.printf("Failed to load sound '%s': %s", args[1], e.getClass().getSimpleName());
                 return;
             }
 
