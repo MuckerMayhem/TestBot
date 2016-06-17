@@ -12,13 +12,6 @@ import sx.blah.discord.util.*;
 
 public class DiscordBot{
 
-    public static final String GUILD_ID = BotParameters.GUILD_ID;
-    public static final String NAME = BotParameters.NAME;
-    public static final String GAME = BotParameters.GAME;
-    public static final String HOME = BotParameters.HOME;
-
-    private static final String TOKEN = "MTkxMzk3NDkzNDE2Nzg3OTY4.CkPSLA.sDU5W0NbZn32gl3eDtFzIhmYV6Q";//Login token
-
     public static DiscordBot instance;//Main instance of the bot
 
     public MessageReceivedEvent lastEvent;
@@ -40,7 +33,7 @@ public class DiscordBot{
         IDiscordClient client;
         try{
             System.out.println("Client logging in...");
-            client = login(TOKEN);
+            client = login(BotParameters.TOKEN);
         }
         catch(DiscordException e){
             System.err.print(e.getMessage());
@@ -95,8 +88,8 @@ public class DiscordBot{
     }
 
     public IChannel getHome(){
-        for(IChannel c : getClient().getGuildByID(GUILD_ID).getChannels()){
-            if(c.getName().equals(HOME)) return c;
+        for(IChannel c : getClient().getGuildByID(BotParameters.GUILD_ID).getChannels()){
+            if(c.getName().equals(BotParameters.HOME)) return c;
         }
         return null;
     }
@@ -183,9 +176,9 @@ public class DiscordBot{
     @EventSubscriber
     public void onReady(ReadyEvent event) throws RateLimitException, DiscordException{
         setAvatar(Image.forUrl("png", "https://cdn3.iconfinder.com/data/icons/fruits-flat-icon-set/256/icon-banana-128.png"));
-        setUsername(NAME);
-        setGame(GAME);
-        setHome(HOME);
+        setUsername(BotParameters.NAME);
+        setGame(BotParameters.GAME);
+        setHome(BotParameters.HOME);
 
         if(getHome() == null){
             System.out.println("No text channel found for bot.");
