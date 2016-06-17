@@ -9,10 +9,12 @@ public class GameBot extends DiscordBot{
         super(client);
     }
 
-    public void playGame(Game game){
-        game.start();
-    }
-
+    /**
+     * Prompts the bot to wait for user input in its home channel.<br><
+     * Any sent by a real user (rather than a bot) will be counted as<br>
+     * the next input.
+     * @return The next input sent by a non-bot user
+     */
     public String nextLine(){
         String last = getHome().getMessages().get(0).getContent();
         String next = last;
@@ -22,5 +24,13 @@ public class GameBot extends DiscordBot{
             }
         }
         return next;
+    }
+
+    public void playGame(Game game){
+        game.start();
+    }
+
+    public void quitGame(){
+
     }
 }

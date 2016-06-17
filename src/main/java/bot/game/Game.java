@@ -12,12 +12,6 @@ public abstract class Game{
         return this.bot;
     }
 
-    /*
-    public static String getInstructions(){
-        return null;
-    }
-    */
-
     public void start(){
         String input = "";
         do{
@@ -30,6 +24,8 @@ public abstract class Game{
     }
 
     public abstract void play();
+
+    public abstract void quit();
 
     public abstract boolean isReplayable();
 }

@@ -93,6 +93,11 @@ public class GameScramble extends Game{
         lose();
     }
 
+    @Override
+    public void quit(){
+
+    }
+
     private void win(){
         this.bot.say("\nCongratulations! You made it through every difficulty level!");
     }

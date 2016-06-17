@@ -1,7 +1,5 @@
 package bot.game;
 
-import bot.DiscordBot;
-
 import java.util.Random;
 import java.util.Scanner;
 
@@ -112,7 +110,12 @@ public class TicTacToe extends Game{
         }
     }
 
-    public void printBoard(){
+    @Override
+    public void quit(){
+
+    }
+
+    private void printBoard(){
         StringBuilder builder = new StringBuilder();
 
         for(int i = 0;i < board.length;i++){
@@ -124,16 +127,16 @@ public class TicTacToe extends Game{
         }
         builder.append("-------------\n\n");
 
-        say(builder.toString());
+        this.bot.say(builder.toString());
     }
 
-    public String getRepresentation(int number){
+    private String getRepresentation(int number){
         if(number == 1) return "X";
         else if(number == -1) return "O";
         else return "#";
     }
 
-    public int checkWin(int x, int y){
+    private int checkWin(int x, int y){
         int col = 0;
         int row = 0;
         int diag = 0;
@@ -158,9 +161,5 @@ public class TicTacToe extends Game{
         if(count == 9) return 2;
 
         return 0;
-    }
-
-    private void say(String message){
-        DiscordBot.instance.say(message);
     }
 }

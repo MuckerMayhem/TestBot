@@ -2,7 +2,6 @@ package bot.listeners;
 
 import bot.BotParameters;
 import bot.DiscordBot;
-import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelLeaveEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
@@ -15,7 +14,7 @@ import java.time.ZonedDateTime;
 
 public class OnLeaveListener
 {
-    @EventSubscriber
+//    @EventSubscriber
     public void onUserLeaveEvent(UserVoiceChannelLeaveEvent event) throws MissingPermissionsException, RateLimitException, DiscordException
     {
         if(event.getUser().isBot())

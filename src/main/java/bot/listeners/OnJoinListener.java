@@ -2,7 +2,6 @@ package bot.listeners;
 
 import bot.BotParameters;
 import bot.DiscordBot;
-import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
@@ -15,7 +14,7 @@ import java.time.ZonedDateTime;
 
 public class OnJoinListener
 {
-    @EventSubscriber
+//    @EventSubscriber
     public void onJoinEvent(UserVoiceChannelJoinEvent event) throws MissingPermissionsException, RateLimitException, DiscordException
     {
         if(event.getUser().isBot())

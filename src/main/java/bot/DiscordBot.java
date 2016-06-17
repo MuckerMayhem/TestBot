@@ -116,6 +116,8 @@ public class DiscordBot{
      * @param message Message to send
      */
     public void say(IChannel channel, String message){
+        if(message == null) return;
+
         if(channel != null){
             try{
                 new MessageBuilder(getClient()).withChannel(channel).withContent(message).build();

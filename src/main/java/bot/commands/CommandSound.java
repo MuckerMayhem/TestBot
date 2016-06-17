@@ -103,6 +103,12 @@ public class CommandSound extends Command
         if(volume > 3.0F) volume = 3.0F;
 
         if(message.getAuthor().getVoiceChannel().isPresent()){
+
+            long duration = getDuration(sound);
+            if(duration == -1){
+                return;
+            }
+            /*
             AudioFileFormat format;
             long length;
 
@@ -126,6 +132,7 @@ public class CommandSound extends Command
                 duration = micros / 1000;
             }
             else return;
+            */
 
             IVoiceChannel channel = message.getAuthor().getVoiceChannel().get();
             channel.join();
@@ -158,5 +165,38 @@ public class CommandSound extends Command
         else{
             bot.say(message.getChannel(), "You are not in a voice channel!");
         }
+    }
+
+    private static long getDuration(Sound sound){
+        AudioFileFormat format;
+        long length;
+
+        try{
+            if(sound.getPath() == null){
+                format = AudioSystem.getAudioFileFormat(sound.getUrl());
+                length = sound.getUrl().openConnection().getContentLength();
+
+            }
+            else{
+                format = AudioSystem.getAudioFileFormat(sound.getPath());
+                length = sound.getPath().length();
+            }
+        }
+        catch(IOException | UnsupportedAudioFileException e){
+            System.err.printf("Failed to load sound '%s': %s", sound.getName(), e.getClass().getSimpleName());
+            return -1;
+        }
+
+        long duration;
+        if(format instanceof TAudioFileFormat){
+            Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
+            duration = micros / 1000;
+        }
+        else{
+            int frameSize = format.getFormat().getFrameSize();
+            float frameRate = format.getFormat().getFrameRate();
+            duration = (long) (length / (frameSize * frameRate));
+        }
+        return duration;
     }
 }
