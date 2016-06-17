@@ -23,7 +23,7 @@ public class Mitsuku
             String s = event.getMessage().getContent();
             try
             {
-                s = DiscordBot.session.think(s);
+//                s = DiscordBot.session.think(s);
                 builder.appendContent(s).build();
 
             } catch (Exception e)

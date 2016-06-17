@@ -7,22 +7,22 @@ import java.net.URL;
 public enum Sound
 {
 
-    QUACK("quack", new File("C:\\Users\\wiize\\Downloads\\quack.mp3"), "duck"),
-    BOOTY("booty", new File("C:\\Users\\wiize\\Downloads\\booty.mp3"), "(͡°͜ʖ͡°)"),
-    HIGHNOON("highnoon", new File("C:\\Users\\wiize\\Downloads\\highnoon.mp3"), "whattimeisit"),
-    LOL("lol", new File("C:\\Users\\wiize\\Downloads\\lol.mp3")),
-    SOGOOD("sogood", new File("C:\\Users\\wiize\\Downloads\\sogood.mp3")),
-    ALLAHU("allahuakbar", new File("C:\\Users\\wiize\\Downloads\\allahuakbar.mp3"), "jihad", "allahu"),
-    YEAH("raymanyeah", new File("../raymanyeah.mp3")),
-    DUMMY("dummy", new File("../dummy.mp3")),
-    BALLSOFSTEEL("ballsofsteel", new File("../ballsofsteel.mp3")),
-    BALLS("balls", new File("../balls.mp3")),
-    MACHO1("circle", new File("../macho_alert16.mp3")),
-    MACHO2("getyou", new File("../macho_alert13.mp3")),
-    ALIVE("alive", new File("../alive.mp3")),
-    BUBBERDUCK("bubberduck", new File("../bubberduck.mp3")),
-    BONETROUSLE("bones", new File("../bonetrousle.mp3")),
-    BONES("bonel", new File("../bones.mp3"));
+    QUACK("quack", new File("sound/quack.mp3"), "duck"),
+    BOOTY("booty", new File("sound/booty"), "(͡°͜ʖ͡°)"),
+    HIGHNOON("highnoon", new File("sound/highnoon.mp3"), "whattimeisit"),
+    LOL("lol", new File("sound/lol.mp3")),
+    SOGOOD("sogood", new File("sound/sogood.mp3")),
+    ALLAHU("allahuakbar", new File("sound/allahuakbar.mp3"), "jihad", "allahu"),
+    YEAH("raymanyeah", new File("sound/raymanyeah.mp3")),
+    DUMMY("dummy", new File("sound/dummy.mp3")),
+    BALLSOFSTEEL("ballsofsteel", new File("sound/ballsofsteel.mp3")),
+    BALLS("balls", new File("sound/balls.mp3")),
+    MACHO1("circle", new File("sound/macho_alert16.mp3")),
+    MACHO2("getyou", new File("sound/macho_alert13.mp3")),
+    ALIVE("alive", new File("sound/alive.mp3")),
+    BUBBERDUCK("bubberduck", new File("sound/bubberduck.mp3")),
+    BONETROUSLE("bones", new File("sound/bonetrousle.mp3")),
+    BONES("bonel", new File("sound/bones.mp3"));
 
     private String name;
     private String[] aliases;
