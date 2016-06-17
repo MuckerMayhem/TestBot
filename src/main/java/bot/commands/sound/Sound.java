@@ -13,8 +13,17 @@ public enum Sound
     LOL("lol", new File("C:\\Users\\wiize\\Downloads\\lol.mp3")),
     SOGOOD("sogood", new File("C:\\Users\\wiize\\Downloads\\sogood.mp3")),
     ALLAHU("allahuakbar", new File("C:\\Users\\wiize\\Downloads\\allahuakbar.mp3"), "jihad", "allahu"),
-    YEAH("raymanyeah", new File("C:\\Users\\Owner\\IdeaProjects\\Test Bot\\raymanyeah.mp3")),
-    DUMMY("dummy", new File("dummy.mp3"));
+    //
+    YEAH("raymanyeah", new File("../raymanyeah.mp3")),
+    DUMMY("dummy", new File("../dummy.mp3")),
+    BALLSOFSTEEL("ballsofsteel", new File("../ballsofsteel.mp3")),
+    BALLS("balls", new File("../balls.mp3")),
+    MACHO1("circle", new File("../macho_alert16.mp3")),
+    MACHO2("getyou", new File("../macho_alert13.mp3")),
+    ALIVE("alive", new File("../alive.mp3")),
+    BUBBERDUCK("bubberduck", new File("../bubberduck.mp3")),
+    BONETROUSLE("bones", new File("../bonetrousle.mp3")),
+    BONES("bonel", new File("../bones.mp3"));
 
     private String name;
     private String[] aliases;

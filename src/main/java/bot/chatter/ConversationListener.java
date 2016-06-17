@@ -3,7 +3,6 @@ package bot.chatter;
 import bot.DiscordBot;
 import bot.behavior.BotAttitude;
 import bot.behavior.Mood;
-import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
@@ -13,7 +12,7 @@ import sx.blah.discord.util.RateLimitException;
 
 public class ConversationListener
 {
-    @EventSubscriber
+    //@EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException
     {
         IMessage imessage = event.getMessage();

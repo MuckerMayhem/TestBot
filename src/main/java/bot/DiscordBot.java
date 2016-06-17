@@ -1,5 +1,10 @@
 package bot;
 
+import bot.chatter.Mitsuku;
+import bot.chatterbotapi.ChatterBot;
+import bot.chatterbotapi.ChatterBotFactory;
+import bot.chatterbotapi.ChatterBotSession;
+import bot.chatterbotapi.ChatterBotType;
 import bot.commands.*;
 import bot.game.GameBot;
 import sx.blah.discord.api.ClientBuilder;
@@ -17,8 +22,8 @@ public class DiscordBot{
     public static final String NAME = BotParameters.NAME;
     public static final String GAME = BotParameters.GAME;
     public static final String HOME = BotParameters.HOME;
-
-    private static final String TOKEN = "MTkxMzk3NDkzNDE2Nzg3OTY4.CkPSLA.sDU5W0NbZn32gl3eDtFzIhmYV6Q";//Login token
+    private static final String TOKEN = BotParameters.TOKEN;
+    public static ChatterBotSession session;
 
     public static DiscordBot instance;//Main instance of the bot
 
@@ -45,6 +50,7 @@ public class DiscordBot{
 
         instance = new DiscordBot(client);
         instance.getClient().getDispatcher().registerListener(instance);
+        instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
@@ -53,6 +59,20 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
+
+        try
+        {
+
+            ChatterBotFactory factory = new ChatterBotFactory();
+
+            ChatterBot bot1 = factory.create(ChatterBotType.PANDORABOTS, "f326d0be8e345a13");
+            ChatterBotSession bot1session = bot1.createSession();
+            session = bot1session;
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
@@ -64,11 +84,6 @@ public class DiscordBot{
         });
 
         game.run();
-    }
-
-    @Deprecated
-    public static IDiscordClient login(String email, String password) throws DiscordException{
-        return new ClientBuilder().withLogin(email, password).login();
     }
 
     public static IDiscordClient login(String token) throws DiscordException{
@@ -192,6 +207,9 @@ public class DiscordBot{
 
         System.out.println("Client initialized.");
     }
+
+
+
 }
 
 
