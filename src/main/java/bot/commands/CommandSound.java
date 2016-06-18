@@ -41,10 +41,17 @@ public class CommandSound extends Command
 
         long duration;
         if(format instanceof TAudioFileFormat){
-            Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
+            System.out.println("TRIGGERED");
+            Long micros = (Long) format.properties().get("duration");
             duration = micros / 1000;
         }
-        else return;
+        else
+        {
+            System.out.println("NOT TRIGGERED.");
+            return;
+        }
+
+        System.out.println("Duration: " + duration);
 
         channel.join();
 
@@ -189,13 +196,13 @@ public class CommandSound extends Command
 
         long duration;
         if(format instanceof TAudioFileFormat){
-            Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
+            Long micros = (Long) format.properties().get("duration");
             duration = micros / 1000;
         }
         else{
             int frameSize = format.getFormat().getFrameSize();
             float frameRate = format.getFormat().getFrameRate();
-            duration = (long) (length / (frameSize * frameRate));
+            duration = (long) (length / (frameSize * frameRate) * 1000);
         }
         return duration;
     }

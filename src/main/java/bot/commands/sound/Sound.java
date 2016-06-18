@@ -4,7 +4,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public enum Sound{
+public enum Sound
+{
 
     QUACK("quack", new File("sound/quack.mp3"), "duck"),
     BOOTY("booty", new File("sound/booty"), "(͡°͜ʖ͡°)"),
@@ -21,45 +22,60 @@ public enum Sound{
     ALIVE("alive", new File("sound/alive.mp3")),
     BUBBERDUCK("bubberduck", new File("sound/bubberduck.mp3")),
     BONETROUSLE("bones", new File("sound/bonetrousle.mp3")),
-    BONES("bonel", new File("sound/bones.mp3"));
-
+    BONES("bonel", new File("sound/bones.mp3")),
+    HOLYSHIT("holyshit", new File("sound/HolyShit_F.wav"));
     private String name;
     private String[] aliases;
 
     private String url;
     private File path;
 
-    Sound(String name, String url, String... aliases){
-        this.name = name; this.url = url; this.aliases = aliases;
+    Sound(String name, String url, String... aliases)
+    {
+        this.name = name;
+        this.url = url;
+        this.aliases = aliases;
     }
 
     @Deprecated
-    Sound(String name, File path, String... aliases){
-        this.name = name; this.aliases = aliases; this.path = path;
+    Sound(String name, File path, String... aliases)
+    {
+        this.name = name;
+        this.aliases = aliases;
+        this.path = path;
     }
 
-    public static Sound get(String name){
-        for(Sound s : values()){
-            if(s.getName().equalsIgnoreCase(name)) return s; for(String a : s.aliases){
-                if(a.equalsIgnoreCase(name)) return s;
+    public static Sound get(String name)
+    {
+        for (Sound s : values())
+        {
+            if (s.getName().equalsIgnoreCase(name)) return s;
+            for (String a : s.aliases)
+            {
+                if (a.equalsIgnoreCase(name)) return s;
             }
-        } return null;
+        }
+        return null;
     }
 
-    public String getName(){
+    public String getName()
+    {
         return this.name;
     }
 
-    public String[] getAliases(){
+    public String[] getAliases()
+    {
         return this.aliases;
     }
 
-    public URL getUrl() throws MalformedURLException{
+    public URL getUrl() throws MalformedURLException
+    {
         return new URL(this.url);
     }
 
     @Deprecated
-    public File getPath(){
+    public File getPath()
+    {
         return this.path;
     }
 }

@@ -61,6 +61,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
+        instance.getCommandHandler().registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
 
         instance.addFunction(new FunctionAnnounceNoon());
 
