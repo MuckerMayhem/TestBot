@@ -13,6 +13,12 @@ public class CommandBooty extends Command{
     private static String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
 
     @Override
+    public String getDetailedDescription(){
+        return "Acquires the booty\n" +
+                "Usage: " + this.commandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
+    }
+
+    @Override
     void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length < 3) return;
 

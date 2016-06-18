@@ -58,8 +58,7 @@ public class CommandSound extends Command
         return "Plays a sound\n" +
                 "Usage: " + this.commandHandler.getCommandPrefix() + this.name + " <sound> [times] [volume]\n" +
                 "Will play a sound the specified number of times at the specified volume.\n" +
-                "Times can be any integer greater than zero and volume is the volume of the\n" +
-                "sound, as a percentage value from 0-100.\n" +
+                "Times can be any integer greater than zero and volume is the volume of the sound, as a percentage value from 0-100.\n" +
                 "The following are valid sounds:```python\n" +
                 String.join("\n", Arrays.stream(Sound.values()).map(Sound::getName).collect(Collectors.toList())) + "```";
     }

@@ -8,7 +8,7 @@ public enum Sound
 {
 
     QUACK("quack", new File("sound/quack.mp3"), "duck"),
-    BOOTY("booty", new File("sound/booty"), "(͡°͜ʖ͡°)"),
+    BOOTY("booty", new File("sound/booty.mp3"), "(͡°͜ʖ͡°)"),
     HIGHNOON("highnoon", new File("sound/highnoon.mp3"), "whattimeisit"),
     LOL("lol", new File("sound/lol.mp3")),
     SOGOOD("sogood", new File("sound/sogood.mp3")),
