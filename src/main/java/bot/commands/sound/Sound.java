@@ -24,12 +24,21 @@ public enum Sound
     BONETROUSLE("bones", new File("sound/bonetrousle.mp3")),
     BONES("bonel", new File("sound/bones.mp3")),
     HOLYSHIT("holyshit", new File("sound/HolyShit_F.wav"));
+
     private String name;
     private String[] aliases;
 
     private String url;
     private File path;
 
+    /**
+     * Registers a new sound from a URL<br>
+     * <i>Note: Sound must be in .wav format to work. If you want to register<br>
+     * a sound that is in .mp3 format you must do it from a file.</i>
+     * @param name Name to be used when playing this sound
+     * @param url URL pointing to the sound
+     * @param aliases Aliases that can be used to play this sound
+     */
     Sound(String name, String url, String... aliases)
     {
         this.name = name;
@@ -37,14 +46,24 @@ public enum Sound
         this.aliases = aliases;
     }
 
-    @Deprecated
-    Sound(String name, File path, String... aliases)
-    {
+    /**
+     * Registers a new sound from a file. <i>Must be in .mp3 or .wav format</i>
+     * @param name Name to be used when playing this sound
+     * @param path Path pointing to the sound
+     * @param aliases Aliases that can be used to play this sound
+     */
+    Sound(String name, File path, String... aliases){
         this.name = name;
         this.aliases = aliases;
         this.path = path;
     }
 
+    /**
+     * Finds a sound with the specified name or alias.<br>
+     * Will return null if no sound exists with this name or alias.
+     * @param name Name or alias of the sound you wish to look for
+     * @return Sound the specified name or alias, or null if no Sound was found
+     */
     public static Sound get(String name)
     {
         for (Sound s : values())

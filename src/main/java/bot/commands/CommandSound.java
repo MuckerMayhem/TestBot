@@ -14,44 +14,19 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class CommandSound extends Command
 {
     public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
-
-        AudioFileFormat format;
-        long length;
-
-        try{
-            if(sound.getPath() == null){
-                format = AudioSystem.getAudioFileFormat(sound.getUrl());
-
-            }
-            else{
-                format = AudioSystem.getAudioFileFormat(sound.getPath());
-            }
-        }
-        catch(IOException | UnsupportedAudioFileException e){
-            System.err.printf("Failed to load sound '%s': %s", sound.getName(), e.getClass().getSimpleName());
+        long duration = getDuration(sound);
+        if(duration <= 0){
             return;
         }
-
-        long duration;
-        if(format instanceof TAudioFileFormat){
-            System.out.println("TRIGGERED");
-            Long micros = (Long) format.properties().get("duration");
-            duration = micros / 1000;
-        }
-        else
-        {
-            System.out.println("NOT TRIGGERED.");
-            return;
-        }
-
-        System.out.println("Duration: " + duration);
 
         channel.join();
 
@@ -64,7 +39,8 @@ public class CommandSound extends Command
             player.provide();
         }
         catch(UnsupportedAudioFileException | IOException e){
-            e.printStackTrace();
+            System.err.print("Could not play sound " + sound.getName() + ": " + e.getClass().getSimpleName());
+            return;
         }
 
         TimerTask task = new TimerTask(){
@@ -78,8 +54,18 @@ public class CommandSound extends Command
     }
 
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    public String getDetailedDescription(){
+        return "Plays a sound\n" +
+                "Usage: " + this.commandHandler.getCommandPrefix() + this.name + " <sound> [times] [volume]\n" +
+                "Will play a sound the specified number of times at the specified volume.\n" +
+                "Times can be any integer greater than zero and volume is the volume of the\n" +
+                "sound, as a percentage value from 0-100.\n" +
+                "The following are valid sounds:```python\n" +
+                String.join("\n", Arrays.stream(Sound.values()).map(Sound::getName).collect(Collectors.toList())) + "```";
+    }
 
+    @Override
+    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         Sound sound;
         if(args.length == 0){
             sound = Sound.values()[new Random().nextInt(Sound.values().length)];
@@ -88,6 +74,11 @@ public class CommandSound extends Command
 
         if(sound == null){
             bot.respond("Invalid sound '" + args[0] + "'");
+            return;
+        }
+
+        long duration = getDuration(sound);
+        if(duration <= 0){
             return;
         }
 
@@ -110,37 +101,6 @@ public class CommandSound extends Command
         if(volume > 3.0F) volume = 3.0F;
 
         if(message.getAuthor().getVoiceChannel().isPresent()){
-
-            long duration = getDuration(sound);
-            if(duration == -1){
-                return;
-            }
-            /*
-            AudioFileFormat format;
-            long length;
-
-            try{
-                if(sound.getPath() == null){
-                    format = AudioSystem.getAudioFileFormat(sound.getUrl());
-
-                }
-                else{
-                    format = AudioSystem.getAudioFileFormat(sound.getPath());
-                }
-            }
-            catch(IOException | UnsupportedAudioFileException e){
-                System.err.printf("Failed to load sound '%s': %s", args[1], e.getClass().getSimpleName());
-                return;
-            }
-
-            long duration;
-            if(format instanceof TAudioFileFormat){
-                Long micros = (Long) ((TAudioFileFormat) format).properties().get("duration");
-                duration = micros / 1000;
-            }
-            else return;
-            */
-
             IVoiceChannel channel = message.getAuthor().getVoiceChannel().get();
             channel.join();
 
@@ -157,7 +117,8 @@ public class CommandSound extends Command
                 player.provide();
             }
             catch(UnsupportedAudioFileException | IOException e){
-                e.printStackTrace();
+                System.err.print("Could not play sound " + sound.getName() + ": " + e.getClass().getSimpleName());
+                return;
             }
 
             TimerTask task = new TimerTask(){
@@ -202,7 +163,7 @@ public class CommandSound extends Command
         else{
             int frameSize = format.getFormat().getFrameSize();
             float frameRate = format.getFormat().getFrameRate();
-            duration = (long) (length / (frameSize * frameRate) * 1000);
+            duration = (long) (length / (frameSize * frameRate)) * 1000;
         }
         return duration;
     }

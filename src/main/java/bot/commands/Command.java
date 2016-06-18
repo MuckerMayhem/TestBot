@@ -26,6 +26,10 @@ public abstract class Command{
         return this.description;
     }
 
+    public String getDetailedDescription(){
+        return "No detailed description for this command";
+    }
+
     public String[] getAliases(){
         return this.aliases;
     }
