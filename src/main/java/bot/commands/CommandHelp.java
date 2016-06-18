@@ -6,6 +6,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,10 @@ public class CommandHelp extends Command{
                             .collect(Collectors.toList())));
         }
         else{
-            Optional<Command> optional = CommandHandler.getAllRegisteredCommands().stream().filter(c -> c.getName().equalsIgnoreCase(args[0])).findFirst();
+            Optional<Command> optional = CommandHandler.getAllRegisteredCommands().stream()
+                    .filter(c -> c.getName().equalsIgnoreCase(args[0]) || Arrays.asList(c.getAliases()).contains(args[0]))
+                    .findFirst();
+
             if(optional.isPresent()){
                 Command command = optional.get();
                 bot.respond(command.getDetailedDescription());
