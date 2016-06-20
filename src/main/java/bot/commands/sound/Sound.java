@@ -31,8 +31,8 @@ public enum Sound{
     DINOS("dinos", new File("sound/dinos.wav")),
     FAIL("fail", new File("sound/fail.mp3")),
     GOODSHIT("goodshit", new File("sound/goodshit.mp3"), "\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40goodshitgo౦ԁsHit\uD83D\uDC4Cthats✔somegood\uD83D\uDC4C\uD83D\uDC4Cshitright\uD83D\uDC4C\uD83D\uDC4Cthere\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4Cright✔there✔✔ifidoƽaүsomyself\uD83D\uDCAFisayso\uD83D\uDCAFthatswhatimtalkingaboutrightthererightthere(chorus:ʳᶦᵍʰᵗᵗʰᵉʳᵉ)mMMMMᎷМ\uD83D\uDCAF\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4CНO0ОଠOOOOOОଠଠOoooᵒᵒᵒᵒᵒᵒᵒᵒᵒ\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDCAF\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC40\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC4CGoodshit"),
-    NOPE("nope", new File("sound/engineer_no01.mp3")),
-    YERAWIZARD("yerawizard", new File("sound/yerawizard.mp3"));
+    KEEM("keem", new File("sound/keem.mp3"), "cancer", "keemstar"),
+    NOPE("nope", new File("sound/engineer_no01.mp3"));
 
     private String name;
     private String[] aliases;

@@ -69,6 +69,7 @@ public class FunctionAnnounceNoon extends BotFunction{
                     if(v.getName().equals(CHANNEL)){
                         CommandSound.playSound(bot, v, Sound.HIGHNOON);
                         checkTime(timeUntilNextNoon());
+                        return;
                     }
                 }
             }
