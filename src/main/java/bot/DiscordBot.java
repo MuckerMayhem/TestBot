@@ -1,5 +1,6 @@
 package bot;
 
+import bot.chatter.Mitsuku;
 import bot.commands.*;
 import bot.function.BotFunction;
 import bot.function.FunctionAnnounceNoon;
@@ -37,7 +38,7 @@ public class DiscordBot{
         this.client = client;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         IDiscordClient client;
         try{
             System.out.println("Client logging in...");
@@ -54,6 +55,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(instance);
         instance.getClient().getDispatcher().registerListener(new OnLeaveListener());
         instance.getClient().getDispatcher().registerListener(new OnJoinListener());
+        instance.getClient().getDispatcher().registerListener(new Mitsuku());
         instance.commandHandler = new CommandHandler(instance);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
