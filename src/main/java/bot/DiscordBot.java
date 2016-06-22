@@ -30,6 +30,7 @@ public class DiscordBot{
 
     private String home;
 
+
     /**
      * Creates a new DiscordBot wrapper for an {@link sx.blah.discord.api.IDiscordClient}<br>
      * @param client IDiscordClient holding login for the bot
@@ -75,6 +76,7 @@ public class DiscordBot{
         });
 
         game.run();
+
     }
 
     @Deprecated
