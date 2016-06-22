@@ -15,7 +15,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.*;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class DiscordBot{
@@ -207,9 +206,8 @@ public class DiscordBot{
 
     @EventSubscriber
     public void onReady(ReadyEvent event) throws RateLimitException, DiscordException{
-//        setAvatar(Image.forUrl("png", "https://cdn3.iconfinder.com/data/icons/fruits-flat-icon-set/256/icon-banana-128.png"));
-        setAvatar(Image.forFile(new File("C:\\Users\\wiize\\Downloads\\kirino.png")));
-        setUsername(BotParameters.NAME);
+        setUsername(BotParameters.getName());
+        setAvatar(BotParameters.IMAGE);
         setGame(BotParameters.GAME);
         setHome(BotParameters.HOME);
 
