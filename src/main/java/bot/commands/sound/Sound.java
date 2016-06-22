@@ -38,7 +38,8 @@ public enum Sound{
     NOPE("nope", new File("sound/engineer_no01.mp3")),
     PHOON("phoon", new File("sound/speeddemon.mp3"), "speeddemon", "seademon"),
     WHOOPS("whoops", new File("sound/magnumdong.mp3"), "monstercondom", "magnumdong"),
-    CHIPDARIPPER("chipdaripper", new File("sound/chipdaripper.mp3"), "interiorcrocodilealligator", "crocodile");
+    CHIPDARIPPER("chipdaripper", new File("sound/chipdaripper.mp3"), "interiorcrocodilealligator", "crocodile"),
+    YERAWIZARD("yerawizard", new File("sound/yerawizard.mp3"));
 
     private String name;
     private String[] aliases;
