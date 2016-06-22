@@ -15,6 +15,7 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.*;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class DiscordBot{
@@ -63,7 +64,8 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
-        instance.getCommandHandler().registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
+        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
+        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, "diceroll", "random");
 
         instance.addFunction(new FunctionAnnounceNoon());
 
@@ -205,7 +207,8 @@ public class DiscordBot{
 
     @EventSubscriber
     public void onReady(ReadyEvent event) throws RateLimitException, DiscordException{
-        setAvatar(Image.forUrl("png", "https://cdn3.iconfinder.com/data/icons/fruits-flat-icon-set/256/icon-banana-128.png"));
+//        setAvatar(Image.forUrl("png", "https://cdn3.iconfinder.com/data/icons/fruits-flat-icon-set/256/icon-banana-128.png"));
+        setAvatar(Image.forFile(new File("C:\\Users\\wiize\\Downloads\\kirino.png")));
         setUsername(BotParameters.NAME);
         setGame(BotParameters.GAME);
         setHome(BotParameters.HOME);

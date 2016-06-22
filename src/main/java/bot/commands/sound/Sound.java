@@ -8,6 +8,9 @@ public enum Sound{
 
     QUACK("quack", new File("sound/quack.mp3"), "duck"),
     BOOTY("booty", new File("sound/booty.mp3"), "(͡°͜ʖ͡°)"),
+    BOOTY2X(null, new File("sound/booty2x.wav")),
+    BOOTY3X(null, new File("sound/booty3x.wav")),
+    BOOTYSLOW(null, new File("sound/bootyslow.mp3")),
     HIGHNOON("highnoon", new File("sound/highnoon.mp3"), "whattimeisit"),
     LOL("lol", new File("sound/lol.mp3")),
     SOGOOD("sogood", new File("sound/sogood.mp3")),
@@ -32,7 +35,10 @@ public enum Sound{
     FAIL("fail", new File("sound/fail.mp3")),
     GOODSHIT("goodshit", new File("sound/goodshit.mp3"), "\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40goodshitgo౦ԁsHit\uD83D\uDC4Cthats✔somegood\uD83D\uDC4C\uD83D\uDC4Cshitright\uD83D\uDC4C\uD83D\uDC4Cthere\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4Cright✔there✔✔ifidoƽaүsomyself\uD83D\uDCAFisayso\uD83D\uDCAFthatswhatimtalkingaboutrightthererightthere(chorus:ʳᶦᵍʰᵗᵗʰᵉʳᵉ)mMMMMᎷМ\uD83D\uDCAF\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4CНO0ОଠOOOOOОଠଠOoooᵒᵒᵒᵒᵒᵒᵒᵒᵒ\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDCAF\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC40\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC4CGoodshit"),
     KEEM("keem", new File("sound/keem.mp3"), "cancer", "keemstar"),
-    NOPE("nope", new File("sound/engineer_no01.mp3"));
+    NOPE("nope", new File("sound/engineer_no01.mp3")),
+    PHOON("phoon", new File("sound/speeddemon.mp3"), "speeddemon", "seademon"),
+    WHOOPS("whoops", new File("sound/magnumdong.mp3"), "monstercondom", "magnumdong"),
+    CHIPDARIPPER("chipdaripper", new File("sound/chipdaripper.mp3"), "interiorcrocodilealligator", "crocodile");
 
     private String name;
     private String[] aliases;
@@ -73,7 +79,9 @@ public enum Sound{
      */
     public static Sound get(String name){
         for(Sound s : values()){
-            if(s.getName().equalsIgnoreCase(name)) return s; for(String a : s.aliases){
+            if(s.name == null) continue;
+            if(s.getName().equalsIgnoreCase(name)) return s;
+            for(String a : s.aliases){
                 if(a.equalsIgnoreCase(name)) return s;
             }
         } return null;
