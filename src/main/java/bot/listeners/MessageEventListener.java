@@ -9,9 +9,6 @@ import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
-/**
- * Created by Owner on 2016-06-22.
- */
 public class MessageEventListener
 {
     private static MessageBuilder builder = new MessageBuilder(DiscordBot.instance.getClient());
@@ -24,7 +21,7 @@ public class MessageEventListener
     {
 
 
-        if(lastEvent.getMessage().getAuthor().equals(event.getMessage().getAuthor()))
+        if(lastEvent.getMessage().getAuthor() == event.getMessage().getAuthor())
         {
             lastEvent = event;
             System.out.println("test");
@@ -33,16 +30,14 @@ public class MessageEventListener
         else
         {
             System.out.println("test3");
-
             lastEvent = event;
             count = 0;
         }
 
         if (count == 3)
         {
-            builder.appendContent("BREAKING UP THAT SHIT BRUH").build();
+            DiscordBot.instance.say(lastEvent.getMessage().getChannel(), "BREAKING UP THAT SHIT BRUH");
             count = 0;
         }
     }
-
 }

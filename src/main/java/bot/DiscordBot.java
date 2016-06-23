@@ -31,7 +31,6 @@ public class DiscordBot{
 
     private String home;
 
-
     /**
      * Creates a new DiscordBot wrapper for an {@link sx.blah.discord.api.IDiscordClient}<br>
      * @param client IDiscordClient holding login for the bot
@@ -78,7 +77,6 @@ public class DiscordBot{
         });
 
         game.run();
-
     }
 
     @Deprecated
@@ -91,7 +89,7 @@ public class DiscordBot{
     }
 
     public IDiscordClient getClient(){
-        return client;
+        return this.client;
     }
 
     public CommandHandler getCommandHandler(){
@@ -209,7 +207,7 @@ public class DiscordBot{
     }
 
     @EventSubscriber
-    public void onReady(ReadyEvent event) throws RateLimitException, DiscordException{
+    public void onReady(ReadyEvent event){
         setUsername(BotParameters.getName());
         setAvatar(BotParameters.IMAGE);
         setGame(BotParameters.GAME);
