@@ -27,20 +27,21 @@ public class OnJoinListener
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
         String text = date.format(formatter);
 
-//not today
-//        System.out.println(event.getUser().getName());
-//        if (event.getUser().getName().equals("Mucker"))
-//        {
-//            for (IChannel c : DiscordBot.instance.getClient().getGuildByID(BotParameters.GUILD_ID).getChannels())
-//            {
-//                if (c.getName().equals("general"))
-//                    builder.withChannel(c).appendContent("Mucker-chan-senpai has arrived.").build();
-//            }
-//
-//
-//        }
-       // else
-        //{
+        /*not today
+        System.out.println(event.getUser().getName());
+        if (event.getUser().getName().equals("Mucker"))
+        {
+            for (IChannel c : DiscordBot.instance.getClient().getGuildByID(BotParameters.GUILD_ID).getChannels())
+            {
+                if (c.getName().equals("general"))
+                    builder.withChannel(c).appendContent("Mucker-chan-senpai has arrived.").build();
+            }
+
+
+        }
+        else
+        {
+        }*/
             for (IChannel c : DiscordBot.instance.getClient().getGuildByID(BotParameters.GUILD_ID).getChannels())
             {
                 if (c.getName().equals(BotParameters.HOME))

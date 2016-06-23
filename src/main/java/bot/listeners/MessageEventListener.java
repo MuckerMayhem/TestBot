@@ -3,41 +3,39 @@ package bot.listeners;
 import bot.DiscordBot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MessageBuilder;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.handle.obj.IChannel;
 
-public class MessageEventListener
-{
-    private static MessageBuilder builder = new MessageBuilder(DiscordBot.instance.getClient());
-    private static int count = 0;
-    private static IMessage message;
-    private static MessageReceivedEvent lastEvent = new MessageReceivedEvent(message);
+import java.util.HashMap;
+
+public class MessageEventListener{
+
+    public static final String BREAKUP_MESSAGE = "No walls! :yum:";
+    public static final int MAX_MESSAGES = 8;
+
+    private static MessageReceivedEvent lastEvent = null;
+    private static HashMap<IChannel, String> messages = new HashMap<>();
+    private static HashMap<IChannel, Integer> counts = new HashMap<>();
 
     @EventSubscriber
-    public void onMessageEvent(MessageReceivedEvent event) throws MissingPermissionsException, RateLimitException, DiscordException
-    {
+    public void onMessageEvent(MessageReceivedEvent event){
+        IChannel channel = event.getMessage().getChannel();
 
+        if(messages.containsKey(channel)){
+            if(messages.get(channel).equals(event.getMessage().getAuthor().getID())){
+                counts.put(channel, counts.get(channel) + 1);
+            }
+            else counts.put(channel, 0);
 
-        if(lastEvent.getMessage().getAuthor() == event.getMessage().getAuthor())
-        {
-            lastEvent = event;
-            System.out.println("test");
-            count++;
+            if(counts.get(channel) >= MAX_MESSAGES){
+                DiscordBot.instance.say(event.getMessage().getChannel(), BREAKUP_MESSAGE);
+                counts.put(channel, 0);
+            }
         }
-        else
-        {
-            System.out.println("test3");
-            lastEvent = event;
-            count = 0;
+        else{
+            messages.put(channel, event.getMessage().getAuthor().getID());
+            counts.put(channel, 1);
         }
 
-        if (count == 3)
-        {
-            DiscordBot.instance.say(lastEvent.getMessage().getChannel(), "BREAKING UP THAT SHIT BRUH");
-            count = 0;
-        }
+        messages.put(channel, event.getMessage().getAuthor().getID());
     }
 }
