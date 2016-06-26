@@ -58,6 +58,7 @@ public class DiscordBot{
 //        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
         instance.commandHandler = new CommandHandler(instance);
+        instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
         instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class);//( ͡° ͜ʖ ͡°)
@@ -66,6 +67,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
         instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, "diceroll", "random");
+
 
         instance.addFunction(new FunctionAnnounceNoon());
 
