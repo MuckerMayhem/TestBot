@@ -4,6 +4,7 @@ import bot.chatter.Mitsuku;
 import bot.commands.*;
 import bot.function.BotFunction;
 import bot.function.FunctionAnnounceNoon;
+import bot.function.FunctionEatFood;
 import bot.game.GameBot;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
@@ -67,9 +68,9 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
         instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, "diceroll", "random");
-
-
+        
         instance.addFunction(new FunctionAnnounceNoon());
+        instance.addFunction(new FunctionEatFood());
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
