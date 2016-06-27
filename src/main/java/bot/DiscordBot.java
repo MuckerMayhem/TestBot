@@ -62,19 +62,29 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new OnJoinListener());
 //        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
+
         instance.commandHandler = new CommandHandler(instance);
+
+        //Admin commands
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
+        instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
+        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
+        instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.MANAGE_MESSAGES);
+        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
+        instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
+
+        //Utility commands
+        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
+
+        //Fun commands
+        instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, Permissions.VOICE_SPEAK, "s");
         instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
-        instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
-        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
-        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
-        instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
-        instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
 
+        //Functions
         instance.addFunction(new FunctionAnnounceNoon());
         instance.addFunction(new FunctionEatFood());
 
