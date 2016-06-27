@@ -11,6 +11,7 @@ public class CommandType extends Command{
     void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length == 0) return;
 
+        bot.deleteMessage(message);
         bot.type(message.getChannel(), String.join(" ", args));
     }
 }
