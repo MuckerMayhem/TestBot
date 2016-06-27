@@ -2,11 +2,14 @@ package bot.commands;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 public abstract class Command{
+
+    Permissions permissions;
 
     String name;
     String description;
@@ -17,6 +20,10 @@ public abstract class Command{
     Class<? extends Command> mainClass;
 
     abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
+
+    public Permissions getRequiredPermissions(){
+        return this.permissions;
+    }
 
     public String getName(){
         return this.name;

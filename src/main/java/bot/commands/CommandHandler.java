@@ -3,9 +3,12 @@ package bot.commands;
 import bot.DiscordBot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
+import util.DiscordUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +46,7 @@ public class CommandHandler{
      * @param aliases Aliases your command can be executed with
      * @return true if the command was successfully registered, otherwise false
      */
-    public boolean registerCommand(String name, String description, Class<? extends Command> mainClass, String... aliases){
+    public boolean registerCommand(String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
         for(Command c : this.commands){
             if(c.name.equalsIgnoreCase(name)){
                 System.out.println("Could not register command '" + name + "': Command with this name has already been registered");
@@ -65,6 +68,7 @@ public class CommandHandler{
 
         try{
             Command instance = mainClass.newInstance();
+            instance.permissions = permissions == null ? Permissions.SEND_MESSAGES : permissions;
             instance.name = name;
             instance.description = description;
             instance.aliases = aliases;
@@ -114,14 +118,15 @@ public class CommandHandler{
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException{
-        String message = event.getMessage().getContent();
+        IMessage message = event.getMessage();
+        String content = event.getMessage().getContent();
 
-        if(!message.startsWith(this.commandPrefix)) return;
+        if(!content.startsWith(this.commandPrefix)) return;
 
-        String command = message.split(" ")[0].substring(1);
+        String command = content.split(" ")[0].substring(1);
         String[] args = EMPTY;
-        if(message.contains(" ")){
-            args = message.substring(message.indexOf(' ') + 1).split(" ");
+        if(content.contains(" ")){
+            args = content.substring(content.indexOf(' ') + 1).split(" ");
         }
 
         for(Command c : commands){
@@ -133,9 +138,10 @@ public class CommandHandler{
                 }
             }
             if(alias || command.equalsIgnoreCase(c.getName())){
+                if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
                 this.bot.lastEvent = event;
-                c.onExecute(this.bot, event.getMessage(), args);
-                System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, event.getMessage().getAuthor().getName(), String.join(", ", args));
+                c.onExecute(this.bot, message, args);
+                System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));
                 return;
             }
         }

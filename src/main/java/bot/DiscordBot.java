@@ -14,6 +14,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.*;
 
 import java.util.ArrayList;
@@ -59,15 +60,15 @@ public class DiscordBot{
 //        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
         instance.commandHandler = new CommandHandler(instance);
-        instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class);
-        instance.commandHandler.registerCommand("test", "Test command", CommandTest.class);
-        instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, "s");
-        instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class);//( ͡° ͜ʖ ͡°)
-        instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class);
-        instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class);
-        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class);
-        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class);
-        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, "diceroll", "random");
+        instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
+        instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, Permissions.VOICE_SPEAK, "s");
+        instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
+        instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
+        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.VOICE_MOVE_MEMBERS);
+        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
 
         instance.addFunction(new FunctionAnnounceNoon());
         instance.addFunction(new FunctionEatFood());
@@ -75,7 +76,7 @@ public class DiscordBot{
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
             gameBot.setCommandHandler(new CommandHandler(gameBot));
-            gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, "play");
+            gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, null, "play");
         });
 
         game.run();
