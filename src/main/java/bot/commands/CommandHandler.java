@@ -129,6 +129,8 @@ public class CommandHandler{
             args = content.substring(content.indexOf(' ') + 1).split(" ");
         }
 
+        boolean keep = false;
+
         for(Command c : commands){
             boolean alias = false;
             for(String s : c.aliases){
@@ -139,6 +141,7 @@ public class CommandHandler{
             }
             if(alias || command.equalsIgnoreCase(c.getName())){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
+                keep = c.debug();
                 this.bot.lastEvent = event;
                 c.onExecute(this.bot, message, args);
                 System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));
@@ -146,6 +149,7 @@ public class CommandHandler{
             }
         }
 
-        event.getMessage().delete();
+        if(!keep)
+            event.getMessage().delete();
     }
 }

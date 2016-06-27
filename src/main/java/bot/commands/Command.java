@@ -19,6 +19,8 @@ public abstract class Command{
 
     Class<? extends Command> mainClass;
 
+    private boolean debug;
+
     abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
 
     public Permissions getRequiredPermissions(){
@@ -43,5 +45,13 @@ public abstract class Command{
 
     public Class<? extends Command> getMainClass(){
         return this.mainClass;
+    }
+
+    public boolean debug(){
+        return this.debug;
+    }
+
+    public void setDebug(boolean debug){
+        this.debug = debug;
     }
 }
