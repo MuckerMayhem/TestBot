@@ -10,9 +10,6 @@ import sx.blah.discord.util.RateLimitException;
 import java.io.File;
 import java.net.URL;
 
-/**
- * Created by Owner on 2016-06-22.
- */
 public class CommandPlayVideo extends Command
 {
 
