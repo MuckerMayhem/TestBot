@@ -98,9 +98,9 @@ public class FunctionEatFood extends BotFunction{
 //        CHAMPAGNE,
 //        SAKE,
 //        TEA,
-//        COFFEE,
-//        BABY_BOTTLE,
-//        FORK_AND_KNIFE,
+        COFFEE(true, "coffee", "\u2615", ":hugging:"),
+        BABY_BOTTLE(false, "baby bottle", "\uD83C\uDF7C", ":baby::skin-tone-1:"),
+        FORK_AND_KNIFE(false, "utensils", "\uD83C\uDF74", ":astonished:"),
         DOG(false, "dog", "\uD83D\uDC36", ":thinking:"),
         POOP(false, "poop", "\uD83D\uDCA9", ":scream:");
 

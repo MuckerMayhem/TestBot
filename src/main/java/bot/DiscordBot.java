@@ -67,7 +67,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.VOICE_MOVE_MEMBERS);
+        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
         instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
 
         instance.addFunction(new FunctionAnnounceNoon());

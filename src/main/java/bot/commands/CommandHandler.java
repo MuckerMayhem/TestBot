@@ -145,5 +145,7 @@ public class CommandHandler{
                 return;
             }
         }
+
+        event.getMessage().delete();
     }
 }
