@@ -14,10 +14,13 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.*;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DiscordBot{
 
@@ -70,6 +73,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
         instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
         instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
+        instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
 
         instance.addFunction(new FunctionAnnounceNoon());
         instance.addFunction(new FunctionEatFood());
@@ -120,17 +124,56 @@ public class DiscordBot{
         return this.functions;
     }
 
+    public void deleteMessage(IMessage message, Long delay){
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run(){
+                try{
+                    message.delete();
+                }
+                catch(MissingPermissionsException | RateLimitException | DiscordException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Timer().schedule(task, delay);
+    }
+
+    public void deleteMessage(IMessage message){
+        deleteMessage(message, 0L);
+    }
+
+    public void type(IChannel channel, String message, Long typingTime){
+        channel.toggleTypingStatus();
+
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run(){
+                say(channel, message);
+            }
+        };
+        new Timer().schedule(task, typingTime);
+    }
+
+    public void type(IChannel channel, String message){
+        type(channel, message, message.length() * 100L);
+    }
+
     /**
-     * Sends a message from this bot in the specified channel
+     * Sends a message from this bot in the specified channel<br>
+     * Message is automatically deleted after the specified amount of time (in millis)<br>
+     * If the time is less than or equal to zero, the message will not be deleted
      * @param channel Channel to speak in
      * @param message Message to send
+     * @param time Time before this message is deleted
      */
-    public void say(IChannel channel, String message){
-        if(message == null) return;
-
+    public IMessage say(IChannel channel, String message, Long time){
         if(channel != null){
             try{
-                new MessageBuilder(getClient()).withChannel(channel).withContent(message).build();
+                IMessage botMessage = new MessageBuilder(getClient()).withChannel(channel).withContent(message).build();
+                if(time > 0)
+                    deleteMessage(botMessage, time);
+                return botMessage;
             }
             catch(RateLimitException e){
                 try{
@@ -139,12 +182,22 @@ public class DiscordBot{
                 catch(InterruptedException e1){
                     e1.printStackTrace();
                 }
-                say(channel, message);
+                return say(channel, message, time);
             }
             catch(DiscordException | MissingPermissionsException e){
                 System.err.print(e.getMessage());
             }
         }
+        return null;
+    }
+
+    /**
+     * Sends a message from this bot in the bot's home channel
+     * No message will be sent if the home channel is not found
+     * @param message Message to send
+     */
+    public IMessage say(IChannel channel, String message){
+        return say(channel, message, 0L);
     }
 
     /**
@@ -154,6 +207,19 @@ public class DiscordBot{
      */
     public void say(String message){
         say(getHome(), message);
+    }
+
+    /**
+     * Sends a message from this bot in the last channel a user executed<br>
+     * a valid command in. Valid commands are commands that are passed<br>
+     * by this bot's {@link bot.commands.CommandHandler}<br>
+     * The message is deleted after the specified time (in millis)
+     *
+     * @param message Message to send
+     * @param time Time before this message is deleted
+     */
+    public void respond(String message, Long time){
+        say(lastEvent.getMessage().getChannel(), message, time);
     }
 
     /**

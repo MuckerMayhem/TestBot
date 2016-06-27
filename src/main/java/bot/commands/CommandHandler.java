@@ -147,8 +147,9 @@ public class CommandHandler{
             }
             if(alias || command.equalsIgnoreCase(c.getName())){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
-                if(!c.debug())
-                    message.delete();
+                if(!c.debug()){
+                    this.bot.deleteMessage(message, 2000L);
+                }
                 this.bot.lastEvent = event;
                 c.onExecute(this.bot, message, args);
                 System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));

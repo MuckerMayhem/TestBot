@@ -2,9 +2,6 @@ package bot.function;
 
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 
 public class FunctionEatFood extends BotFunction{
 
@@ -12,22 +9,16 @@ public class FunctionEatFood extends BotFunction{
     public void onMessageReceived(MessageReceivedEvent event){
         String content = event.getMessage().getContent().replaceAll(" ", "");
         for(Food f : Food.values()){
-            if(content.equalsIgnoreCase(f.getUnicode())){
-                try{
-                    event.getMessage().delete();
-                    bot.say(event.getMessage().getChannel(), f.getEatMessage());
-                }
-                catch(MissingPermissionsException | RateLimitException | DiscordException e){
-                    System.err.print("Bot failed to eat :(\n" + e.getMessage());
-                }
-                break;
+            if(content.equals(f.getUnicode())){
+                bot.deleteMessage(event.getMessage(), 2000L);
+                bot.type(event.getMessage().getChannel(), f.getEatMessage());
             }
         }
     }
 
     @Override
     public void onActivate(){
-        
+
     }
 
     @Override

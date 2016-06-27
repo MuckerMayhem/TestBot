@@ -17,6 +17,6 @@ public class CommandPrune extends Command{
                 .filter(m -> m.getContent().toLowerCase().contains(String.join(" ", args).toLowerCase()))
                 .collect(Collectors.toList());
         message.getChannel().getMessages().bulkDelete(affectedMessages);
-        bot.say(message.getChannel(), message.getAuthor().mention() + " " + affectedMessages.size() + " messages deleted.");
+        bot.say(message.getChannel(), message.getAuthor().mention() + " " + affectedMessages.size() + " messages deleted.", 3000L);
     }
 }
