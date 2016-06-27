@@ -40,19 +40,18 @@ public class FunctionAnnounceNoon extends BotFunction{
         return (days * 86400000) + (hours * 3600000L) + (minutes * 60000L) + (seconds * 1000L);
     }
 
-    public boolean isActive(){
-        return this.active;
-    }
-
     @Override
-    public void activate(){
-        this.active = true;
+    public void onActivate(){
         checkTime(timeUntilNextNoon());
     }
 
     @Override
-    public void deactivate(){
-        this.active = false;
+    public void onDeactivate(){
+
+    }
+
+    public boolean isActive(){
+        return this.active;
     }
 
     private void checkTime(long delay){

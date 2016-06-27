@@ -8,16 +8,6 @@ import sx.blah.discord.util.RateLimitException;
 
 public class FunctionEatFood extends BotFunction{
 
-    @Override
-    public void activate(){
-        this.bot.getClient().getDispatcher().registerListener(this);
-    }
-
-    @Override
-    public void deactivate(){
-        this.bot.getClient().getDispatcher().unregisterListener(this);
-    }
-
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event){
         String content = event.getMessage().getContent().replaceAll(" ", "");
@@ -33,6 +23,16 @@ public class FunctionEatFood extends BotFunction{
                 break;
             }
         }
+    }
+
+    @Override
+    public void onActivate(){
+        
+    }
+
+    @Override
+    public void onDeactivate(){
+
     }
 
     public enum Food{
