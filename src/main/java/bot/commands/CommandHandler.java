@@ -38,15 +38,7 @@ public class CommandHandler{
         return global_commands;
     }
 
-    /**
-     * Register a new command on a bot. Uses the command prefix set by {@link #setCommandPrefix(String)}
-     * @param name Identifier used to execute this command
-     * @param description Description of the command. This is shown in the help menu
-     * @param mainClass Main class of your command. Should extend {@link bot.commands.Command}
-     * @param aliases Aliases your command can be executed with
-     * @return true if the command was successfully registered, otherwise false
-     */
-    public boolean registerCommand(String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
+    public boolean registerCommand(boolean debug, String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
         for(Command c : this.commands){
             if(c.name.equalsIgnoreCase(name)){
                 System.out.println("Could not register command '" + name + "': Command with this name has already been registered");
@@ -74,6 +66,8 @@ public class CommandHandler{
             instance.aliases = aliases;
             instance.commandHandler = this;
 
+            instance.setDebug(debug);
+
             this.commands.add(instance);
             global_commands.add(instance);
         }
@@ -85,6 +79,18 @@ public class CommandHandler{
         System.out.println("Command '" + name + "' registered with aliases " + Arrays.toString(aliases));
 
         return true;
+    }
+
+    /**
+     * Register a new command on a bot. Uses the command prefix set by {@link #setCommandPrefix(String)}
+     * @param name Identifier used to execute this command
+     * @param description Description of the command. This is shown in the help menu
+     * @param mainClass Main class of your command. Should extend {@link bot.commands.Command}
+     * @param aliases Aliases your command can be executed with
+     * @return true if the command was successfully registered, otherwise false
+     */
+    public boolean registerCommand(String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
+        return registerCommand(false, name, description, mainClass, permissions, aliases);
     }
 
     /**
