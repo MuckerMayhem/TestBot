@@ -8,6 +8,7 @@ import bot.function.FunctionEatFood;
 import bot.game.GameBot;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
+import bot.listeners.YoutubeLinkListener;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -62,6 +63,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new OnJoinListener());
 //        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
+        instance.getClient().getDispatcher().registerListener(new YoutubeLinkListener());
 
         instance.commandHandler = new CommandHandler(instance);
 
@@ -71,7 +73,6 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
         instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.MANAGE_MESSAGES);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
-        instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
 
         //Utility commands
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
