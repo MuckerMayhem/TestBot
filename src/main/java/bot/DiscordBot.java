@@ -78,6 +78,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("fact", "Breaks up continued messages by one user", CommandFact.class, Permissions.SEND_MESSAGES);
 
         //Fun commands
         instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
