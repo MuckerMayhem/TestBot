@@ -7,6 +7,8 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.io.IOException;
+
 public abstract class Command{
 
     Permissions permissions;
@@ -21,7 +23,7 @@ public abstract class Command{
 
     private boolean debug;
 
-    abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException;
+    abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException;
 
     public Permissions getRequiredPermissions(){
         return this.permissions;

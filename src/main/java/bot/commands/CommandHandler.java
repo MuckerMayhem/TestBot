@@ -10,6 +10,7 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -123,7 +124,7 @@ public class CommandHandler{
     }
 
     @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException{
+    public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
         IMessage message = event.getMessage();
         String content = event.getMessage().getContent();
 

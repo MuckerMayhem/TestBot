@@ -5,7 +5,9 @@ import bot.commands.*;
 import bot.function.BotFunction;
 import bot.function.FunctionAnnounceNoon;
 import bot.function.FunctionEatFood;
+import bot.function.FunctionWelcomeBack;
 import bot.game.GameBot;
+import bot.listeners.MessageEventListener;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
 import sx.blah.discord.api.ClientBuilder;
@@ -60,7 +62,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(instance);
         instance.getClient().getDispatcher().registerListener(new OnLeaveListener());
         instance.getClient().getDispatcher().registerListener(new OnJoinListener());
-//        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
+        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
@@ -69,7 +71,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
-        instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.MANAGE_MESSAGES);
+        instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.CHANGE_NICKNAME);
         instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
 
         //Utility commands
@@ -86,14 +88,21 @@ public class DiscordBot{
         //Functions
         instance.addFunction(new FunctionAnnounceNoon());
         instance.addFunction(new FunctionEatFood());
+        instance.addFunction(new FunctionWelcomeBack());
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
             gameBot.setCommandHandler(new CommandHandler(gameBot));
-            gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, null, "play");
-        });
-
+            gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, Permissions.SEND_MESSAGES, "play");
+        }, "GameBot");
         game.run();
+
+        Thread input = new Thread(() -> {
+            InputBot inputBot = new InputBot(client);
+            inputBot.setCommandHandler(new CommandHandler(inputBot));
+            inputBot.getCommandHandler().registerCommand("clear", "Clear messages", CommandClear.class, Permissions.MANAGE_SERVER);
+        }, "InputBot");
+        input.run();
     }
 
     @Deprecated
