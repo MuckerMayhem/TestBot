@@ -33,7 +33,7 @@ public class CommandHelp extends Command{
                 Command command = optional.get();
                 bot.respond(command.getDetailedDescription());
             }
-            else bot.respond("Invalid command '" + args[0] + "'");
+            else bot.respond("Invalid command '" + args[0] + "'", 3500L);
         }
     }
 }

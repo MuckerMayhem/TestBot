@@ -69,6 +69,8 @@ public class CommandHandler{
 
             instance.setDebug(debug);
 
+            instance.onRegister();
+
             this.commands.add(instance);
             global_commands.add(instance);
         }

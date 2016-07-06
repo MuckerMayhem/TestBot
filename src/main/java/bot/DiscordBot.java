@@ -2,12 +2,8 @@ package bot;
 
 import bot.chatter.Mitsuku;
 import bot.commands.*;
-import bot.function.BotFunction;
-import bot.function.FunctionAnnounceNoon;
-import bot.function.FunctionEatFood;
-import bot.function.FunctionWelcomeBack;
+import bot.function.*;
 import bot.game.GameBot;
-import bot.listeners.MessageEventListener;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
 import sx.blah.discord.api.ClientBuilder;
@@ -20,6 +16,7 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +43,12 @@ public class DiscordBot{
     }
 
     public static void main(String[] args) throws Exception{
+        if(!getDataFolder().exists()){
+           System.out.println("Data folder not found. Creating directory...");
+            if(getDataFolder().mkdir())
+                System.out.println("Done!");
+        }
+
         IDiscordClient client;
         try{
             System.out.println("Client logging in...");
@@ -62,7 +65,6 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(instance);
         instance.getClient().getDispatcher().registerListener(new OnLeaveListener());
         instance.getClient().getDispatcher().registerListener(new OnJoinListener());
-        instance.getClient().getDispatcher().registerListener(new MessageEventListener());
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
@@ -72,7 +74,6 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
         instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.CHANGE_NICKNAME);
-        instance.commandHandler.registerCommand(true, "dl", "Downloads a video. hopefully gonna use it to stream audio", CommandPlayVideo.class, Permissions.MANAGE_SERVER);
 
         //Utility commands
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
@@ -84,11 +85,15 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
         instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, Permissions.VOICE_SPEAK, "s");
         instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
+        instance.commandHandler.registerCommand("waifu", "Manage your waifu list", CommandWaifu.class, Permissions.SEND_MESSAGES);
 
         //Functions
         instance.addFunction(new FunctionAnnounceNoon());
         instance.addFunction(new FunctionEatFood());
         instance.addFunction(new FunctionWelcomeBack());
+        instance.addFunction(new FunctionBreakMessages());
+        instance.addFunction(new FunctionGetVideoTime());
+
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);
@@ -112,6 +117,10 @@ public class DiscordBot{
 
     public static IDiscordClient login(String token) throws DiscordException{
         return new ClientBuilder().withToken(token).login();
+    }
+
+    public static File getDataFolder(){
+        return new File(System.getProperty("user.dir") + File.separator + "data");
     }
 
     public IDiscordClient getClient(){

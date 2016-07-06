@@ -33,6 +33,10 @@ public abstract class Command{
         return this.name;
     }
 
+    public String getHandle(){
+        return this.commandHandler.getCommandPrefix() + this.name;
+    }
+
     public String getDescription(){
         return this.description;
     }
@@ -55,5 +59,9 @@ public abstract class Command{
 
     public void setDebug(boolean debug){
         this.debug = debug;
+    }
+
+    public void onRegister(){
+
     }
 }
