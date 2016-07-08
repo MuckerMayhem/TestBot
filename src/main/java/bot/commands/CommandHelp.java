@@ -26,6 +26,7 @@ public class CommandHelp extends Command{
                             .stream()
                             .filter(c -> DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions()))
                             .map(c -> c.commandHandler.getCommandPrefix() + c.name + " - " + c.getDescription())
+                            .sorted()
                             .collect(Collectors.toList())));
         }
         else{
