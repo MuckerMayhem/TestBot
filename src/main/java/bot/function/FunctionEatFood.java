@@ -20,12 +20,17 @@ public class FunctionEatFood extends BotFunction{
     }
 
     @Override
-    public void onActivate(){
+    public void init(){
 
     }
 
     @Override
-    public void onDeactivate(){
+    protected void onActivate(){
+
+    }
+
+    @Override
+    protected void onDeactivate(){
 
     }
 

@@ -24,10 +24,10 @@ import java.util.TimerTask;
 
 public class DiscordBot{
 
-    public static final long MESSAGE_TIME_SHORT = 3500L;
-    public static final long MESSAGE_TIME_LONG  = 6000L;
-
     public static DiscordBot instance;//Main instance of the bot
+
+    private static final long MESSAGE_TIME_SHORT = 3500L;
+    private static final long MESSAGE_TIME_LONG  = 6000L;
 
     public MessageReceivedEvent lastEvent;
 
@@ -74,7 +74,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
-        instance.settingsHandler = new SettingsHandler(SettingsHandler.SETTINGS_FILE);
+        instance.settingsHandler = new SettingsHandler(instance);
 
         //Admin commands
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
@@ -339,6 +339,7 @@ public class DiscordBot{
     public void addFunction(BotFunction function){
         this.functions.add(function);
         function.bot = this;
+        function.init();
     }
 
     @EventSubscriber

@@ -12,7 +12,12 @@ import sx.blah.discord.util.RateLimitException;
 public class CommandGame extends Command{
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(!(bot instanceof GameBot)){
             System.err.print("Non-game bot tried to play game with user. Shame!");
             return;

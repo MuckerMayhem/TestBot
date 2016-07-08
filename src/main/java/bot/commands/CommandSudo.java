@@ -10,15 +10,17 @@ import sx.blah.discord.util.RateLimitException;
 import java.util.Objects;
 import java.util.Scanner;
 
-/**
- * Created by Owner on 2016-06-27.
- */
 public class CommandSudo extends Command
 {
     Scanner r = new Scanner(System.in);
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException
     {
         System.out.println("test");
         IChannel channel = bot.getClient().getChannelByID("189563484839608320");

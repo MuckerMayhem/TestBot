@@ -24,7 +24,9 @@ public abstract class Command{
 
     private boolean debug;
 
-    abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException;
+    protected abstract void onRegister();
+
+    protected abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException;
 
     public Permissions getRequiredPermissions(){
         return this.permissions;
@@ -60,10 +62,6 @@ public abstract class Command{
 
     public void setDebug(boolean debug){
         this.debug = debug;
-    }
-
-    public void onRegister(){
-
     }
 
     public boolean checkSetting(String userId, Setting setting){

@@ -59,20 +59,12 @@ public class CommandSound extends Command
     }
 
     @Override
-    public String getDetailedDescription(){
-        return "Plays a sound\n" +
-                "Usage: " + this.commandHandler.getCommandPrefix() + this.name + " <sound> [times] [volume]\n" +
-                "Will play a sound the specified number of times at the specified volume.\n" +
-                "Times can be any integer greater than zero and volume is the volume of the sound, as a percentage value from 0-300.\n" +
-                "The following are valid sounds:```python\n" +
-                String.join("\n", Arrays.stream(Sound.values())
-                        .filter(s -> s.getName() != null)
-                        .map(Sound::getName)
-                        .collect(Collectors.toList())) + "```";
+    protected void onRegister(){
+
     }
 
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         Sound sound;
         if(args.length == 0){
             sound = Sound.values()[new Random().nextInt(Sound.values().length)];
@@ -140,6 +132,19 @@ public class CommandSound extends Command
         else{
             bot.say(message.getChannel(), "You are not in a voice channel!");
         }
+    }
+
+    @Override
+    public String getDetailedDescription(){
+        return "Plays a sound\n" +
+                "Usage: " + this.commandHandler.getCommandPrefix() + this.name + " <sound> [times] [volume]\n" +
+                "Will play a sound the specified number of times at the specified volume.\n" +
+                "Times can be any integer greater than zero and volume is the volume of the sound, as a percentage value from 0-300.\n" +
+                "The following are valid sounds:```python\n" +
+                String.join("\n", Arrays.stream(Sound.values())
+                        .filter(s -> s.getName() != null)
+                        .map(Sound::getName)
+                        .collect(Collectors.toList())) + "```";
     }
 
     private static long getDuration(Sound sound){

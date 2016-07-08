@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 
 public class CommandPrune extends Command{
     @Override
+    protected void onRegister(){
+
+    }
+
+    @Override
     public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length == 0) return;
         List<IMessage> affectedMessages = message.getChannel().getMessages().stream()

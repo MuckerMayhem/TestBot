@@ -8,21 +8,35 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SettingsHandler{
 
-    public static final File SETTINGS_FILE = new File(DiscordBot.getDataFolder() + File.separator + "usersettings.json");
+    public static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "usersettings.json");
 
+    private static ArrayList<Setting> global_settings = new ArrayList<>();
     private static HashMap<String, Settings> userSettings = new HashMap<>();
 
-    public SettingsHandler(File file){
+    protected DiscordBot bot;
+
+    private ArrayList<Setting> settings = new ArrayList<>();
+    private File file;
+
+    public SettingsHandler(DiscordBot bot, File file){
+        this.bot = bot;
+        this.file = file;
+
         try{
             loadSettings(file);
         }
         catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public SettingsHandler(DiscordBot bot){
+        this(bot, DEFAULT_FILE);
     }
 
     public Settings getUserSettings(String userId){
@@ -42,9 +56,21 @@ public class SettingsHandler{
         return settings.get(setting);
     }
 
+    public DiscordBot getBot(){
+        return this.bot;
+    }
+
+    public File getFile(){
+        return this.file;
+    }
+
+    public void registerNewSetting(Setting setting){
+
+    }
+
     public void setUserSettings(String userId, Settings settings){
         userSettings.put(userId, settings);
-        saveSettings(SETTINGS_FILE);
+        saveSettings(this.file);
     }
 
     public void setUserSetting(String userId, Setting setting, boolean value){
@@ -53,7 +79,7 @@ public class SettingsHandler{
 
         userSettings.get(userId).set(setting, value);
 
-        saveSettings(SETTINGS_FILE);
+        saveSettings(this.file);
     }
 
     public void toggleUserSetting(String userId, Setting setting){

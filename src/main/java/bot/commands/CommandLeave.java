@@ -6,26 +6,14 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
-public class CommandLeave extends Command
-{
-
-
-
+public class CommandLeave extends Command{
     @Override
-    public String getName()
-    {
-        return "leave";
+    protected void onRegister(){
+
     }
 
     @Override
-    public String getDescription()
-    {
-        return "Leave command";
-    }
-
-    @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException
-    {
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         bot.getClient().getConnectedVoiceChannels().get(0).leave();
     }
 }

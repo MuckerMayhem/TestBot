@@ -12,7 +12,12 @@ import sx.blah.discord.util.MissingPermissionsException;
 public class CommandAttitude extends Command{
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args){
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         BotAttitude attitude = BotAttitude.getBotFor(message.getAuthor().getID());
         try{
             MessageBuilder builder = new MessageBuilder(bot.getClient());

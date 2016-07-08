@@ -18,7 +18,12 @@ public class CommandDiceRoll extends Command{
     private static final Random RANDOM = new Random();
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         int value = 6;
         String random = "";
         try{

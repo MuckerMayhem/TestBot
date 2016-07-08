@@ -14,7 +14,12 @@ import java.util.stream.Collectors;
 public class CommandHelp extends Command{
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length == 0){
             bot.respond("\n" + "Enter " + this.commandHandler.getCommandPrefix() + this.name + " <command> for details on a specific command\n" +
                     String.join("\n", CommandHandler.getAllRegisteredCommands()

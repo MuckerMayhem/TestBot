@@ -31,7 +31,12 @@ public class FunctionBreakMessages extends BotFunction{
     private static String lastFact = "";
 
     @Override
-    public void onActivate(){
+    public void init(){
+
+    }
+
+    @Override
+    protected void onActivate(){
         if(facts.isEmpty()){
             Document doc = null;
             try{
@@ -57,7 +62,7 @@ public class FunctionBreakMessages extends BotFunction{
     }
 
     @Override
-    public void onDeactivate(){
+    protected void onDeactivate(){
 
     }
 

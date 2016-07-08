@@ -17,13 +17,12 @@ public class CommandBooty extends Command{
     private static String[] theBootySlow = {"͡o", "͜ʖ", "͡o)"};
 
     @Override
-    public String getDetailedDescription(){
-        return "Acquires the booty\n" +
-                "Usage: " + this.commandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
+    protected void onRegister(){
+
     }
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length < 3) return;
 
         if(!message.getAuthor().getVoiceChannel().isPresent()) return;
@@ -32,5 +31,11 @@ public class CommandBooty extends Command{
         else if(Arrays.equals(theBooty2x, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTY2X);
         else if(Arrays.equals(theBooty3x, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTY3X);
         else if(Arrays.equals(theBootySlow, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTYSLOW);
+    }
+
+    @Override
+    public String getDetailedDescription(){
+        return "Acquires the booty\n" +
+                "Usage: " + this.commandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
     }
 }

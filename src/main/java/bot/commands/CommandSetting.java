@@ -11,19 +11,13 @@ import sx.blah.discord.util.RateLimitException;
 import java.io.IOException;
 
 public class CommandSetting extends Command{
-
     @Override
-    public String getDetailedDescription(){
-        return "Change your personal settings\n" +
-                "Usage:\n" +
-                " " + this.getHandle() + " list\n" +
-                "  *List all settings and their current value*\n" +
-                " " + this.getHandle() + " <setting> <true/false>\n" +
-                "  *Change a setting*";
+    protected void onRegister(){
+
     }
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
         String userId = message.getAuthor().getID();
 
         if(args.length == 0){
@@ -58,5 +52,15 @@ public class CommandSetting extends Command{
                 return;
             }
         }
+    }
+
+    @Override
+    public String getDetailedDescription(){
+        return "Change your personal settings\n" +
+                "Usage:\n" +
+                " " + this.getHandle() + " list\n" +
+                "  *List all settings and their current value*\n" +
+                " " + this.getHandle() + " <setting> <true/false>\n" +
+                "  *Change a setting*";
     }
 }

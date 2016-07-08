@@ -8,7 +8,12 @@ import sx.blah.discord.util.RateLimitException;
 
 public class CommandType extends Command{
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(args.length == 0) return;
 
         bot.deleteMessage(message);

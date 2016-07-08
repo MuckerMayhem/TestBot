@@ -9,12 +9,17 @@ public class FunctionWelcomeBack extends BotFunction{
     public static String[] welcomes = {"Welcome back, {USER}!", "Hello again, {USER}!", "Welcome back {USER}, we missed you!"};
 
     @Override
-    public void onActivate(){
+    public void init(){
 
     }
 
     @Override
-    public void onDeactivate(){
+    protected void onActivate(){
+
+    }
+
+    @Override
+    protected void onDeactivate(){
 
     }
 

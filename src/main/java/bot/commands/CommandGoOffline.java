@@ -8,7 +8,12 @@ import sx.blah.discord.util.RateLimitException;
 
 public class CommandGoOffline extends Command{
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws MissingPermissionsException, RateLimitException, DiscordException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws MissingPermissionsException, RateLimitException, DiscordException{
         bot.getClient().logout();
     }
 }

@@ -14,12 +14,17 @@ public class FunctionGetVideoTime extends BotFunction{
     private static final String[] IMPORTANT_REGIONS = {"US", "CA", "AU"};
 
     @Override
-    public void onActivate(){
+    public void init(){
 
     }
 
     @Override
-    public void onDeactivate(){
+    protected void onActivate(){
+
+    }
+
+    @Override
+    protected void onDeactivate(){
 
     }
 

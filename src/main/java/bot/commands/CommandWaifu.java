@@ -26,7 +26,21 @@ public class CommandWaifu extends Command{
     private static HashMap<String, ArrayList<String>> waifus = new HashMap<>();
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    protected void onRegister(){
+        try{
+            loadWaifus(DEFAULT_FILE);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+        if(!hasAsWaifu("195313570127282176", "188803847458652162")){
+            addWaifu("195313570127282176", "188803847458652162");
+        }
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
         String userId = message.getAuthor().getID();
 
         if(args.length == 0){
@@ -104,20 +118,6 @@ public class CommandWaifu extends Command{
                 "  *Add a user to your waifu list*\n" +
                 " " + this.getHandle() + " remove <user>\n" +
                 "  *Remove a user from your waifu list*";
-    }
-
-    @Override
-    public void onRegister(){
-        try{
-            loadWaifus(DEFAULT_FILE);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
-        if(!hasAsWaifu("195313570127282176", "188803847458652162")){
-            addWaifu("195313570127282176", "188803847458652162");
-        }
     }
 
     private static void loadWaifus(File file) throws IOException{

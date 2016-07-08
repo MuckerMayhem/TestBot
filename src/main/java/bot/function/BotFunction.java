@@ -8,21 +8,23 @@ public abstract class BotFunction{
     public DiscordBot bot;
     private boolean active;
 
+    public abstract void init();
+
+    protected abstract void onActivate();
+
+    protected abstract void onDeactivate();
+
     public void activate(){
         this.active = true;
         this.bot.getClient().getDispatcher().registerListener(this);
         this.onActivate();
     }
 
-    public abstract void onActivate();
-
     public void deactivate(){
         this.active = false;
         this.bot.getClient().getDispatcher().unregisterListener(this);
         this.onDeactivate();
     }
-
-    public abstract void onDeactivate();
 
     public boolean isActive(){
         return this.active;

@@ -11,7 +11,12 @@ import java.util.Random;
 public class CommandMeme extends Command{
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         Random random = new Random();
 
         if(random.nextInt(2) == 0){

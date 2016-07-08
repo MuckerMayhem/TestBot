@@ -18,7 +18,12 @@ public class CommandClear extends Command{
     private static final List<String> ALLOWED = Arrays.asList("bottest", "music-bot", "bot");
 
     @Override
-    void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         if(!ALLOWED.contains(message.getChannel().getName())){
             bot.say(message.getChannel(), "You can't do this here!", 3000L);
             return;

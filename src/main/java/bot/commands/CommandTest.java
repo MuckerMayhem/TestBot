@@ -8,7 +8,12 @@ import java.util.Arrays;
 public class CommandTest extends Command{
 
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args){
+    protected void onRegister(){
+
+    }
+
+    @Override
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         bot.respond("Hello, " + message.getAuthor().getName() + " (" + String.join(", ", Arrays.asList(args)) + ")");
     }
 }

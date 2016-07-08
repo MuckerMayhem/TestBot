@@ -41,12 +41,17 @@ public class FunctionAnnounceNoon extends BotFunction{
     }
 
     @Override
-    public void onActivate(){
-        checkTime(timeUntilNextNoon());
+    public void init(){
+
     }
 
     @Override
-    public void onDeactivate(){
+    protected void onActivate(){
+
+    }
+
+    @Override
+    protected void onDeactivate(){
 
     }
 
