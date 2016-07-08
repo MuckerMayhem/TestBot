@@ -1,6 +1,7 @@
 package bot.function;
 
 import bot.DiscordBot;
+import bot.settings.SettingsHandler.Setting;
 
 public abstract class BotFunction{
 
@@ -25,5 +26,9 @@ public abstract class BotFunction{
 
     public boolean isActive(){
         return this.active;
+    }
+
+    public boolean checkSetting(String userId, Setting setting){
+        return this.bot.getSettingsHandler().getUserSetting(userId, setting);
     }
 }

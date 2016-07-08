@@ -1,6 +1,7 @@
 package bot.commands;
 
 import bot.DiscordBot;
+import bot.settings.SettingsHandler.Setting;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
@@ -63,5 +64,9 @@ public abstract class Command{
 
     public void onRegister(){
 
+    }
+
+    public boolean checkSetting(String userId, Setting setting){
+        return this.commandHandler.bot.getSettingsHandler().getUserSetting(userId, setting);
     }
 }

@@ -21,7 +21,7 @@ public class CommandGame extends Command{
         GameBot gameBot = (GameBot) bot;
 
         if(message.getChannel() != gameBot.getHome()){
-            gameBot.respond("Please run this command in the '" + gameBot.getHome().getName() + "' channel if you wish to play a game with me. :slight_smile: ", 3000L);
+            gameBot.info("Please run this command in the '" + gameBot.getHome().getName() + "' channel if you wish to play a game with me. :slight_smile:");
             return;
         }
 

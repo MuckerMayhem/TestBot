@@ -1,5 +1,6 @@
 package bot.function;
 
+import bot.settings.SettingsHandler.Setting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 
@@ -7,6 +8,8 @@ public class FunctionEatFood extends BotFunction{
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event){
+        if(!checkSetting(event.getMessage().getAuthor().getID(), Setting.ALLOW_EMOJI_EATING)) return;
+
         String content = event.getMessage().getContent().replaceAll(" ", "");
         for(Food f : Food.values()){
             if(content.equals(f.getUnicode())){

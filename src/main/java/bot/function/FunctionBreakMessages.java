@@ -1,6 +1,7 @@
 package bot.function;
 
 import bot.DiscordBot;
+import bot.settings.SettingsHandler.Setting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,7 +50,7 @@ public class FunctionBreakMessages extends BotFunction{
                 facts.put(fact, author);
             }
 
-            facts.put("Cole is bae :heart:", "wiizerdofwiierd");
+            facts.put("Cole is bae ❤", "wiizerdofwiierd");
         }
 
         System.out.println("Successfully loaded facts list.");
@@ -62,6 +63,8 @@ public class FunctionBreakMessages extends BotFunction{
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event){
+        if(!checkSetting(event.getMessage().getAuthor().getID(), Setting.ALLOW_WALL_BREAKING)) return;
+
         IChannel channel = event.getMessage().getChannel();
 
         if(messages.containsKey(channel)){
@@ -75,7 +78,7 @@ public class FunctionBreakMessages extends BotFunction{
                     String fact = randomFact();
                     DiscordBot.instance.say(event.getMessage().getChannel(), fact);
                     if(fact.equalsIgnoreCase(lastFact)){
-                        DiscordBot.instance.type(event.getMessage().getChannel(), "...but you probably already knew that! :smile:", 3000L);
+                        DiscordBot.instance.type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
                     }
                     lastFact = fact;
                 }

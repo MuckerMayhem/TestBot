@@ -42,6 +42,6 @@ public class CommandDiceRoll extends Command{
             random = (RANDOM.nextInt(value) + 1) + "";
         }
 
-        bot.respond(message.getAuthor().mention() + " " + random, 6000L);
+        bot.info(message.getAuthor().mention() + " " + random, true);
     }
 }

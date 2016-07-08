@@ -6,6 +6,7 @@ import bot.function.*;
 import bot.game.GameBot;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
+import bot.settings.SettingsHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -23,12 +24,17 @@ import java.util.TimerTask;
 
 public class DiscordBot{
 
+    public static final long MESSAGE_TIME_SHORT = 3500L;
+    public static final long MESSAGE_TIME_LONG  = 6000L;
+
     public static DiscordBot instance;//Main instance of the bot
 
     public MessageReceivedEvent lastEvent;
 
     private IDiscordClient client;
+
     private CommandHandler commandHandler;
+    private SettingsHandler settingsHandler;
 
     private ArrayList<BotFunction> functions = new ArrayList<BotFunction>();
 
@@ -68,6 +74,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
+        instance.settingsHandler = new SettingsHandler(SettingsHandler.SETTINGS_FILE);
 
         //Admin commands
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
@@ -79,6 +86,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("setting", "Change user settings", CommandSetting.class, Permissions.SEND_MESSAGES);
 
         //Fun commands
         instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
@@ -129,6 +137,10 @@ public class DiscordBot{
 
     public CommandHandler getCommandHandler(){
         return this.commandHandler;
+    }
+
+    public SettingsHandler getSettingsHandler(){
+        return this.settingsHandler;
     }
 
     public String getUsername(){
@@ -259,6 +271,28 @@ public class DiscordBot{
         say(lastEvent.getMessage().getChannel(), message);
     }
 
+    /**
+     * Sends a message from this bot in the last channel a user executed<br>
+     * a valid command in. Valid commands are commands that are passed<br>
+     * by this bot's {@link bot.commands.CommandHandler}. Message disappears after a short<br>
+     * amount of time (Decided by the <i>longer</i> parameter)
+     * @param message Message to send
+     * @param longer Whether the message should stay for 6.0 seconds rather than 3.5
+     */
+    public void info(String message, boolean longer){
+        respond(message, longer ? MESSAGE_TIME_LONG : MESSAGE_TIME_SHORT);
+    }
+
+    /**
+     * Sends a message from this bot in the last channel a user executed<br>
+     * a valid command in. Valid commands are commands that are passed<br>
+     * by this bot's {@link bot.commands.CommandHandler}. Message disappears after 3.5 seconds
+     * @param message Message to send
+     */
+    public void info(String message){
+        respond(message, MESSAGE_TIME_SHORT);
+    }
+
     public void executeCommand(String name, String[] args){
         getCommandHandler().executeCommand(name, args);
     }
@@ -296,6 +330,10 @@ public class DiscordBot{
 
     public void setCommandHandler(CommandHandler commandHandler){
         this.commandHandler = commandHandler;
+    }
+
+    public void setSettingsHandler(SettingsHandler settingsHandler){
+        this.settingsHandler = settingsHandler;
     }
 
     public void addFunction(BotFunction function){

@@ -1,6 +1,7 @@
 package bot.commands;
 
 import bot.DiscordBot;
+import bot.settings.SettingsHandler.Setting;
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -29,7 +30,7 @@ public class CommandWaifu extends Command{
         String userId = message.getAuthor().getID();
 
         if(args.length == 0){
-            bot.respond(getDetailedDescription(), 6000L);
+            bot.info(getDetailedDescription(), true);
             return;
         }
 
@@ -38,51 +39,57 @@ public class CommandWaifu extends Command{
             if(args.length >= 2){
                 IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
                 if(user == null){
-                    bot.respond("User not found!", 3500L);
+                    bot.info("User not found!");
                     return;
                 }
                 else target = user;
             }
 
-            bot.respond("*" + target.getDisplayName(message.getGuild()) + "'s waifus:*\n" + String.join("\n", waifus.get(target.getID()).stream()
+            bot.info("*" + target.getDisplayName(message.getGuild()) + "'s waifus:*\n" + String.join("\n", waifus.get(target.getID()).stream()
             .filter(i -> DiscordUtil.getUserByID(message.getGuild(), i) != null)
             .map(i -> DiscordUtil.getUserByID(message.getGuild(), i).getDisplayName(message.getGuild()))
-            .collect(Collectors.toList())), 6000L);
+            .collect(Collectors.toList())), true);
         }
         else if(args.length < 2){
-            bot.respond(getDetailedDescription(), 6000L);
+            bot.info(getDetailedDescription(), true);
             return;
         }
 
         if(args[0].equalsIgnoreCase("add")){
             IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
-                bot.respond("User not found!", 3500L);
+                bot.info("User not found!");
             }
             else if(user == bot.getClient().getOurUser() && !userId.equals("188803847458652162")){
-                bot.respond("Silly thing! I can't be your waifu! Hehe :kissing:", 3500L);
+                bot.info("Silly thing! I can't be your waifu! Hehe \uD83D\uDE17");
             }
             else if(hasAsWaifu(userId, user.getID())){
-                bot.respond("That person is already on your waifu list!", 3500L);
+                bot.info("That person is already on your waifu list!");
             }
             else{
                 addWaifu(userId, user.getID());
-                bot.respond("User '" + user.getName() + "' added to your waifu list", 3500L);
-                bot.say(bot.getHome(), "Hey, " + user.mention() + "! " + message.getAuthor().getDisplayName(message.getGuild()) + " has added you to their waifu list!");
+                bot.info("User '" + user.getName() + "' added to your waifu list");
+
+                if(checkSetting(user.getID(), Setting.SEE_WAIFU_NOTIFICATIONS)){
+                    bot.say(bot.getHome(), "Hey, " + user.mention() + "! " + message.getAuthor().getDisplayName(message.getGuild()) + " has added you to their waifu list!");
+                }
             }
         }
         else if(args[0].equalsIgnoreCase("remove")){
             IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
-                bot.respond("User not found!", 3500L);
+                bot.info("User not found!");
             }
             else if(!hasAsWaifu(userId, user.getID())){
-                bot.respond("That person is not on your waifu list!", 3500L);
+                bot.info("That person is not on your waifu list!");
             }
             else{
                 removeWaifu(userId, user.getID());
-                bot.respond("User '" + user.getName() + "' removed from your waifu list", 3500L);
-                bot.say(bot.getHome(), user.mention() + ", " + message.getAuthor().getDisplayName(message.getGuild()) + " has removed you from their waifu list! b-baka!");
+                bot.info("User '" + user.getName() + "' removed from your waifu list");
+
+                if(checkSetting(user.getID(), Setting.SEE_WAIFU_NOTIFICATIONS)){
+                    bot.say(bot.getHome(), user.mention() + ", " + message.getAuthor().getDisplayName(message.getGuild()) + " has removed you from their waifu list! b-baka!");
+                }
             }
         }
     }
@@ -115,7 +122,7 @@ public class CommandWaifu extends Command{
 
     private static void loadWaifus(File file) throws IOException{
         if(file.exists()){
-            String content = IOUtils.toString(new FileInputStream(DEFAULT_FILE));
+            String content = IOUtils.toString(new FileInputStream(file));
 
             JsonElement element = new JsonParser().parse(content);
             if(!element.isJsonArray()) return;

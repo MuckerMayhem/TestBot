@@ -20,10 +20,10 @@ public class CommandHandler{
     private static ArrayList<Command> global_commands = new ArrayList<>();
     private static final String[] EMPTY = {};
 
+    protected DiscordBot bot;
+
     private ArrayList<Command> commands = new ArrayList<>();
     private String commandPrefix = "!";
-
-    private DiscordBot bot;
 
     private MessageReceivedEvent lastEvent;
 
