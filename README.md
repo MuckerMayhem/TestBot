@@ -4,7 +4,7 @@ A now somewhat but not really sooper dooper bot.
 
 ## Current commands
 
-!attitude - Show bot's conversational attitude towards you<br />  
+!attitude - Show bot's conversational attitude towards you  
 !clear - Clear all messages in a text channel  
 !game - Play a game with the bot!  
 !gooffline - Send the bot offline  
