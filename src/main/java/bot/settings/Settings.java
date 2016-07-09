@@ -32,7 +32,7 @@ public class Settings implements Iterable<Setting>{
     }
 
     public static Settings defaults(SettingsHandler handler){
-        if(defaults.containsKey(handler))
+        if(!defaults.containsKey(handler))
             defaults.put(handler, new Settings(handler));
 
         return defaults.get(handler);

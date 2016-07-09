@@ -29,6 +29,9 @@ public class DiscordBot{
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
 
+    private static final File SETTINGS_FILE = new File(getDataFolder() + File.separator + "settings.json");
+    private static final SettingsHandler GLOBAL_SETTINGS = new SettingsHandler(SETTINGS_FILE, true);
+
     public MessageReceivedEvent lastEvent;
 
     private IDiscordClient client;
@@ -74,7 +77,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
-        instance.settingsHandler = new SettingsHandler(instance);
+        instance.settingsHandler = new SettingsHandler();
 
         //Admin commands
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
@@ -118,6 +121,8 @@ public class DiscordBot{
             inputBot.getCommandHandler().registerCommand("clear", "Clear messages", CommandClear.class, Permissions.MANAGE_SERVER);
         }, "InputBot");
         input.run();
+
+        GLOBAL_SETTINGS.loadSettings();
     }
 
     @Deprecated
@@ -131,6 +136,10 @@ public class DiscordBot{
 
     public static File getDataFolder(){
         return new File(System.getProperty("user.dir") + File.separator + "data");
+    }
+
+    public static SettingsHandler getGlobalSettingsHandler(){
+        return GLOBAL_SETTINGS;
     }
 
     public IDiscordClient getClient(){

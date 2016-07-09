@@ -2,6 +2,7 @@ package bot.commands;
 
 import bot.DiscordBot;
 import bot.InputBot;
+import bot.settings.ArraySetting;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
@@ -9,22 +10,24 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class CommandClear extends Command{
 
-    private static final List<String> ALLOWED = Arrays.asList("bottest", "music-bot", "bot");
+    private static final String[] ALLOWED = {"bottest", "bot", "music-bot"};
+    private static final ArraySetting WHITELIST_CLEAR = new ArraySetting("clear_whitelist", "List of channels the clear command can be used in", ALLOWED);
 
     @Override
     protected void onRegister(){
-
+        DiscordBot.getGlobalSettingsHandler().registerNewSetting(WHITELIST_CLEAR);
     }
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        if(!ALLOWED.contains(message.getChannel().getName())){
+        String[] whitelist = (String[]) DiscordBot.getGlobalSettingsHandler().getUserSetting(null, WHITELIST_CLEAR);
+
+        if(!Arrays.asList(whitelist).contains(message.getChannel().getName())){
             bot.say(message.getChannel(), "You can't do this here!", 3000L);
             return;
         }

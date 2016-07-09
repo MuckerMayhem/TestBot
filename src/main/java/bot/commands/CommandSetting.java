@@ -2,10 +2,13 @@ package bot.commands;
 
 import bot.DiscordBot;
 import bot.settings.Setting;
+import bot.settings.SettingsHandler;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
+import util.DiscordUtil;
 
 import java.io.IOException;
 
@@ -24,9 +27,17 @@ public class CommandSetting extends Command{
             return;
         }
 
+        boolean serverAccess = DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), Permissions.MANAGE_SERVER);
         if(args[0].equalsIgnoreCase("list")){
-            bot.respond("Here is the list of settings you can change:\n" +
-                        bot.getSettingsHandler().getUserSettings(userId), 5000L * bot.getSettingsHandler().getRegisteredSettings().size());
+            StringBuilder builder = new StringBuilder("Here is the list of settings you can change:\n" +
+                    bot.getSettingsHandler().getUserSettings(userId));
+
+            if(serverAccess)
+                builder.append("In addition, you also have access to the following global (server) settings:\n")
+                        .append(DiscordBot.getGlobalSettingsHandler().getUserSettings(null).toString());
+
+            bot.respond(builder.toString(), 5000L * bot.getSettingsHandler().getRegisteredSettings().size());
+
             return;
         }
 
@@ -41,8 +52,16 @@ public class CommandSetting extends Command{
             return;
         }
 
+        SettingsHandler handler = bot.getSettingsHandler();
+
+        Setting serverSetting = DiscordBot.getGlobalSettingsHandler().getSettingByName(args[0]);
         Setting setting = bot.getSettingsHandler().getSettingByName(args[0]);
-        if(setting == null){
+
+        if(serverAccess && serverSetting != null){
+            setting = serverSetting;
+            handler = DiscordBot.getGlobalSettingsHandler();
+        }
+        else if(setting == null){
             bot.info("Invalid setting '" + args[0] + "'!");
             return;
         }
@@ -53,9 +72,8 @@ public class CommandSetting extends Command{
             return;
         }
 
-        bot.getSettingsHandler().setUserSetting(userId, setting, value);
+        handler.setUserSetting(userId, setting, value);
         bot.info("Setting " + setting.getName() + " set to *" + setting.getValueAsString(value) + "*");
-        return;
     }
 
     @Override

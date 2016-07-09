@@ -15,21 +15,28 @@ public class SettingsHandler{
 
     public static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "usersettings.json");
 
-    private static ArrayList<Setting> global_settings = new ArrayList<>();
+    private static final String DEFAULT = "_default_";
 
-    protected DiscordBot bot;
+    private static ArrayList<Setting> global_settings = new ArrayList<>();
 
     private HashMap<String, Settings> userSettings = new HashMap<>();
     private ArrayList<Setting> settings = new ArrayList<>();
     private File file;
 
-    public SettingsHandler(DiscordBot bot, File file){
-        this.bot = bot;
-        this.file = file;
+    private boolean singleUser;
+
+    public SettingsHandler(File file, boolean forceSingleUser){
+        this(file);
+        this.singleUser = forceSingleUser;
     }
 
-    public SettingsHandler(DiscordBot bot){
-        this(bot, DEFAULT_FILE);
+    public SettingsHandler(File file){
+        this.file = file;
+        this.singleUser = false;
+    }
+
+    public SettingsHandler(){
+        this(DEFAULT_FILE);
     }
 
     /**
@@ -54,7 +61,7 @@ public class SettingsHandler{
      * @return {@link bot.settings.Settings} containing settings for the user
      */
     public Settings getUserSettings(String userId){
-        return userSettings.getOrDefault(userId, Settings.defaults(this));
+        return userSettings.getOrDefault(this.singleUser ? DEFAULT : userId, Settings.defaults(this));
     }
 
     /**
@@ -76,16 +83,8 @@ public class SettingsHandler{
      * @return The value the user has set for the setting
      */
     public Object getUserSetting(String userId, Setting setting){
-        Settings settings = userSettings.getOrDefault(userId, Settings.defaults(this));
-
+        Settings settings = userSettings.getOrDefault(this.singleUser ? DEFAULT : userId, Settings.defaults(this));
         return settings.get(setting);
-    }
-
-    /**
-     * Gets the bot associated with this SettingsHandler
-     */
-    public DiscordBot getBot(){
-        return this.bot;
     }
 
     /**
@@ -94,6 +93,10 @@ public class SettingsHandler{
      */
     public File getFile(){
         return this.file;
+    }
+
+    public boolean isSingleUser(){
+        return this.singleUser;
     }
 
     /**
@@ -111,7 +114,7 @@ public class SettingsHandler{
      * @param settings New {@link bot.settings.Settings} for this user
      */
     public void setUserSettings(String userId, Settings settings){
-        userSettings.put(userId, settings);
+        userSettings.put(this.singleUser ? DEFAULT : userId, settings);
         saveSettings();
     }
 
@@ -130,10 +133,10 @@ public class SettingsHandler{
      * @param value Value of the setting you are changing
      */
     public void setUserSetting(String userId, Setting setting, Object value){
-        if(!userSettings.containsKey(userId))
-            userSettings.put(userId, new Settings(this));
+        if(!userSettings.containsKey(this.singleUser ? DEFAULT : userId))
+            userSettings.put(this.singleUser ? DEFAULT : userId, new Settings(this));
 
-        userSettings.get(userId).set(setting, value);
+        userSettings.get(this.singleUser ? DEFAULT : userId).set(setting, value);
 
         saveSettings();
     }
