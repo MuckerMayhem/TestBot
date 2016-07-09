@@ -1,6 +1,7 @@
 # TestBot
 
-A now somewhat but not really sooper dooper bot.
+A now somewhat but not really sooper dooper bot.  
+This bot is currently a private bot designed specifically for one server, but this may change in the future.
 
 ## Current commands
 

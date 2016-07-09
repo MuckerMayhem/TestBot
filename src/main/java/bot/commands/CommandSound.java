@@ -72,7 +72,7 @@ public class CommandSound extends Command
         else sound = Sound.get(args[0]);
 
         if(sound == null){
-            bot.respond("Invalid sound '" + args[0] + "'");
+            bot.info("Invalid sound '" + args[0] + "'");
             return;
         }
 
@@ -130,7 +130,7 @@ public class CommandSound extends Command
             new Timer().schedule(task, (duration * times) + 400L);
         }
         else{
-            bot.say(message.getChannel(), "You are not in a voice channel!");
+            bot.info("You are not in a voice channel!");
         }
     }
 
@@ -144,6 +144,7 @@ public class CommandSound extends Command
                 String.join("\n", Arrays.stream(Sound.values())
                         .filter(s -> s.getName() != null)
                         .map(Sound::getName)
+                        .sorted()
                         .collect(Collectors.toList())) + "```";
     }
 

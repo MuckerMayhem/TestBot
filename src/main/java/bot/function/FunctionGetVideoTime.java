@@ -12,6 +12,7 @@ import java.io.IOException;
 public class FunctionGetVideoTime extends BotFunction{
 
     private static final String[] IMPORTANT_REGIONS = {"US", "CA", "AU"};
+    private static final String[] BLACKLISTED_CHANNELS = {"195126570854252544", "189563086418608130"};
 
     @Override
     public void init(){
@@ -30,6 +31,10 @@ public class FunctionGetVideoTime extends BotFunction{
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event) throws IOException, RateLimitException, DiscordException, MissingPermissionsException{
+        for(String s : BLACKLISTED_CHANNELS){
+            if(event.getMessage().getChannel().getID().equals(s)) return;
+        }
+
         String content = event.getMessage().getContent();
 
         //Accounts for most youtube links that Discord can expand
