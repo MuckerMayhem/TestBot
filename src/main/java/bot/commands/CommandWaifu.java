@@ -30,7 +30,7 @@ public class CommandWaifu extends Command{
 
     @Override
     protected void onRegister(){
-        this.commandHandler.bot.getSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
+        this.commandHandler.bot.getUserSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
 
         try{
             loadWaifus(DEFAULT_FILE);

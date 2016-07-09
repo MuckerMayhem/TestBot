@@ -35,7 +35,7 @@ public class FunctionGetVideoTime extends BotFunction{
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event) throws IOException, RateLimitException, DiscordException, MissingPermissionsException{
-        for(String s : (String[]) DiscordBot.getGlobalSettingsHandler().getUserSetting(null, BLACKLIST_VIDEOINFO)){
+        for(String s : (String[]) DiscordBot.getGlobalSettingsHandler().getSetting(BLACKLIST_VIDEOINFO)){
             if(event.getMessage().getChannel().getName().equals(s)) return;
         }
 

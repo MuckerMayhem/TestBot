@@ -39,7 +39,7 @@ public abstract class BotFunction{
      * @return
      */
     public boolean checkSetting(String userId, BooleanSetting setting){
-        return (Boolean) this.bot.getSettingsHandler().getUserSetting(userId, setting);
+        return (Boolean) this.bot.getUserSettingsHandler().getUserSetting(userId, setting);
     }
 
     public boolean checkSetting(MessageReceivedEvent event, BooleanSetting setting){

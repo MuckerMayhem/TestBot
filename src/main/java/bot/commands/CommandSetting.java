@@ -30,19 +30,19 @@ public class CommandSetting extends Command{
         boolean serverAccess = DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), Permissions.MANAGE_SERVER);
         if(args[0].equalsIgnoreCase("list")){
             StringBuilder builder = new StringBuilder("Here is the list of settings you can change:\n" +
-                    bot.getSettingsHandler().getUserSettings(userId));
+                    bot.getUserSettingsHandler().getSettings(userId));
 
             if(serverAccess)
-                builder.append("In addition, you also have access to the following global (server) settings:\n")
-                        .append(DiscordBot.getGlobalSettingsHandler().getUserSettings(null).toString());
+                builder.append("In addition, you have access to the following global (server) settings:\n")
+                        .append(DiscordBot.getGlobalSettingsHandler().getSettings().toString());
 
-            bot.respond(builder.toString(), 5000L * bot.getSettingsHandler().getRegisteredSettings().size());
+            bot.respond(builder.toString(), 5000L * bot.getUserSettingsHandler().getRegisteredSettings().size());
 
             return;
         }
 
         if(args[0].equalsIgnoreCase("reset")){
-            bot.getSettingsHandler().resetUserSettings(userId);
+            bot.getUserSettingsHandler().resetUserSettings(userId);
             bot.info("Reset all your settings to their default values.");
             return;
         }
@@ -52,10 +52,10 @@ public class CommandSetting extends Command{
             return;
         }
 
-        SettingsHandler handler = bot.getSettingsHandler();
+        SettingsHandler handler = bot.getUserSettingsHandler();
 
         Setting serverSetting = DiscordBot.getGlobalSettingsHandler().getSettingByName(args[0]);
-        Setting setting = bot.getSettingsHandler().getSettingByName(args[0]);
+        Setting setting = bot.getUserSettingsHandler().getSettingByName(args[0]);
 
         if(serverAccess && serverSetting != null){
             setting = serverSetting;
@@ -72,7 +72,7 @@ public class CommandSetting extends Command{
             return;
         }
 
-        handler.setUserSetting(userId, setting, value);
+        handler.setSetting(userId, setting, value);
         bot.info("Setting " + setting.getName() + " set to *" + setting.getValueAsString(value) + "*");
     }
 

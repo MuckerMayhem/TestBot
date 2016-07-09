@@ -71,6 +71,6 @@ public abstract class Command{
      * @return
      */
     public boolean checkSetting(String userId, BooleanSetting setting){
-        return (Boolean) this.commandHandler.bot.getSettingsHandler().getUserSetting(userId, setting);
+        return (Boolean) this.commandHandler.bot.getUserSettingsHandler().getUserSetting(userId, setting);
     }
 }

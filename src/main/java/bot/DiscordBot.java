@@ -6,7 +6,8 @@ import bot.function.*;
 import bot.game.GameBot;
 import bot.listeners.OnJoinListener;
 import bot.listeners.OnLeaveListener;
-import bot.settings.SettingsHandler;
+import bot.settings.SingleSettingsHandler;
+import bot.settings.UserSettingsHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -30,14 +31,14 @@ public class DiscordBot{
     private static final long MESSAGE_TIME_LONG  = 6000L;
 
     private static final File SETTINGS_FILE = new File(getDataFolder() + File.separator + "settings.json");
-    private static final SettingsHandler GLOBAL_SETTINGS = new SettingsHandler(SETTINGS_FILE, true);
+    private static final SingleSettingsHandler GLOBAL_SETTINGS = new SingleSettingsHandler(SETTINGS_FILE);
 
     public MessageReceivedEvent lastEvent;
 
     private IDiscordClient client;
 
     private CommandHandler commandHandler;
-    private SettingsHandler settingsHandler;
+    private UserSettingsHandler settingsHandler;
 
     private ArrayList<BotFunction> functions = new ArrayList<BotFunction>();
 
@@ -77,7 +78,7 @@ public class DiscordBot{
         instance.getClient().getDispatcher().registerListener(new Mitsuku());
 
         instance.commandHandler = new CommandHandler(instance);
-        instance.settingsHandler = new SettingsHandler();
+        instance.settingsHandler = new UserSettingsHandler();
 
         //Admin commands
         instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
@@ -121,7 +122,7 @@ public class DiscordBot{
             inputBot.getCommandHandler().registerCommand("clear", "Clear messages", CommandClear.class, Permissions.MANAGE_SERVER);
         }, "InputBot");
         input.run();
-
+        
         GLOBAL_SETTINGS.loadSettings();
     }
 
@@ -138,7 +139,7 @@ public class DiscordBot{
         return new File(System.getProperty("user.dir") + File.separator + "data");
     }
 
-    public static SettingsHandler getGlobalSettingsHandler(){
+    public static SingleSettingsHandler getGlobalSettingsHandler(){
         return GLOBAL_SETTINGS;
     }
 
@@ -150,7 +151,7 @@ public class DiscordBot{
         return this.commandHandler;
     }
 
-    public SettingsHandler getSettingsHandler(){
+    public UserSettingsHandler getUserSettingsHandler(){
         return this.settingsHandler;
     }
 
@@ -343,7 +344,7 @@ public class DiscordBot{
         this.commandHandler = commandHandler;
     }
 
-    public void setSettingsHandler(SettingsHandler settingsHandler){
+    public void setSettingsHandler(UserSettingsHandler settingsHandler){
         this.settingsHandler = settingsHandler;
     }
 

@@ -25,7 +25,7 @@ public class CommandClear extends Command{
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        String[] whitelist = (String[]) DiscordBot.getGlobalSettingsHandler().getUserSetting(null, WHITELIST_CLEAR);
+        String[] whitelist = (String[]) DiscordBot.getGlobalSettingsHandler().getSetting(WHITELIST_CLEAR);
 
         if(!Arrays.asList(whitelist).contains(message.getChannel().getName())){
             bot.say(message.getChannel(), "You can't do this here!", 3000L);

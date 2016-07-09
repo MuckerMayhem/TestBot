@@ -11,7 +11,7 @@ public class FunctionEatFood extends BotFunction{
 
     @Override
     public void init(){
-        this.bot.getSettingsHandler().registerNewSetting(ALLOW_EMOJI_EATING);
+        this.bot.getUserSettingsHandler().registerNewSetting(ALLOW_EMOJI_EATING);
     }
 
     @Override
