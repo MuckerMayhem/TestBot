@@ -1,7 +1,7 @@
 package bot.commands;
 
 import bot.DiscordBot;
-import bot.settings.SettingsHandler.Setting;
+import bot.settings.BooleanSetting;
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,10 +23,15 @@ public class CommandWaifu extends Command{
 
     private static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "waifus.json");
 
+    //Setting for this command
+    public static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", "Change whether you see when someone adds/removes you to your waifu list", true);
+
     private static HashMap<String, ArrayList<String>> waifus = new HashMap<>();
 
     @Override
     protected void onRegister(){
+        this.commandHandler.bot.getSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
+
         try{
             loadWaifus(DEFAULT_FILE);
         }
@@ -84,7 +89,7 @@ public class CommandWaifu extends Command{
                 addWaifu(userId, user.getID());
                 bot.info("User '" + user.getName() + "' added to your waifu list");
 
-                if(checkSetting(user.getID(), Setting.SEE_WAIFU_NOTIFICATIONS)){
+                if(checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
                     bot.say(bot.getHome(), "Hey, " + user.mention() + "! " + message.getAuthor().getDisplayName(message.getGuild()) + " has added you to their waifu list!");
                 }
             }
@@ -101,7 +106,7 @@ public class CommandWaifu extends Command{
                 removeWaifu(userId, user.getID());
                 bot.info("User '" + user.getName() + "' removed from your waifu list");
 
-                if(checkSetting(user.getID(), Setting.SEE_WAIFU_NOTIFICATIONS)){
+                if(checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
                     bot.say(bot.getHome(), user.mention() + ", " + message.getAuthor().getDisplayName(message.getGuild()) + " has removed you from their waifu list! b-baka!");
                 }
             }

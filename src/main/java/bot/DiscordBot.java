@@ -81,6 +81,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
         instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
         instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.CHANGE_NICKNAME);
+        instance.commandHandler.registerCommand("showhelp", "Show the detailed description of a command", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
 
         //Utility commands
         instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
@@ -102,6 +103,7 @@ public class DiscordBot{
         instance.addFunction(new FunctionBreakMessages());
         instance.addFunction(new FunctionGetVideoTime());
 
+        instance.settingsHandler.loadSettings();//All settings should be registered by this time, and can now be loaded
 
         Thread game = new Thread(() -> {
             GameBot gameBot = new GameBot(client);

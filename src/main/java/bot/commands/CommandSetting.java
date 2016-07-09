@@ -1,8 +1,7 @@
 package bot.commands;
 
 import bot.DiscordBot;
-import bot.settings.Settings;
-import bot.settings.SettingsHandler.Setting;
+import bot.settings.Setting;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -32,7 +31,7 @@ public class CommandSetting extends Command{
         }
 
         if(args[0].equalsIgnoreCase("reset")){
-            bot.getSettingsHandler().setUserSettings(userId, Settings.DEFAULT);
+            bot.getSettingsHandler().resetUserSettings(userId);
             bot.info("Reset all your settings to their default values.");
             return;
         }
@@ -42,16 +41,21 @@ public class CommandSetting extends Command{
             return;
         }
 
-        if(!"truefalsedefault".contains(args[1].toLowerCase())) return;
-
-        for(Setting s : Setting.values()){
-            if(args[0].equalsIgnoreCase(s.getName())){
-                boolean value = args[1].equalsIgnoreCase("default") ? s.getDefault() : Boolean.parseBoolean(args[1]);
-                bot.getSettingsHandler().setUserSetting(userId, s, value);
-                bot.info("Setting " + s.getName() + " set to *" + value + "*");
-                return;
-            }
+        Setting setting = bot.getSettingsHandler().getSettingByName(args[0]);
+        if(setting == null){
+            bot.info("Invalid setting '" + args[0] + "'!");
+            return;
         }
+
+        Object value = setting.parse(args[1]);
+        if(value == null){
+            bot.info("Invalid value '" + args[1] + "'");
+            return;
+        }
+
+        bot.getSettingsHandler().setUserSetting(userId, setting, value);
+        bot.info("Setting " + setting.getName() + " set to *" + value + "*");
+        return;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class CommandSetting extends Command{
                 "Usage:\n" +
                 " " + this.getHandle() + " list\n" +
                 "  *List all settings and their current value*\n" +
-                " " + this.getHandle() + " <setting> <true/false>\n" +
+                " " + this.getHandle() + " <setting> <value>\n" +
                 "  *Change a setting*";
     }
 }

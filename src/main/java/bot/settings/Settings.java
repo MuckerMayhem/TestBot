@@ -1,58 +1,51 @@
 package bot.settings;
 
-import bot.settings.SettingsHandler.Setting;
+import java.util.HashMap;
+import java.util.Iterator;
 
-public class Settings{
+/**
+ * Represents a set of {@link bot.settings.Setting}s and their values
+ */
+public class Settings implements Iterable<Setting>{
 
-    public static final Settings DEFAULT = new Settings(false);
+    private static HashMap<SettingsHandler, Settings> defaults = new HashMap<>();
 
-    private boolean seeWelcomeNotifications;
-    private boolean seeWaifuNotifications;
-    private boolean allowEmojiEating;
-    private boolean allowWallBreaking;
+    private HashMap<Setting, Object> values = new HashMap<>();
 
     private boolean canModify;
 
     public Settings(){
-        this.seeWelcomeNotifications = true;
-        this.seeWaifuNotifications   = true;
-        this.allowEmojiEating        = true;
-        this.allowWallBreaking       = true;
-        this.canModify               = true;
+        this.canModify = true;
     }
 
-    private Settings(boolean canModify){
-        this();
+    public Settings(SettingsHandler handler){
+        for(Setting s : handler.getRegisteredSettings()){
+            values.put(s, s.getDefaultValue());
+        }
+
+        this.canModify = true;
+    }
+
+    private Settings(SettingsHandler handler, boolean canModify){
+        this(handler);
         this.canModify = canModify;
     }
 
-    public boolean get(Setting setting){
-        switch(setting){
-            case SEE_WELCOME_NOTIFICATIONS: return this.seeWelcomeNotifications;
-            case SEE_WAIFU_NOTIFICATIONS:   return this.seeWaifuNotifications;
-            case ALLOW_EMOJI_EATING:        return this.allowEmojiEating;
-            case ALLOW_WALL_BREAKING:       return this.allowWallBreaking;
-            default: return setting.getDefault();
-        }
+    public static Settings defaults(SettingsHandler handler){
+        if(defaults.containsKey(handler))
+            defaults.put(handler, new Settings(handler));
+
+        return defaults.get(handler);
     }
 
-    public void set(Setting setting, boolean value){
+    public Object get(Setting setting){
+        return values.getOrDefault(setting, setting.getDefaultValue());
+    }
+
+    public void set(Setting setting, Object value){
         if(!this.canModify) return;
 
-        switch(setting){
-            case SEE_WELCOME_NOTIFICATIONS:
-                this.seeWelcomeNotifications = value;
-                break;
-            case SEE_WAIFU_NOTIFICATIONS:
-                this.seeWaifuNotifications = value;
-                break;
-            case ALLOW_EMOJI_EATING:
-                this.allowEmojiEating = value;
-                break;
-            case ALLOW_WALL_BREAKING:
-                this.allowWallBreaking = value;
-                break;
-        }
+        values.put(setting, value);
     }
 
     @Override
@@ -60,22 +53,27 @@ public class Settings{
         StringBuilder builder = new StringBuilder("```");
 
         int longest = 0;
-        for(Setting s : Setting.values()){
+        for(Setting s : this.values.keySet()){
             if(s.getName().length() > longest) longest = s.getName().length();
         }
         longest += 3;
 
-        for(Setting s : Setting.values()){
-            builder.append(String.format("%-" + (get(s) ? longest : longest - 1) + "s", s.getName() + ":"))//lol
+        for(Setting s : this.values.keySet()){
+            builder.append(String.format("%-" + longest + "s", s.getName() + ":"))//lol
                     .append(get(s))
                     .append(" | ")
                     .append(s.getDescription())
                     .append(" (Default: ")
-                    .append(s.getDefault())
+                    .append(s.getDefaultValue())
                     .append(")")
                     .append("\n");
         }
 
         return builder.append("```").toString();
+    }
+
+    @Override
+    public Iterator<Setting> iterator(){
+        return this.values.keySet().iterator();
     }
 }

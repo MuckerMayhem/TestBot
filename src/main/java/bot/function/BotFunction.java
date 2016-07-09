@@ -1,7 +1,9 @@
 package bot.function;
 
 import bot.DiscordBot;
-import bot.settings.SettingsHandler.Setting;
+import bot.settings.BooleanSetting;
+import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IMessage;
 
 public abstract class BotFunction{
 
@@ -30,7 +32,21 @@ public abstract class BotFunction{
         return this.active;
     }
 
-    public boolean checkSetting(String userId, Setting setting){
-        return this.bot.getSettingsHandler().getUserSetting(userId, setting);
+    /**
+     * Check the value of a {@link bot.settings.BooleanSetting}'s value
+     * @param userId User to get value of setting for
+     * @param setting Setting to check
+     * @return
+     */
+    public boolean checkSetting(String userId, BooleanSetting setting){
+        return (Boolean) this.bot.getSettingsHandler().getUserSetting(userId, setting);
+    }
+
+    public boolean checkSetting(MessageReceivedEvent event, BooleanSetting setting){
+        return checkSetting(event.getMessage().getAuthor().getID(), setting);
+    }
+
+    public boolean checkSetting(IMessage message, BooleanSetting setting){
+        return checkSetting(message.getAuthor().getID(), setting);
     }
 }

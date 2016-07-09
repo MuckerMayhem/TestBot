@@ -1,7 +1,7 @@
 package bot.commands;
 
 import bot.DiscordBot;
-import bot.settings.SettingsHandler.Setting;
+import bot.settings.BooleanSetting;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
@@ -64,7 +64,13 @@ public abstract class Command{
         this.debug = debug;
     }
 
-    public boolean checkSetting(String userId, Setting setting){
-        return this.commandHandler.bot.getSettingsHandler().getUserSetting(userId, setting);
+    /**
+     * Check the value of a {@link bot.settings.BooleanSetting}'s value
+     * @param userId User to get value of setting for
+     * @param setting Setting to check
+     * @return
+     */
+    public boolean checkSetting(String userId, BooleanSetting setting){
+        return (Boolean) this.commandHandler.bot.getSettingsHandler().getUserSetting(userId, setting);
     }
 }

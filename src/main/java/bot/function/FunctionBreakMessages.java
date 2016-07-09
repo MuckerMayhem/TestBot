@@ -1,7 +1,7 @@
 package bot.function;
 
 import bot.DiscordBot;
-import bot.settings.SettingsHandler.Setting;
+import bot.settings.BooleanSetting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -23,6 +23,9 @@ public class FunctionBreakMessages extends BotFunction{
 
     private static final Random RANDOM = new Random();
 
+    //Setting for this function
+    private static final BooleanSetting ALLOW_WALL_BREAKING = new BooleanSetting("break_walls", "Change whether the bot can break up your walls of text", true);
+
     private static MessageReceivedEvent lastEvent = null;
     private static HashMap<IChannel, String> messages = new HashMap<>();
     private static HashMap<IChannel, Integer> counts = new HashMap<>();
@@ -32,7 +35,7 @@ public class FunctionBreakMessages extends BotFunction{
 
     @Override
     public void init(){
-
+        this.bot.getSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class FunctionBreakMessages extends BotFunction{
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event){
-        if(!checkSetting(event.getMessage().getAuthor().getID(), Setting.ALLOW_WALL_BREAKING)) return;
+        if(!checkSetting(event, ALLOW_WALL_BREAKING)) return;
 
         IChannel channel = event.getMessage().getChannel();
 

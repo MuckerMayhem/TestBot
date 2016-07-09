@@ -39,6 +39,13 @@ public class CommandHandler{
         return global_commands;
     }
 
+    public static Command getCommandByName(String name){
+        for(Command c : global_commands){
+            if(c.getName().equalsIgnoreCase(name)) return c;
+        }
+        return null;
+    }
+
     public boolean registerCommand(boolean debug, String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
         for(Command c : this.commands){
             if(c.name.equalsIgnoreCase(name)){
