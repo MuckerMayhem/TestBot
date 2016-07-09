@@ -154,7 +154,7 @@ public class SettingsHandler{
             for(Setting s : this.settings){
                 JsonObject setting = new JsonObject();
                 setting.addProperty("name", s.getName());
-                setting.addProperty("value", userSettings.get(id).get(s).toString());
+                setting.addProperty("value", s.getValueAsString(userSettings.get(id).get(s)));
                 settings.add(setting);
             }
             users.add(user);
@@ -192,6 +192,7 @@ public class SettingsHandler{
                     continue;
 
                 Settings settings = new Settings();
+                userSettings.put(userId, settings);
 
                 for(JsonElement e1 : settingsArray.getAsJsonArray()){
                     if(!e1.isJsonObject())
@@ -203,10 +204,9 @@ public class SettingsHandler{
                     settings.set(setting, setting.parse(e1.getAsJsonObject().get("value").getAsString()));
                 }
                 //For any settings that are registered but were not found in the file, add them with the default value
-                this.settings.stream().filter(s -> !this.userSettings.containsValue(s)).forEach(s -> {
+                this.getRegisteredSettings().stream().filter(s -> !this.userSettings.get(userId).hasValueFor(s)).forEach(s -> {
                     settings.set(s, s.getDefaultValue());
                 });
-                userSettings.put(userId, settings);
             }
         }
         else file.createNewFile();

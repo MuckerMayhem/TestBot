@@ -45,6 +45,11 @@ public class GameScramble extends Game{
     }
 
     @Override
+    public boolean isMultiplayer(){
+        return false;
+    }
+
+    @Override
     public boolean isReplayable(){
         return true;
     }

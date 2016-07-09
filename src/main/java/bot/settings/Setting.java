@@ -24,6 +24,10 @@ public abstract class Setting{
         return this.description;
     }
 
+    public String getValueAsString(Object value){
+        return value.toString();
+    }
+
     @Override
     public String toString(){
         return this.name + ": " + this.description + " (Default: " + this.defaultValue + ")";

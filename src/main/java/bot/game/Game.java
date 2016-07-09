@@ -8,6 +8,14 @@ public abstract class Game{
         this.bot = bot;
     }
 
+    public abstract boolean isMultiplayer();
+
+    public abstract boolean isReplayable();
+
+    public abstract void play();
+
+    public abstract void quit();
+
     public GameBot getBot(){
         return this.bot;
     }
@@ -22,10 +30,4 @@ public abstract class Game{
         }
         while(input.toLowerCase().startsWith("y"));
     }
-
-    public abstract void play();
-
-    public abstract void quit();
-
-    public abstract boolean isReplayable();
 }

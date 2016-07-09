@@ -48,28 +48,55 @@ public class Settings implements Iterable<Setting>{
         values.put(setting, value);
     }
 
+    public boolean hasValueFor(Setting s){
+        return this.values.containsKey(s);
+    }
+
     @Override
     public String toString(){
+
+        int leftPadding = 0;
+        int rightPadding = 0;
+
+        for(Setting s : this){
+            int left = s.getName().length();
+            if(left > leftPadding) leftPadding = left;
+
+            int right = s.getValueAsString(get(s)).length();
+            if(right > rightPadding) rightPadding = right;
+        }
+
         StringBuilder builder = new StringBuilder("```");
 
-        int longest = 0;
-        for(Setting s : this.values.keySet()){
-            if(s.getName().length() > longest) longest = s.getName().length();
-        }
-        longest += 3;
+        for(Setting s : this){
+            String value = s.getValueAsString(get(s));
 
-        for(Setting s : this.values.keySet()){
-            builder.append(String.format("%-" + longest + "s", s.getName() + ":"))//lol
-                    .append(get(s))
+            builder.append(s.getName())
+                    .append(": ")
+                    .append(pad(value, leftPadding - s.getName().length(), rightPadding - value.length()))
                     .append(" | ")
                     .append(s.getDescription())
                     .append(" (Default: ")
-                    .append(s.getDefaultValue())
+                    .append(s.getValueAsString(s.getDefaultValue()))
                     .append(")")
                     .append("\n");
         }
 
         return builder.append("```").toString();
+    }
+
+    private static String pad(String string, int leftTimes, int rightTimes){
+        StringBuilder builder = new StringBuilder();
+
+        for(int i = 0;i < leftTimes;i++){
+            builder.append(" ");
+        }
+        builder.append(string);
+        for(int i = 0;i < rightTimes;i++){
+            builder.append(" ");
+        }
+
+        return builder.toString();
     }
 
     @Override

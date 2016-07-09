@@ -26,7 +26,7 @@ public class CommandSetting extends Command{
 
         if(args[0].equalsIgnoreCase("list")){
             bot.respond("Here is the list of settings you can change:\n" +
-                        bot.getSettingsHandler().getUserSettings(userId), 10000L);
+                        bot.getSettingsHandler().getUserSettings(userId), 5000L * bot.getSettingsHandler().getRegisteredSettings().size());
             return;
         }
 
@@ -54,7 +54,7 @@ public class CommandSetting extends Command{
         }
 
         bot.getSettingsHandler().setUserSetting(userId, setting, value);
-        bot.info("Setting " + setting.getName() + " set to *" + value + "*");
+        bot.info("Setting " + setting.getName() + " set to *" + setting.getValueAsString(value) + "*");
         return;
     }
 
