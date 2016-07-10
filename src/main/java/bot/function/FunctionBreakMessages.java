@@ -35,7 +35,7 @@ public class FunctionBreakMessages extends BotFunction{
 
     @Override
     public void init(){
-        this.bot.getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
+        getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
     }
 
     @Override

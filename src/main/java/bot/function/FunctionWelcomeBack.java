@@ -13,7 +13,7 @@ public class FunctionWelcomeBack extends BotFunction{
 
     @Override
     public void init(){
-        this.bot.getUserSettingsHandler().registerNewSetting(SEE_WELCOME_NOTIFICATIONS);
+        getUserSettingsHandler().registerNewSetting(SEE_WELCOME_NOTIFICATIONS);
     }
 
     @Override

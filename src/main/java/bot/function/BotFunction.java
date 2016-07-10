@@ -2,6 +2,8 @@ package bot.function;
 
 import bot.DiscordBot;
 import bot.settings.BooleanSetting;
+import bot.settings.SingleSettingsHandler;
+import bot.settings.UserSettingsHandler;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -10,11 +12,19 @@ public abstract class BotFunction{
     public DiscordBot bot;
     private boolean active;
 
+    public static SingleSettingsHandler getGlobalSettingsHandler(){
+        return DiscordBot.getGlobalSettingsHandler();
+    }
+
     public abstract void init();
 
     protected abstract void onActivate();
 
     protected abstract void onDeactivate();
+
+    public UserSettingsHandler getUserSettingsHandler(){
+        return this.bot.getUserSettingsHandler();
+    }
 
     public void activate(){
         this.active = true;

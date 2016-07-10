@@ -2,6 +2,8 @@ package bot.commands;
 
 import bot.DiscordBot;
 import bot.settings.BooleanSetting;
+import bot.settings.SingleSettingsHandler;
+import bot.settings.UserSettingsHandler;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.DiscordException;
@@ -24,9 +26,17 @@ public abstract class Command{
 
     private boolean debug;
 
+    public static SingleSettingsHandler getGlobalSettingsHandler(){
+        return DiscordBot.getGlobalSettingsHandler();
+    }
+
     protected abstract void onRegister();
 
     protected abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException;
+
+    public UserSettingsHandler getUserSettingsHandler(){
+        return this.commandHandler.bot.getUserSettingsHandler();
+    }
 
     public Permissions getRequiredPermissions(){
         return this.permissions;

@@ -92,6 +92,7 @@ public class DiscordBot{
         instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
         instance.commandHandler.registerCommand("setting", "Change user settings", CommandSetting.class, Permissions.SEND_MESSAGES);
+        instance.commandHandler.registerCommand("rabbit", "Show your rabb.it room", CommandRabbit.class, Permissions.SEND_MESSAGES);
 
         //Fun commands
         instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
@@ -122,7 +123,7 @@ public class DiscordBot{
             inputBot.getCommandHandler().registerCommand("clear", "Clear messages", CommandClear.class, Permissions.MANAGE_SERVER);
         }, "InputBot");
         input.run();
-        
+
         GLOBAL_SETTINGS.loadSettings();
     }
 

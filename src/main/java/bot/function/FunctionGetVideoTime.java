@@ -1,6 +1,5 @@
 package bot.function;
 
-import bot.DiscordBot;
 import bot.settings.ArraySetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -20,7 +19,7 @@ public class FunctionGetVideoTime extends BotFunction{
 
     @Override
     public void init(){
-        DiscordBot.getGlobalSettingsHandler().registerNewSetting(BLACKLIST_VIDEOINFO);
+        getGlobalSettingsHandler().registerNewSetting(BLACKLIST_VIDEOINFO);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class FunctionGetVideoTime extends BotFunction{
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event) throws IOException, RateLimitException, DiscordException, MissingPermissionsException{
-        for(String s : (String[]) DiscordBot.getGlobalSettingsHandler().getSetting(BLACKLIST_VIDEOINFO)){
+        for(String s : (String[]) getGlobalSettingsHandler().getSetting(BLACKLIST_VIDEOINFO)){
             if(event.getMessage().getChannel().getName().equals(s)) return;
         }
 

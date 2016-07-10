@@ -145,6 +145,44 @@ public class CommandHandler{
             args = content.substring(content.indexOf(' ') + 1).split(" ");
         }
 
+        int length = 0;
+        boolean count = true;
+        for(String s : args){
+            if(s.startsWith("\"") && !s.endsWith("\"")){
+                count = false;
+            }
+            else if(s.endsWith("\"") && !s.startsWith("\"")){
+                count = true;
+                length++;
+            }
+            else if(count) length++;
+        }
+
+        String[] newArgs = new String[length];
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+        boolean quotes = false;
+        for(String s : args){
+            if(s.startsWith("\"") && !s.endsWith("\"")){
+                builder.append(s.substring(1, s.length()));
+                quotes = true;
+            }
+            else if(s.endsWith("\"") && !s.startsWith("\"")){
+                newArgs[index] = builder.append(" ").append(s.substring(0, s.length() - 1)).toString();
+                index++;
+                builder.setLength(0);
+                quotes = false;
+            }
+            else if(quotes){
+                builder.append(" ").append(s);
+            }
+            else{
+                newArgs[index] = s.replaceAll("\"", "");
+                index++;
+            }
+        }
+        args = newArgs;
+
         boolean keep = false;
 
         for(Command c : commands){
