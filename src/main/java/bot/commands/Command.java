@@ -2,6 +2,7 @@ package bot.commands;
 
 import bot.DiscordBot;
 import bot.settings.BooleanSetting;
+import bot.settings.Setting;
 import bot.settings.SingleSettingsHandler;
 import bot.settings.UserSettingsHandler;
 import sx.blah.discord.handle.obj.IMessage;
@@ -33,10 +34,6 @@ public abstract class Command{
     protected abstract void onRegister();
 
     protected abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException;
-
-    public UserSettingsHandler getUserSettingsHandler(){
-        return this.commandHandler.bot.getUserSettingsHandler();
-    }
 
     public Permissions getRequiredPermissions(){
         return this.permissions;
@@ -74,6 +71,14 @@ public abstract class Command{
         this.debug = debug;
     }
 
+    public UserSettingsHandler getUserSettingsHandler(){
+        return this.commandHandler.bot.getUserSettingsHandler();
+    }
+
+    public Object getUserSetting(String userId, Setting setting){
+        return getUserSettingsHandler().getUserSetting(userId, setting);
+    }
+
     /**
      * Check the value of a {@link bot.settings.BooleanSetting}'s value
      * @param userId User to get value of setting for
@@ -81,6 +86,6 @@ public abstract class Command{
      * @return
      */
     public boolean checkSetting(String userId, BooleanSetting setting){
-        return (Boolean) this.commandHandler.bot.getUserSettingsHandler().getUserSetting(userId, setting);
+        return (Boolean) getUserSetting(userId, setting);
     }
 }

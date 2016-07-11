@@ -9,6 +9,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
+import util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,12 +119,6 @@ public class CommandHandler{
         return commandPrefix;
     }
 
-    public void executeCommand(String name, String[] args){
-        for(Command c : commands){
-
-        }
-    }
-
     /**
      * Sets the prefix used to execute commands. Defaults to "!"
      * @param newPrefix - New prefix to use
@@ -142,48 +137,8 @@ public class CommandHandler{
         String command = content.split(" ")[0].substring(1);
         String[] args = EMPTY;
         if(content.contains(" ")){
-            args = content.substring(content.indexOf(' ') + 1).split(" ");
+            args = Util.parseQuotes(content.substring(content.indexOf(' ') + 1).split(" "));
         }
-
-        int length = 0;
-        boolean count = true;
-        for(String s : args){
-            if(s.startsWith("\"") && !s.endsWith("\"")){
-                count = false;
-            }
-            else if(s.endsWith("\"") && !s.startsWith("\"")){
-                count = true;
-                length++;
-            }
-            else if(count) length++;
-        }
-
-        String[] newArgs = new String[length];
-        StringBuilder builder = new StringBuilder();
-        int index = 0;
-        boolean quotes = false;
-        for(String s : args){
-            if(s.startsWith("\"") && !s.endsWith("\"")){
-                builder.append(s.substring(1, s.length()));
-                quotes = true;
-            }
-            else if(s.endsWith("\"") && !s.startsWith("\"")){
-                newArgs[index] = builder.append(" ").append(s.substring(0, s.length() - 1)).toString();
-                index++;
-                builder.setLength(0);
-                quotes = false;
-            }
-            else if(quotes){
-                builder.append(" ").append(s);
-            }
-            else{
-                newArgs[index] = s.replaceAll("\"", "");
-                index++;
-            }
-        }
-        args = newArgs;
-
-        boolean keep = false;
 
         for(Command c : commands){
             boolean alias = false;

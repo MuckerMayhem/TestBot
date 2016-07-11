@@ -20,12 +20,12 @@ public class CommandRabbit extends Command{
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
-        String rabbit = (String) getUserSettingsHandler().getSetting(message.getAuthor().getID(), RABBIT_NAME);
+        String rabbit = (String) getUserSetting(message.getAuthor().getID(), RABBIT_NAME);
         if(rabbit.isEmpty()){
             bot.info("You do not have a rabb.it room set. Use the settings command to set one.", true);
             return;
         }
 
-        bot.respond("http://rabb.it/" + rabbit);
+        bot.respond("http://rabb.it/" + rabbit + (args.length > 0 ? " — " + String.join(" ", args) : ""));
     }
 }

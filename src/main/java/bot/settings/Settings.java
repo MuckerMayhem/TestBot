@@ -99,6 +99,14 @@ public class Settings implements Iterable<Setting>{
         return builder.toString();
     }
 
+    private static String formatForType(Setting setting, String value){
+        if(setting instanceof StringSetting)
+            return '\'' + value + '\'';
+        else if(setting instanceof ArraySetting)
+            return '[' + String.join(", ", value.split(",")) + ']';
+        else return value;
+    }
+
     @Override
     public Iterator<Setting> iterator(){
         return this.values.keySet().iterator();

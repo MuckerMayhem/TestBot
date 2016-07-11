@@ -306,10 +306,6 @@ public class DiscordBot{
         respond(message, MESSAGE_TIME_SHORT);
     }
 
-    public void executeCommand(String name, String[] args){
-        getCommandHandler().executeCommand(name, args);
-    }
-
     /**
      * Sets username of the client attached to this bot.</br>
      * This affects all bot instances

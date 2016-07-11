@@ -2,6 +2,7 @@ package bot.function;
 
 import bot.DiscordBot;
 import bot.settings.BooleanSetting;
+import bot.settings.Setting;
 import bot.settings.SingleSettingsHandler;
 import bot.settings.UserSettingsHandler;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -22,10 +23,6 @@ public abstract class BotFunction{
 
     protected abstract void onDeactivate();
 
-    public UserSettingsHandler getUserSettingsHandler(){
-        return this.bot.getUserSettingsHandler();
-    }
-
     public void activate(){
         this.active = true;
         this.bot.getClient().getDispatcher().registerListener(this);
@@ -42,6 +39,14 @@ public abstract class BotFunction{
         return this.active;
     }
 
+    public UserSettingsHandler getUserSettingsHandler(){
+        return this.bot.getUserSettingsHandler();
+    }
+
+    public Object getUserSetting(String userId, Setting setting){
+        return getUserSettingsHandler().getUserSetting(userId, setting);
+    }
+
     /**
      * Check the value of a {@link bot.settings.BooleanSetting}'s value
      * @param userId User to get value of setting for
@@ -49,7 +54,7 @@ public abstract class BotFunction{
      * @return
      */
     public boolean checkSetting(String userId, BooleanSetting setting){
-        return (Boolean) this.bot.getUserSettingsHandler().getUserSetting(userId, setting);
+        return (Boolean) getUserSetting(userId, setting);
     }
 
     public boolean checkSetting(MessageReceivedEvent event, BooleanSetting setting){
