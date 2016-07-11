@@ -13,6 +13,7 @@ import util.DiscordUtil;
 import java.io.IOException;
 
 public class CommandSetting extends Command{
+
     @Override
     protected void onRegister(){
 

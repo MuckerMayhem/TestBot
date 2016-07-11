@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommandPrune extends Command{
+
     @Override
     protected void onRegister(){
 

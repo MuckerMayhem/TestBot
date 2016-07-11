@@ -7,6 +7,7 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 public class CommandGoOffline extends Command{
+
     @Override
     protected void onRegister(){
 
