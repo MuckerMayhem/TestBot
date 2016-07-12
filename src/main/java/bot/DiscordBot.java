@@ -40,7 +40,7 @@ public class DiscordBot{
     private CommandHandler commandHandler;
     private UserSettingsHandler settingsHandler;
 
-    private ArrayList<BotFunction> functions = new ArrayList<BotFunction>();
+    private ArrayList<BotFunction> functions = new ArrayList<>();
 
     private String home;
 
@@ -388,5 +388,3 @@ public class DiscordBot{
     }
     */
 }
-
-

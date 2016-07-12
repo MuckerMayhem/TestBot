@@ -1,7 +1,9 @@
 # TestBot
 
 A now somewhat but not really sooper dooper bot.  
-This bot is currently a private bot designed specifically for one server, but this may change in the future.
+This bot is currently a private bot designed specifically for one server, but this may change in the future.  
+
+Need more information? Visit the [wiki](https://github.com/ColeTheKing/TestBot/wiki)  
 
 ## Current commands
 
@@ -13,9 +15,10 @@ This bot is currently a private bot designed specifically for one server, but th
 !leave - Disconnects the bot from its voice channel  
 !meme - le dank maymay XDDD  
 !prune - Prune messages matching a specific phrase  
+!rabbit - Quickly link your rabb.it room  
 !roll - Roll dice or choose a random user  
 !setting - Change user settings  
-!sound - Play a soung  
+!sound - Play a song  
 !test - Test command  
 !type - Make the bot type something  
 !waifu - Manage your waifus! So kawaii! (kill me)  
@@ -28,7 +31,7 @@ This bot is currently a private bot designed specifically for one server, but th
 **Play a game, alone or with friends.** *(note: no multiplayer games actually added yet)*  
 **Add waifus** and annoy your friends by how much of a weeaboo you are!*  
 **Trigger everyone's PTSD** with a special announcement every day at 12:00!  
-**Have your food eaten** by a bot with a never-ending stomach!  
+**Have your food eaten** by a bot with a never-ending stomach!*  
 **Be welcomed back** every single time you return from the AFK channel!*  
 
 <sup>* = configurable</sup>
@@ -71,3 +74,6 @@ This bot is currently a private bot designed specifically for one server, but th
 * yerawizard
 
 As for what they do, that's to come when it's not ~~11:30 PM~~ 4:15 AM and I'm not lazy.
+
+## More Information
+See the [wiki](https://github.com/ColeTheKing/TestBot/wiki) for more information
