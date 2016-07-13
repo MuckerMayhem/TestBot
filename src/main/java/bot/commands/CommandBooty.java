@@ -17,7 +17,17 @@ public class CommandBooty extends Command{
     private static String[] theBootySlow = {"͡o", "͜ʖ", "͡o)"};
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 
@@ -36,6 +46,6 @@ public class CommandBooty extends Command{
     @Override
     public String getDetailedDescription(){
         return "Acquires the booty\n" +
-                "Usage: " + this.commandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
+                "Usage: " + CommandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
     }
 }

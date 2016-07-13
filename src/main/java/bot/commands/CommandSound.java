@@ -14,11 +14,9 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 public class CommandSound extends Command
 {
@@ -59,7 +57,17 @@ public class CommandSound extends Command
     }
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 
@@ -134,6 +142,7 @@ public class CommandSound extends Command
         }
     }
 
+    /*
     @Override
     public String getDetailedDescription(){
         return "Plays a sound\n" +
@@ -147,6 +156,7 @@ public class CommandSound extends Command
                         .sorted()
                         .collect(Collectors.toList())) + "```";
     }
+    */
 
     private static long getDuration(Sound sound){
         AudioFileFormat format;

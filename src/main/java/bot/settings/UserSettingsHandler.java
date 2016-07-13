@@ -13,10 +13,6 @@ public class UserSettingsHandler extends SettingsHandler{
 
     protected HashMap<String, Settings> userSettings = new HashMap<>();
 
-    public UserSettingsHandler(){
-        super();
-    }
-
     public UserSettingsHandler(File file){
         super(file);
     }

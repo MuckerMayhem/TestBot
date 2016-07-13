@@ -19,13 +19,23 @@ public class CommandClear extends Command{
     private static final ArraySetting WHITELIST_CLEAR = new ArraySetting("clear_whitelist", "List of channels the clear command can be used in", ALLOWED);
 
     @Override
-    protected void onRegister(){
-        getGlobalSettingsHandler().registerNewSetting(WHITELIST_CLEAR);
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+        bot.getServerSettingsHandler().registerNewSetting(WHITELIST_CLEAR);
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
+
     }
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        String[] whitelist = (String[]) getGlobalSettingsHandler().getSetting(WHITELIST_CLEAR);
+        String[] whitelist = (String[]) bot.getServerSettingsHandler().getSetting(WHITELIST_CLEAR);
 
         if(!Arrays.asList(whitelist).contains(message.getChannel().getName())){
             bot.say(message.getChannel(), "You can't do this here!", 3000L);

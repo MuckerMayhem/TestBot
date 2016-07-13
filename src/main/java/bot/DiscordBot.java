@@ -1,68 +1,115 @@
 package bot;
 
-import bot.chatter.Mitsuku;
 import bot.commands.*;
 import bot.function.*;
-import bot.game.GameBot;
-import bot.listeners.OnJoinListener;
-import bot.listeners.OnLeaveListener;
+import bot.locale.Locale;
+import bot.locale.LocaleHandler;
+import bot.settings.BooleanSetting;
+import bot.settings.Setting;
 import bot.settings.SingleSettingsHandler;
 import bot.settings.UserSettingsHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.*;
+import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MessageBuilder;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
+import util.DiscordUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.IOException;
+import java.util.*;
+
+import static bot.commands.CommandHandler.registerCommand;
+import static bot.function.BotFunction.registerFunction;
 
 public class DiscordBot{
 
-    public static DiscordBot instance;//Main instance of the bot
+    private static UserSettingsHandler userSettingsHandler = new UserSettingsHandler(new File(getGlobalDataFolder() + File.separator + "usersettings.json"));
+
+    //COMMANDS
+    //Admin commands
+    public static final Command COMMAND_PRUNE = registerCommand("prune", CommandPrune.class, Permissions.MANAGE_MESSAGES);
+    public static final Command COMMAND_LEAVE = registerCommand("leave", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
+    public static final Command COMMAND_TYPE = registerCommand("type", CommandType.class, Permissions.CHANGE_NICKNAME);
+    public static final Command COMMAND_SHOWHELP = registerCommand("showhelp", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
+
+    //Utility commands
+    public static final Command COMMAND_HELP = registerCommand("help", CommandHelp.class, Permissions.SEND_MESSAGES);
+    public static final Command COMMAND_TEST = registerCommand("test", CommandTest.class, Permissions.SEND_MESSAGES);
+    public static final Command COMMAND_SETTING = registerCommand("setting", CommandSetting.class, Permissions.SEND_MESSAGES);
+    public static final Command COMMAND_RABBIT = registerCommand("rabbit", CommandRabbit.class, Permissions.SEND_MESSAGES);
+
+    //Fun commands
+    public static final Command COMMAND_MEME = registerCommand("meme", CommandMeme.class, Permissions.SEND_MESSAGES);
+    public static final Command COMMAND_ROLL = registerCommand("roll", CommandDiceRoll.class, Permissions.SEND_MESSAGES);
+    public static final Command COMMAND_SOUND = registerCommand("sound", CommandSound.class, Permissions.VOICE_SPEAK);
+    public static final Command COMMAND_BOOTY = registerCommand("(", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
+    public static final Command COMMAND_WAIFU = registerCommand("waifu", CommandWaifu.class, Permissions.SEND_MESSAGES);
+
+    //Game command
+    public static final Command COMMAND_GAME = registerCommand("game", CommandGame.class, Permissions.SEND_MESSAGES);
+
+    //Clear command
+    public static final Command COMMAND_CLEAR = registerCommand("clear", CommandClear.class, Permissions.MANAGE_SERVER);
+
+
+    //FUNCTIONS
+//    public static final BotFunction FUNCTION_HIGHNOON = registerFunction("highnoon", FunctionHighNoon.class);
+    public static final BotFunction FUNCTION_BREAKWALLS = registerFunction("breakwalls", FunctionBreakMessages.class);
+    public static final BotFunction FUNCTION_EAT = registerFunction("eat", FunctionEatFood.class);
+    public static final BotFunction FUNCTION_YTTIME = registerFunction("yttime", FunctionGetVideoTime.class);
+    public static final BotFunction FUNCTION_WELCOME = registerFunction("welcome", FunctionWelcomeBack.class);
+
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
 
-    private static final File SETTINGS_FILE = new File(getDataFolder() + File.separator + "settings.json");
-    private static final SingleSettingsHandler GLOBAL_SETTINGS = new SingleSettingsHandler(SETTINGS_FILE);
+    private static IDiscordClient client;
+    private static DiscordBot instance;
+    private static HashMap<IGuild, DiscordBot> instances = new HashMap<>();//All bot instances
 
     public MessageReceivedEvent lastEvent;
 
-    private IDiscordClient client;
+    private IGuild guild;
 
-    private CommandHandler commandHandler;
-    private UserSettingsHandler settingsHandler;
+    private SingleSettingsHandler serverSettingsHandler;
+    private LocaleHandler localeHandler;
 
+    private ArrayList<Command> commands = new ArrayList<>();
     private ArrayList<BotFunction> functions = new ArrayList<>();
 
     private String home;
 
-    /**
-     * Creates a new DiscordBot wrapper for an {@link sx.blah.discord.api.IDiscordClient}<br>
-     * @param client IDiscordClient holding login for the bot
-     */
-    public DiscordBot(IDiscordClient client){
-        this.client = client;
+    public DiscordBot() {}
+
+    public DiscordBot(IGuild guild){
+        this.guild = guild;
+        instances.put(guild, this);
+        init();
     }
 
     public static void main(String[] args) throws Exception{
-        if(!getDataFolder().exists()){
+        if(args.length == 0){
+            System.out.println("Please run again with correct arguments... (Missing token)");
+            System.exit(0);
+        }
+
+        if(!getGlobalDataFolder().exists()){
            System.out.println("Data folder not found. Creating directory...");
-            if(getDataFolder().mkdir())
+            if(getGlobalDataFolder().mkdir())
                 System.out.println("Done!");
         }
 
         IDiscordClient client;
         try{
             System.out.println("Client logging in...");
-            client = login(BotParameters.TOKEN);
+            client = login(args[0]);
         }
         catch(DiscordException e){
             System.err.print(e.getMessage());
@@ -71,60 +118,47 @@ public class DiscordBot{
 
         System.out.println("Client successfully logged in");
 
-        instance = new DiscordBot(client);
-        instance.getClient().getDispatcher().registerListener(instance);
-        instance.getClient().getDispatcher().registerListener(new OnLeaveListener());
-        instance.getClient().getDispatcher().registerListener(new OnJoinListener());
-        instance.getClient().getDispatcher().registerListener(new Mitsuku());
+        client.getDispatcher().registerListener(new EventListener());
+        client.getDispatcher().registerListener(new CommandHandler());
 
-        instance.commandHandler = new CommandHandler(instance);
-        instance.settingsHandler = new UserSettingsHandler();
+        instance = new DiscordBot();
 
-        //Admin commands
-        instance.commandHandler.registerCommand("prune", "Prunes messages matching the specified filter", CommandPrune.class, Permissions.MANAGE_MESSAGES);
-        instance.commandHandler.registerCommand("leave", "Leave command", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
-        instance.commandHandler.registerCommand("gooffline", "Logs out the bot.", CommandGoOffline.class, Permissions.MANAGE_SERVER);
-        instance.commandHandler.registerCommand("type", "Make the bot type a message", CommandType.class, Permissions.CHANGE_NICKNAME);
-        instance.commandHandler.registerCommand("showhelp", "Show the detailed description of a command", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
+        try{
+            userSettingsHandler.loadSettings();//All settings should be registered by this time, and can now be loaded
+        }
+        catch(IOException e){
+            getGuildlessInstance().reportException(e, "Failed to load user settings.");
+        }
+    }
 
-        //Utility commands
-        instance.commandHandler.registerCommand("help", "Show help", CommandHelp.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("test", "Test command", CommandTest.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("attitude", "Display bot attitude towards yourself", CommandAttitude.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("setting", "Change user settings", CommandSetting.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("rabbit", "Show your rabb.it room", CommandRabbit.class, Permissions.SEND_MESSAGES);
+    public void init(){
+        if(!getDataFolder().exists()){
+            System.out.println("Creating data folder for guild " + this.guild.getID() + "...");
+            if(getDataFolder().mkdir())
+                System.out.println("Done!");
+        }
 
-        //Fun commands
-        instance.commandHandler.registerCommand("meme", "meme", CommandMeme.class, Permissions.SEND_MESSAGES);
-        instance.commandHandler.registerCommand("roll", "Roll a random number or user", CommandDiceRoll.class, Permissions.SEND_MESSAGES, "diceroll", "random");
-        instance.commandHandler.registerCommand("sound", "Play sounds", CommandSound.class, Permissions.VOICE_SPEAK, "s");
-        instance.commandHandler.registerCommand("(", "( ͡° ͜ʖ ͡°)", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
-        instance.commandHandler.registerCommand("waifu", "Manage your waifu list", CommandWaifu.class, Permissions.SEND_MESSAGES);
+        this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
 
-        //Functions
-        instance.addFunction(new FunctionAnnounceNoon());
-        instance.addFunction(new FunctionEatFood());
-        instance.addFunction(new FunctionWelcomeBack());
-        instance.addFunction(new FunctionBreakMessages());
-        instance.addFunction(new FunctionGetVideoTime());
+        this.localeHandler = LocaleHandler.get(Locale.ENGLISH);
 
-        instance.settingsHandler.loadSettings();//All settings should be registered by this time, and can now be loaded
+        CommandHandler.getAllRegisteredCommands().forEach(this::addCommand);
+        BotFunction.getAllRegisteredFunctions().forEach(this::addFunction);
 
-        Thread game = new Thread(() -> {
-            GameBot gameBot = new GameBot(client);
-            gameBot.setCommandHandler(new CommandHandler(gameBot));
-            gameBot.getCommandHandler().registerCommand("game", "Play a game", CommandGame.class, Permissions.SEND_MESSAGES, "play");
-        }, "GameBot");
-        game.run();
+        try{
+            getServerSettingsHandler().loadSettings();
+        }
+        catch(IOException e){
+            reportException(e, "Failed to load global settings.");
+        }
+    }
 
-        Thread input = new Thread(() -> {
-            InputBot inputBot = new InputBot(client);
-            inputBot.setCommandHandler(new CommandHandler(inputBot));
-            inputBot.getCommandHandler().registerCommand("clear", "Clear messages", CommandClear.class, Permissions.MANAGE_SERVER);
-        }, "InputBot");
-        input.run();
+    public static DiscordBot getGuildlessInstance(){
+        return instance;
+    }
 
-        GLOBAL_SETTINGS.loadSettings();
+    public static DiscordBot getInstance(IGuild guild){
+        return instances.get(guild);
     }
 
     @Deprecated
@@ -136,63 +170,74 @@ public class DiscordBot{
         return new ClientBuilder().withToken(token).login();
     }
 
-    public static File getDataFolder(){
+    public static IDiscordClient getClient(){
+        return client;
+    }
+
+    public static File getGlobalDataFolder(){
         return new File(System.getProperty("user.dir") + File.separator + "data");
     }
 
-    public static SingleSettingsHandler getGlobalSettingsHandler(){
-        return GLOBAL_SETTINGS;
+    public static UserSettingsHandler getUserSettingsHandler(){
+        return userSettingsHandler;
     }
 
-    public IDiscordClient getClient(){
-        return this.client;
+    public Object getUserSetting(String userId, Setting setting){
+        return getUserSettingsHandler().getUserSetting(userId, setting);
     }
 
-    public CommandHandler getCommandHandler(){
-        return this.commandHandler;
+    public boolean checkSetting(String userId, BooleanSetting setting){
+        return (Boolean) getUserSetting(userId, setting);
     }
 
-    public UserSettingsHandler getUserSettingsHandler(){
-        return this.settingsHandler;
+    public File getDataFolder(){
+        return new File(getGlobalDataFolder() + File.separator + this.guild.getID());
+    }
+
+    public File getDataFile(String name){
+        return new File(getDataFolder() + File.separator + name);
+    }
+
+    public IGuild getGuild(){
+        return this.guild;
+    }
+
+    public LocaleHandler getLocaleHandler(){
+        return this.localeHandler;
+    }
+
+    public SingleSettingsHandler getServerSettingsHandler(){
+        return this.serverSettingsHandler;
+    }
+
+    public Locale getLocale(){
+        return getLocaleHandler().getLocale();
     }
 
     public String getUsername(){
-        return this.client.getOurUser().getName();
+        return client.getOurUser().getName();
     }
 
     public String getGame(){
-        if(this.client.getOurUser().getGame().isPresent()) return this.client.getOurUser().getGame().get();
+        if(client.getOurUser().getGame().isPresent())
+            return client.getOurUser().getGame().get();
+
         return null;
     }
 
     public IChannel getHome(){
-        for(IChannel c : getClient().getGuildByID(BotParameters.GUILD_ID).getChannels()){
-            if(c.getName().equals(BotParameters.HOME)) return c;
+        for(IChannel c : this.guild.getChannels()){
+            if(c.getName().equals(this.home)) return c;
         }
         return null;
     }
 
-    public ArrayList<BotFunction> getFunctions(){
+    public List<Command> getCommands(){
+        return this.commands;
+    }
+
+    public List<BotFunction> getFunctions(){
         return this.functions;
-    }
-
-    public void deleteMessage(IMessage message, Long delay){
-        TimerTask task = new TimerTask(){
-            @Override
-            public void run(){
-                try{
-                    message.delete();
-                }
-                catch(MissingPermissionsException | RateLimitException | DiscordException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        new Timer().schedule(task, delay);
-    }
-
-    public void deleteMessage(IMessage message){
-        deleteMessage(message, 0L);
     }
 
     public void type(IChannel channel, String message, Long typingTime){
@@ -224,7 +269,7 @@ public class DiscordBot{
             try{
                 IMessage botMessage = new MessageBuilder(getClient()).withChannel(channel).withContent(message).build();
                 if(time > 0)
-                    deleteMessage(botMessage, time);
+                    DiscordUtil.deleteMessage(botMessage, time);
                 return botMessage;
             }
             catch(RateLimitException e){
@@ -306,66 +351,35 @@ public class DiscordBot{
         respond(message, MESSAGE_TIME_SHORT);
     }
 
-    /**
-     * Sets username of the client attached to this bot.</br>
-     * This affects all bot instances
-     * @param username New username of the bot
-     */
-    public void setUsername(String username){
-        try{
-            this.client.changeUsername(username);
-        }
-        catch(DiscordException | RateLimitException e){
-            System.err.print(e.getMessage());
-        }
-    }
-
-    public void setAvatar(Image image){
-        try{
-            this.client.changeAvatar(image);
-        }
-        catch(DiscordException | RateLimitException e){
-            System.err.print(e.getMessage());
-        }
-    }
-
-    public void setGame(String game){
-        this.client.changeGameStatus(game);
-    }
-
     public void setHome(String home){
         this.home = home;
     }
 
-    public void setCommandHandler(CommandHandler commandHandler){
-        this.commandHandler = commandHandler;
+    public void addCommand(Command command){
+        this.commands.add(command);
+        command.onEnable(this);
     }
 
-    public void setSettingsHandler(UserSettingsHandler settingsHandler){
-        this.settingsHandler = settingsHandler;
+    public void removeCommand(Command command){
+        this.commands.add(command);
+        command.onDisable(this);
     }
 
     public void addFunction(BotFunction function){
         this.functions.add(function);
-        function.bot = this;
-        function.init();
+        function.onEnable(this);
     }
 
-    @EventSubscriber
-    public void onReady(ReadyEvent event){
-        setUsername(BotParameters.getName());
-        setAvatar(BotParameters.IMAGE);
-        setGame(BotParameters.GAME);
-        setHome(BotParameters.HOME);
+    public void removeFunction(BotFunction function){
+        this.functions.remove(function);
+        function.onDisable(this);
+    }
 
-        if(getHome() == null){
-            System.out.println("No text channel found for bot.");
-            System.out.println("Users will be unable to play games and some features will be unavailable");
-        }
-
-        System.out.println("Bot initialized.");
-
-        this.functions.forEach(BotFunction::activate);
+    public void reportException(Exception e, String message){
+        System.err.print(message + " | Details:\n" +
+                "Class name: " + e.getClass().getName() + "\n" +
+                "Message: " + e.getMessage() + "\n" +
+                "Guild ID: " + this.guild.getID());
     }
 
     /*Maybe used for logging later?

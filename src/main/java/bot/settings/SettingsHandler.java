@@ -1,14 +1,10 @@
 package bot.settings;
 
-import bot.DiscordBot;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class SettingsHandler{
-
-    public static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "usersettings.json");
 
     private static ArrayList<Setting> global_settings = new ArrayList<>();
 
@@ -17,10 +13,6 @@ public abstract class SettingsHandler{
 
     public SettingsHandler(File file){
         this.file = file;
-    }
-
-    public SettingsHandler(){
-        this(DEFAULT_FILE);
     }
 
     /**

@@ -15,7 +15,17 @@ import java.io.IOException;
 public class CommandSetting extends Command{
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 
@@ -31,19 +41,19 @@ public class CommandSetting extends Command{
         boolean serverAccess = DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), Permissions.MANAGE_SERVER);
         if(args[0].equalsIgnoreCase("list")){
             StringBuilder builder = new StringBuilder("Here is the list of settings you can change:\n" +
-                    bot.getUserSettingsHandler().getSettings(userId));
+                    DiscordBot.getUserSettingsHandler().getSettings(userId));
 
             if(serverAccess)
                 builder.append("In addition, you have access to the following global (server) settings:\n")
-                        .append(DiscordBot.getGlobalSettingsHandler().getSettings().toString());
+                        .append(bot.getServerSettingsHandler().getSettings().toString());
 
-            bot.respond(builder.toString(), 5000L * bot.getUserSettingsHandler().getRegisteredSettings().size());
+            bot.respond(builder.toString(), 5000L * DiscordBot.getUserSettingsHandler().getRegisteredSettings().size());
 
             return;
         }
 
         if(args[0].equalsIgnoreCase("reset")){
-            bot.getUserSettingsHandler().resetUserSettings(userId);
+            DiscordBot.getUserSettingsHandler().resetUserSettings(userId);
             bot.info("Reset all your settings to their default values.");
             return;
         }
@@ -53,14 +63,14 @@ public class CommandSetting extends Command{
             return;
         }
 
-        SettingsHandler handler = bot.getUserSettingsHandler();
+        SettingsHandler handler = DiscordBot.getUserSettingsHandler();
 
-        Setting serverSetting = DiscordBot.getGlobalSettingsHandler().getSettingByName(args[0]);
-        Setting setting = bot.getUserSettingsHandler().getSettingByName(args[0]);
+        Setting serverSetting = bot.getServerSettingsHandler().getSettingByName(args[0]);
+        Setting setting = DiscordBot.getUserSettingsHandler().getSettingByName(args[0]);
 
         if(serverAccess && serverSetting != null){
             setting = serverSetting;
-            handler = DiscordBot.getGlobalSettingsHandler();
+            handler = bot.getServerSettingsHandler();
         }
         else if(setting == null){
             bot.info("Invalid setting '" + args[0] + "'!");
@@ -77,6 +87,7 @@ public class CommandSetting extends Command{
         bot.info("Setting " + setting.getName() + " set to *" + setting.getValueAsString(value) + "*");
     }
 
+    /*
     @Override
     public String getDetailedDescription(){
         return "Change your personal settings\n" +
@@ -86,4 +97,5 @@ public class CommandSetting extends Command{
                 " " + this.getHandle() + " <setting> <value>\n" +
                 "  *Change a setting*";
     }
+    */
 }

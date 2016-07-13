@@ -8,7 +8,17 @@ import java.util.Arrays;
 public class CommandTest extends Command{
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 

@@ -1,5 +1,6 @@
 package bot.function;
 
+import bot.DiscordBot;
 import bot.settings.ArraySetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -13,28 +14,29 @@ import java.io.IOException;
 public class FunctionGetVideoTime extends BotFunction{
 
     private static final String[] IMPORTANT_REGIONS = {"US", "CA", "AU"};
-    private static final String[] BLACKLISTED_CHANNELS = {"music-bot", "rules"};
 
-    private static final ArraySetting BLACKLIST_VIDEOINFO = new ArraySetting("blacklist_videoinfo", "List of channels where the bot does not give YouTube info", BLACKLISTED_CHANNELS);
+    private static final ArraySetting SETTING_YTBLACKLIST = new ArraySetting("blacklist_videoinfo", "List of channels where the bot does not give YouTube info", new String[]{});
 
     @Override
-    public void init(){
-        getGlobalSettingsHandler().registerNewSetting(BLACKLIST_VIDEOINFO);
+    public void onRegister() {}
+
+    @Override
+    public void onEnable(DiscordBot bot){
+       bot.getServerSettingsHandler().registerNewSetting(SETTING_YTBLACKLIST);
     }
 
     @Override
-    protected void onActivate(){
+    public void onDisable(DiscordBot bot){
 
     }
 
-    @Override
-    protected void onDeactivate(){
-
-    }
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event) throws IOException, RateLimitException, DiscordException, MissingPermissionsException{
-        for(String s : (String[]) getGlobalSettingsHandler().getSetting(BLACKLIST_VIDEOINFO)){
+        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+        if(bot == null) return;
+
+        for(String s : (String[]) bot.getServerSettingsHandler().getSetting(SETTING_YTBLACKLIST)){
             if(event.getMessage().getChannel().getName().equals(s)) return;
         }
 

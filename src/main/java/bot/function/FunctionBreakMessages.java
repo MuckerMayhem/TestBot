@@ -34,12 +34,9 @@ public class FunctionBreakMessages extends BotFunction{
     private static String lastFact = "";
 
     @Override
-    public void init(){
-        getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
-    }
+    public void onRegister(){
+        DiscordBot.getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
 
-    @Override
-    protected void onActivate(){
         if(facts.isEmpty()){
             Document doc = null;
             try{
@@ -65,13 +62,18 @@ public class FunctionBreakMessages extends BotFunction{
     }
 
     @Override
-    protected void onDeactivate(){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event){
-        if(!checkSetting(event, ALLOW_WALL_BREAKING)) return;
+        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+        if(bot == null) return;
+
+
+        if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_WALL_BREAKING)) return;
 
         IChannel channel = event.getMessage().getChannel();
 
@@ -84,14 +86,14 @@ public class FunctionBreakMessages extends BotFunction{
             if(counts.get(channel) >= MAX_MESSAGES + RANDOM.nextInt(7) - 3){
                 try{
                     String fact = randomFact();
-                    DiscordBot.instance.say(event.getMessage().getChannel(), fact);
+                    DiscordBot.getGuildlessInstance().say(event.getMessage().getChannel(), fact);
                     if(fact.equalsIgnoreCase(lastFact)){
-                        DiscordBot.instance.type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
+                        DiscordBot.getGuildlessInstance().type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
                     }
                     lastFact = fact;
                 }
                 catch(IOException e){
-                    DiscordBot.instance.say(BREAKUP_MESSAGE);
+                    DiscordBot.getGuildlessInstance().say(BREAKUP_MESSAGE);
                 }
                 counts.put(channel, 0);
             }

@@ -21,28 +21,32 @@ import java.util.stream.Collectors;
 
 public class CommandWaifu extends Command{
 
-    private static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "waifus.json");
-
     //Setting for this command
-    public static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", "Change whether you see when someone adds/removes you to your waifu list", true);
+    private static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", "Change whether you see when someone adds/removes you to your waifu list", true);
 
     private static HashMap<String, ArrayList<String>> waifus = new HashMap<>();
 
     @Override
-    protected void onRegister(){
-        this.commandHandler.bot.getUserSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
+    public void onRegister(){
+        DiscordBot.getUserSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
+    }
 
+    @Override
+    public void onEnable(DiscordBot bot){
         try{
-            loadWaifus(DEFAULT_FILE);
+            loadWaifus(bot.getDataFile("waifus.json"));
         }
         catch(IOException e){
             e.printStackTrace();
         }
 
-        if(!hasAsWaifu("195313570127282176", "188803847458652162")){
-            addWaifu("195313570127282176", "188803847458652162");
-        }
+//        if(!hasAsWaifu(bot, DiscordBot.getClient().getOurUser().getID(), bot.getGuild().getOwnerID())){
+//            addWaifu(bot, DiscordBot.getClient().getOurUser().getID(), bot.getGuild().getOwnerID());
+//        }
     }
+
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
@@ -79,17 +83,17 @@ public class CommandWaifu extends Command{
             if(user == null){
                 bot.info("User not found!");
             }
-            else if(user == bot.getClient().getOurUser() && !userId.equals("188803847458652162")){
+            else if(user == DiscordBot.getClient().getOurUser() && !userId.equals("188803847458652162")){
                 bot.info("Silly thing! I can't be your waifu! Hehe \uD83D\uDE17");
             }
-            else if(hasAsWaifu(userId, user.getID())){
+            else if(hasAsWaifu(bot, userId, user.getID())){
                 bot.info("That person is already on your waifu list!");
             }
             else{
-                addWaifu(userId, user.getID());
+                addWaifu(bot, userId, user.getID());
                 bot.info("User '" + user.getName() + "' added to your waifu list");
 
-                if(checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
+                if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
                     bot.say(bot.getHome(), "Hey, " + user.mention() + "! " + message.getAuthor().getDisplayName(message.getGuild()) + " has added you to their waifu list!");
                 }
             }
@@ -99,20 +103,21 @@ public class CommandWaifu extends Command{
             if(user == null){
                 bot.info("User not found!");
             }
-            else if(!hasAsWaifu(userId, user.getID())){
+            else if(!hasAsWaifu(bot, userId, user.getID())){
                 bot.info("That person is not on your waifu list!");
             }
             else{
-                removeWaifu(userId, user.getID());
+                removeWaifu(bot, userId, user.getID());
                 bot.info("User '" + user.getName() + "' removed from your waifu list");
 
-                if(checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
+                if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
                     bot.say(bot.getHome(), user.mention() + ", " + message.getAuthor().getDisplayName(message.getGuild()) + " has removed you from their waifu list! b-baka!");
                 }
             }
         }
     }
 
+    /*
     @Override
     public String getDetailedDescription(){
         return "Manage your waifus!\n" +
@@ -124,6 +129,7 @@ public class CommandWaifu extends Command{
                 " " + this.getHandle() + " remove <user>\n" +
                 "  *Remove a user from your waifu list*";
     }
+    */
 
     private static void loadWaifus(File file) throws IOException{
         if(file.exists()){
@@ -165,7 +171,7 @@ public class CommandWaifu extends Command{
         FileUtils.writeStringToFile(file, gson.toJson(users));
     }
 
-    private boolean hasAsWaifu(String firstUserId, String secondUserId){
+    private boolean hasAsWaifu(DiscordBot bot, String firstUserId, String secondUserId){
         if(waifus.containsKey(firstUserId) && waifus.get(firstUserId) != null){
             return waifus.get(firstUserId).contains(secondUserId);
         }
@@ -173,28 +179,28 @@ public class CommandWaifu extends Command{
         return false;
     }
 
-    private boolean hasAsWaifu(IUser firstUser, IUser secondUser){
-        return hasAsWaifu(firstUser.getID(), secondUser.getID());
+    private boolean hasAsWaifu(DiscordBot bot, IUser firstUser, IUser secondUser){
+        return hasAsWaifu(bot, firstUser.getID(), secondUser.getID());
     }
 
-    private void addWaifu(String firstUserID, String secondUserId){
+    private void addWaifu(DiscordBot bot, String firstUserID, String secondUserId){
         waifus.putIfAbsent(firstUserID, new ArrayList<>());
         waifus.get(firstUserID).add(secondUserId);
 
         try{
-            saveWaifus(DEFAULT_FILE);
+            saveWaifus(bot.getDataFile("waifus.json"));
         }
         catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    private void removeWaifu(String firstUserId, String secondUserId){
+    private void removeWaifu(DiscordBot bot, String firstUserId, String secondUserId){
         waifus.putIfAbsent(firstUserId, new ArrayList<>());
         waifus.get(firstUserId).remove(secondUserId);
 
         try{
-            saveWaifus(DEFAULT_FILE);
+            saveWaifus(bot.getDataFile("waifus.json"));
         }
         catch(IOException e){
             e.printStackTrace();

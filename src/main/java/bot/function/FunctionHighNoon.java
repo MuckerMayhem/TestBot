@@ -1,17 +1,7 @@
 package bot.function;
 
-import bot.BotParameters;
-import bot.DiscordBot;
-import bot.commands.CommandSound;
-import bot.commands.sound.Sound;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class FunctionAnnounceNoon extends BotFunction{
+/*
+public class FunctionHighNoon extends BotFunction{
 
     private static final String CHANNEL = "General";
 
@@ -40,21 +30,6 @@ public class FunctionAnnounceNoon extends BotFunction{
         return (days * 86400000) + (hours * 3600000L) + (minutes * 60000L) + (seconds * 1000L);
     }
 
-    @Override
-    public void init(){
-
-    }
-
-    @Override
-    protected void onActivate(){
-
-    }
-
-    @Override
-    protected void onDeactivate(){
-
-    }
-
     public boolean isActive(){
         return this.active;
     }
@@ -63,13 +38,13 @@ public class FunctionAnnounceNoon extends BotFunction{
         TimerTask task = new TimerTask(){
             @Override
             public void run(){
-                if(!FunctionAnnounceNoon.this.active){
+                if(!FunctionHighNoon.this.active){
                     this.cancel();
                     return;
                 }
 
-                DiscordBot bot = FunctionAnnounceNoon.this.bot;
-                for(IVoiceChannel v : bot.getClient().getGuildByID(BotParameters.GUILD_ID).getVoiceChannels()){
+                DiscordBot bot = FunctionHighNoon.this.bot;
+                for(IVoiceChannel v : bot.getGuild().getVoiceChannels()){
                     if(v.getName().equals(CHANNEL)){
                         CommandSound.playSound(bot, v, Sound.HIGHNOON);
                         checkTime(timeUntilNextNoon());
@@ -81,4 +56,20 @@ public class FunctionAnnounceNoon extends BotFunction{
 
         new Timer().schedule(task, delay);
     }
+
+    @Override
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
+
+    }
 }
+*/

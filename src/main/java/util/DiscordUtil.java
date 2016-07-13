@@ -1,9 +1,12 @@
 package util;
 
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DiscordUtil{
 
@@ -37,5 +40,24 @@ public class DiscordUtil{
             if(u.getID().equals(id)) return u;
         }
         return null;
+    }
+
+    public static void deleteMessage(IMessage message, Long delay){
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run(){
+                try{
+                    message.delete();
+                }
+                catch(MissingPermissionsException | RateLimitException | DiscordException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Timer().schedule(task, delay);
+    }
+
+    public static void deleteMessage(IMessage message){
+        deleteMessage(message, 0L);
     }
 }

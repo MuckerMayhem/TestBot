@@ -1,5 +1,6 @@
 package bot.function;
 
+import bot.DiscordBot;
 import bot.settings.BooleanSetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
@@ -12,26 +13,25 @@ public class FunctionWelcomeBack extends BotFunction{
     private static final BooleanSetting SEE_WELCOME_NOTIFICATIONS = new BooleanSetting("notify_welcome", "Change whether the bot welcomes you back", true);
 
     @Override
-    public void init(){
-        getUserSettingsHandler().registerNewSetting(SEE_WELCOME_NOTIFICATIONS);
+    public void onRegister(){
+        DiscordBot.getUserSettingsHandler().registerNewSetting(SEE_WELCOME_NOTIFICATIONS);
     }
 
     @Override
-    protected void onActivate(){
-
-    }
+    public void onEnable(DiscordBot bot) {}
 
     @Override
-    protected void onDeactivate(){
-
-    }
+    public void onDisable(DiscordBot bot) {}
 
     @EventSubscriber
     public void onVoiceChannelLeave(UserVoiceChannelMoveEvent event){
-        if(!checkSetting(event.getUser().getID(), SEE_WELCOME_NOTIFICATIONS)) return;
+        DiscordBot bot = DiscordBot.getInstance(event.getNewChannel().getGuild());
+        if(bot == null) return;
+
+        if(!bot.checkSetting(event.getUser().getID(), SEE_WELCOME_NOTIFICATIONS)) return;
 
         if(event.getOldChannel().getID().equals(event.getOldChannel().getGuild().getAFKChannel().getID())){
-            this.bot.say("Welcome back, " + event.getUser().mention() + "!" + (event.getUser().getID().equals("188803847458652162") ? " :heart:" : ""));
+            bot.say("Welcome back, " + event.getUser().mention() + "!" + (event.getUser().getID().equals("188803847458652162") ? " :heart:" : ""));
         }
     }
 }

@@ -1,0 +1,30 @@
+(.name:(
+(.desc:( ͡° ͜ʖ ͡°)
+clear.name:effacer
+clear.desc:Effacer tous les messages
+roll.name:rouler
+roll.desc:Aléatoirement, rouler pour un membre ou un numéro
+game.name:jeu
+game.desc:Jouer un jeu
+help.name:aide
+help.desc:Afficher d'aide
+leave.name:partir
+leave.desc:Forcer le bot à partir de son salon vocal
+meme.name:meme
+meme.desc:Mème
+prune.name:tailler
+prune.desc:Supprimer des messages que correspondre à une phrase
+rabbit.name:rabbit
+rabbit.desc:Envoyer un lien à votre salon de rabb.it
+setting.name:option
+setting.desc:Changer votre options
+showhelp.name:aider
+showhelp.desc:Afficher la description détaillé pour une commande
+sound.name:son
+sound.desc:Écouter un son
+test.name:test
+test.desc:Commande test
+type.name:taper
+type.desc:Taper un message en tant que le bot
+waifu.name:waifu
+waifu.desc:Gérer les waifus!

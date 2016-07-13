@@ -1,8 +1,10 @@
 package bot.function;
 
+import bot.DiscordBot;
 import bot.settings.BooleanSetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import util.DiscordUtil;
 
 public class FunctionEatFood extends BotFunction{
 
@@ -10,28 +12,27 @@ public class FunctionEatFood extends BotFunction{
     private static final BooleanSetting ALLOW_EMOJI_EATING = new BooleanSetting("eat_emoji", "Change whether the bot can eat your emoji", true);
 
     @Override
-    public void init(){
-        this.bot.getUserSettingsHandler().registerNewSetting(ALLOW_EMOJI_EATING);
+    public void onRegister(){
+        DiscordBot.getUserSettingsHandler().registerNewSetting(ALLOW_EMOJI_EATING);
     }
 
     @Override
-    protected void onActivate(){
-
-    }
+    public void onEnable(DiscordBot bot) {}
 
     @Override
-    protected void onDeactivate(){
-
-    }
+    public void onDisable(DiscordBot bot) {}
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event){
-        if(!checkSetting(event, ALLOW_EMOJI_EATING)) return;
+        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+        if(bot == null) return;
+
+        if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_EMOJI_EATING)) return;
 
         String content = event.getMessage().getContent().replaceAll(" ", "");
         for(Food f : Food.values()){
             if(content.equals(f.getUnicode())){
-                bot.deleteMessage(event.getMessage(), 2000L);
+                DiscordUtil.deleteMessage(event.getMessage(), 2000L);
                 bot.type(event.getMessage().getChannel(), f.getEatMessage());
             }
         }

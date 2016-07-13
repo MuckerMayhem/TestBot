@@ -1,67 +1,47 @@
 package bot.function;
 
 import bot.DiscordBot;
-import bot.settings.BooleanSetting;
-import bot.settings.Setting;
-import bot.settings.SingleSettingsHandler;
-import bot.settings.UserSettingsHandler;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BotFunction{
 
-    public DiscordBot bot;
-    private boolean active;
+    private static ArrayList<BotFunction> global_functions = new ArrayList<>();
 
-    public static SingleSettingsHandler getGlobalSettingsHandler(){
-        return DiscordBot.getGlobalSettingsHandler();
+    private String name;
+    private Class<? extends BotFunction> mainClass;
+
+    public static List<BotFunction> getAllRegisteredFunctions(){
+        return global_functions;
     }
 
-    public abstract void init();
+    public static BotFunction registerFunction(String name, Class<? extends BotFunction> mainClass){
+        BotFunction instance;
+        try{
+            instance = mainClass.newInstance();
+            instance.name = name;
+            instance.mainClass = mainClass;
 
-    protected abstract void onActivate();
+            instance.onRegister();
 
-    protected abstract void onDeactivate();
+            global_functions.add(instance);
+        }
+        catch(InstantiationException | IllegalAccessException e){
+            System.err.print("Failed to register function '" + name + "': " + e.getClass().getSimpleName());
+            return null;
+        }
 
-    public void activate(){
-        this.active = true;
-        this.bot.getClient().getDispatcher().registerListener(this);
-        this.onActivate();
+        return instance;
     }
 
-    public void deactivate(){
-        this.active = false;
-        this.bot.getClient().getDispatcher().unregisterListener(this);
-        this.onDeactivate();
-    }
+    public abstract void onRegister();
 
-    public boolean isActive(){
-        return this.active;
-    }
+    public abstract void onEnable(DiscordBot bot);
 
-    public UserSettingsHandler getUserSettingsHandler(){
-        return this.bot.getUserSettingsHandler();
-    }
+    public abstract void onDisable(DiscordBot bot);
 
-    public Object getUserSetting(String userId, Setting setting){
-        return getUserSettingsHandler().getUserSetting(userId, setting);
-    }
-
-    /**
-     * Check the value of a {@link bot.settings.BooleanSetting}'s value
-     * @param userId User to get value of setting for
-     * @param setting Setting to check
-     * @return
-     */
-    public boolean checkSetting(String userId, BooleanSetting setting){
-        return (Boolean) getUserSetting(userId, setting);
-    }
-
-    public boolean checkSetting(MessageReceivedEvent event, BooleanSetting setting){
-        return checkSetting(event.getMessage().getAuthor().getID(), setting);
-    }
-
-    public boolean checkSetting(IMessage message, BooleanSetting setting){
-        return checkSetting(message.getAuthor().getID(), setting);
+    public String getName(){
+        return this.name;
     }
 }

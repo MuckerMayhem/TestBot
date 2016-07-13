@@ -11,7 +11,17 @@ import java.io.IOException;
 public class CommandShowHelp extends Command{
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 

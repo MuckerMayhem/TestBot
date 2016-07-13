@@ -18,19 +18,19 @@ import java.util.List;
 
 public class CommandHandler{
 
-    private static ArrayList<Command> global_commands = new ArrayList<>();
     private static final String[] EMPTY = {};
 
-    protected DiscordBot bot;
+    private static String commandPrefix = "!";
+    private static ArrayList<Command> global_commands = new ArrayList<>();
 
-    private ArrayList<Command> commands = new ArrayList<>();
-    private String commandPrefix = "!";
+    private DiscordBot bot;
 
     private MessageReceivedEvent lastEvent;
 
+    public CommandHandler() {}
+
     public CommandHandler(DiscordBot bot){
         this.bot = bot;
-        bot.getClient().getDispatcher().registerListener(this);
     }
 
     /**
@@ -42,80 +42,71 @@ public class CommandHandler{
 
     public static Command getCommandByName(String name){
         for(Command c : global_commands){
-            if(c.getName().equalsIgnoreCase(name)) return c;
+            if(c.getRegisteredName().equalsIgnoreCase(name)) return c;
         }
         return null;
     }
 
-    public boolean registerCommand(boolean debug, String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
-        for(Command c : this.commands){
+    public static Command registerCommand(boolean debug, String name, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
+        for(Command c : global_commands){
+
             if(c.name.equalsIgnoreCase(name)){
                 System.out.println("Could not register command '" + name + "': Command with this name has already been registered");
-                return false;
+                return null;
             }
             for(String s : c.aliases){
                 if(s.equalsIgnoreCase(name)){
                     System.out.println("Could not register command '" + name + "': Conflict with alias of same name for command '" + c.name + "'");
-                    return false;
+                    return null;
                 }
                 for(String s1 : aliases){
                     if(s1.equalsIgnoreCase(s)){
                         System.out.println("Could not register command '" + name + "': Duplicate alias '" + s +  "' for command '" + c.name + "'");
-                        return false;
+                        return null;
                     }
                 }
             }
         }
 
+        Command instance;
         try{
-            Command instance = mainClass.newInstance();
+            instance = mainClass.newInstance();
             instance.permissions = permissions == null ? Permissions.SEND_MESSAGES : permissions;
             instance.name = name;
-            instance.description = description;
             instance.aliases = aliases;
-            instance.commandHandler = this;
 
             instance.setDebug(debug);
 
             instance.onRegister();
 
-            this.commands.add(instance);
             global_commands.add(instance);
         }
         catch(InstantiationException | IllegalAccessException e){
             System.err.print("Failed to register command '" + name + "': " + e.getClass().getSimpleName());
-            return false;
+            return null;
         }
 
         System.out.println("Command '" + name + "' registered with aliases " + Arrays.toString(aliases));
 
-        return true;
+        return instance;
     }
 
     /**
      * Register a new command on a bot. Uses the command prefix set by {@link #setCommandPrefix(String)}
      * @param name Identifier used to execute this command
-     * @param description Description of the command. This is shown in the help menu
      * @param mainClass Main class of your command. Should extend {@link bot.commands.Command}
      * @param aliases Aliases your command can be executed with
      * @return true if the command was successfully registered, otherwise false
      */
-    public boolean registerCommand(String name, String description, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
-        return registerCommand(false, name, description, mainClass, permissions, aliases);
-    }
-
-    /**
-     * @return a list containing all registered commands for this CommandHandler instance
-     */
-    public List<Command> getRegisteredCommands(){
-        return commands;
+    public static Command registerCommand(String name, Class<? extends Command> mainClass, Permissions permissions, String... aliases){
+        return registerCommand(false, name, mainClass, permissions, aliases);
     }
 
     /**
      * Gets the command prefix used for executing commands
      * @return - The command prefix that is currently in use
      */
-    public String getCommandPrefix(){
+    public static String getCommandPrefix(){
         return commandPrefix;
     }
 
@@ -123,24 +114,30 @@ public class CommandHandler{
      * Sets the prefix used to execute commands. Defaults to "!"
      * @param newPrefix - New prefix to use
      */
-    public void setCommandPrefix(String newPrefix){
+    public static void setCommandPrefix(String newPrefix){
         commandPrefix = newPrefix;
     }
 
+    public DiscordBot getBot(){
+        return this.bot;
+    }
+
     @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    public void onMessageReceived(MessageReceivedEvent event){
+        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+        if(bot == null){
+            System.err.println("Could not find bot for guild " + event.getMessage().getGuild().getID());
+            return;
+        }
+
         IMessage message = event.getMessage();
         String content = event.getMessage().getContent();
 
-        if(!content.startsWith(this.commandPrefix)) return;
+        if(!content.startsWith(commandPrefix)) return;
 
         String command = content.split(" ")[0].substring(1);
-        String[] args = EMPTY;
-        if(content.contains(" ")){
-            args = Util.parseQuotes(content.substring(content.indexOf(' ') + 1).split(" "));
-        }
 
-        for(Command c : commands){
+        for(Command c : bot.getCommands()){
             boolean alias = false;
             for(String s : c.aliases){
                 if(command.equalsIgnoreCase(s)){
@@ -148,14 +145,28 @@ public class CommandHandler{
                     break;
                 }
             }
-            if(alias || command.equalsIgnoreCase(c.getName())){
+            if(alias || command.equalsIgnoreCase(c.getName(bot.getLocale()))){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
                 if(!c.debug()){
-                    this.bot.deleteMessage(message, 2000L);
+                    DiscordUtil.deleteMessage(message, 2000L);
                 }
-                this.bot.lastEvent = event;
-                c.onExecute(this.bot, message, args);
-                System.out.printf("Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));
+
+                String[] args = EMPTY;
+                if(content.contains(" ")){
+                    args = Util.parseQuotes(content.substring(content.indexOf(' ') + 1).split(" "));
+                }
+
+                bot.lastEvent = event;
+                try{
+                    c.onExecute(bot, message, args);
+                }
+                catch(DiscordException | RateLimitException | MissingPermissionsException | IOException e){
+                    bot.reportException(e, "Exception occurred while executing command '" + c.getRegisteredName() + "'");
+                    return;
+                }
+
+                System.out.printf("(%s) Command '%s' run by user %s with arguments: %s\n", message.getGuild().getName(), c.name, message.getAuthor().getName(), String.join(", ", args));
+
                 return;
             }
         }

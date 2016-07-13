@@ -18,7 +18,17 @@ public class CommandDiceRoll extends Command{
     private static final Random RANDOM = new Random();
 
     @Override
-    protected void onRegister(){
+    public void onRegister(){
+
+    }
+
+    @Override
+    public void onEnable(DiscordBot bot){
+
+    }
+
+    @Override
+    public void onDisable(DiscordBot bot){
 
     }
 

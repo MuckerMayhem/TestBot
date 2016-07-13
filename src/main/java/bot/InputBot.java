@@ -1,13 +1,13 @@
 package bot;
 
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class InputBot extends DiscordBot{
 
-    public InputBot(IDiscordClient client){
-        super(client);
+    public InputBot(IGuild guild){
+        super(guild);
     }
 
     /**
