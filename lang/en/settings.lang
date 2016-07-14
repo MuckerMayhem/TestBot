@@ -1,0 +1,16 @@
+rabbit_room.name:Rabb.it room
+rabbit_room.desc:Name of your rabb.it room
+notify_welcome.name:Welcome notifications
+notify_welcome.desc:Get welcomed back from the AFK channel
+eat_emoji.name:Eat emoji
+eat_emoji.desc:The bot eats your emoji
+notify_waifu.name:Waifu notifications
+notify_waifu.desc:Get notified when you're added/removed as a waifu
+break_walls.name:Break text walls
+break_walls.desc:Break up your walls of text with a fun fact
+clear_whitelist.name:Clear whitelist
+clear_whitelist.desc:Channels that can be cleared by the clear command
+blacklist_videoinfo.name:Video info blacklist
+blacklist_videoinfo.desc:Channels to NOT send video info in
+locale.name:Language
+locale.desc:Language of the bot

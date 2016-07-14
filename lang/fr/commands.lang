@@ -28,3 +28,5 @@ type.name:taper
 type.desc:Taper un message en tant que le bot
 waifu.name:waifu
 waifu.desc:Gérer les waifus!
+restart.name:redemarrer
+restart.desc:Redémarrer le bot

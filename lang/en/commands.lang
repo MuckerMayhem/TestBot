@@ -28,3 +28,5 @@ type.name:type
 type.desc:Make the bot type a message
 waifu.name:waifu
 waifu.desc:Manage your waifus!
+restart.name:restart
+restart.desc:Restart the bot

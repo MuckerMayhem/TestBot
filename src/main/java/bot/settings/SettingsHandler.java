@@ -71,6 +71,9 @@ public abstract class SettingsHandler{
      */
     public void registerNewSetting(Setting setting){
         this.settings.add(setting);
-        global_settings.add(setting);
+        if(!global_settings.contains(setting)){
+            global_settings.add(setting);
+            System.out.println("Registering new setting: " + setting.getName());
+        }
     }
 }

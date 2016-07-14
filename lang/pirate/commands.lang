@@ -3,7 +3,7 @@
 clear.name:clear
 clear.desc:Clear messages
 roll.name:roll
-roll.desc:Roll a random number or user
+roll.desc:Roll a random number or buccaneer
 game.name:game
 game.desc:Play a game
 help.name:help
@@ -18,7 +18,7 @@ rabbit.name:rabbit
 rabbit.desc:Show your rabbit room
 setting.name:setting
 setting.desc:Change a setting
-showhelp.name:showhelp?
+showhelp.name:showhelp
 showhelp.desc:Show t' detailed description of a command
 sound.name:sound
 sound.desc:Play a sound
@@ -26,5 +26,7 @@ test.name:test
 test.desc:Test command
 type.name:type
 type.desc:Make t' bot type a message
-waifu.name:waifu
-waifu.desc:Manage your waifus!
+waifu.name:matey
+waifu.desc:Manage yer mateys
+restart.name:restart
+restart.desc:Restart the bot

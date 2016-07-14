@@ -14,6 +14,13 @@ public enum Locale{
         this.name = name;
     }
 
+    public static Locale getFromCode(String code){
+        for(Locale l : values()){
+            if(l.code.equals(code)) return l;
+        }
+        return null;
+    }
+
     public String getCode(){
         return this.code;
     }

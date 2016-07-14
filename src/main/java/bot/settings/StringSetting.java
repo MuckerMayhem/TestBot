@@ -4,8 +4,8 @@ public class StringSetting extends Setting{
 
     private String[] validValues;
 
-    public StringSetting(String name, String description, String defaultValue){
-        super(name, description, defaultValue);
+    public StringSetting(String name, String defaultValue){
+        super(name, defaultValue);
     }
 
     @Override
@@ -26,10 +26,5 @@ public class StringSetting extends Setting{
 
     public void setValidValues(String... values){
         this.validValues = values;
-    }
-
-    @Override
-    public String toString(){
-        return this.name + ": " + this.description + " (Default: '" + this.defaultValue + "')";
     }
 }

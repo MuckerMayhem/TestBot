@@ -1,14 +1,15 @@
 package bot.settings;
 
-public abstract class Setting{
+import bot.locale.Locale;
+import bot.locale.LocaleHandler;
+
+public abstract class Setting implements Comparable<Setting>{
 
     protected String name;
-    protected String description;
     protected Object defaultValue;
 
-    public Setting(String name, String description, Object defaultValue){
+    public Setting(String name, Object defaultValue){
         this.name = name;
-        this.description = description;
         this.defaultValue = defaultValue;
     }
 
@@ -20,8 +21,12 @@ public abstract class Setting{
         return this.name;
     }
 
-    public String getDescription(){
-        return this.description;
+    public String getName(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedName(this);
+    }
+
+    public String getDescription(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedDescription(this);
     }
 
     public String getValueAsString(Object value){
@@ -29,7 +34,7 @@ public abstract class Setting{
     }
 
     @Override
-    public String toString(){
-        return this.name + ": " + this.description + " (Default: " + this.defaultValue + ")";
+    public int compareTo(Setting other){
+        return this.name.compareTo(other.name);
     }
 }

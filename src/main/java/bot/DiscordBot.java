@@ -1,13 +1,11 @@
 package bot;
 
-import bot.commands.*;
-import bot.function.*;
+import bot.feature.BotFeature;
+import bot.feature.commands.*;
+import bot.feature.function.*;
 import bot.locale.Locale;
 import bot.locale.LocaleHandler;
-import bot.settings.BooleanSetting;
-import bot.settings.Setting;
-import bot.settings.SingleSettingsHandler;
-import bot.settings.UserSettingsHandler;
+import bot.settings.*;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -24,9 +22,10 @@ import util.DiscordUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static bot.commands.CommandHandler.registerCommand;
-import static bot.function.BotFunction.registerFunction;
+import static bot.feature.commands.CommandHandler.registerCommand;
+import static bot.feature.function.BotFunction.registerFunction;
 
 public class DiscordBot{
 
@@ -34,29 +33,30 @@ public class DiscordBot{
 
     //COMMANDS
     //Admin commands
-    public static final Command COMMAND_PRUNE = registerCommand("prune", CommandPrune.class, Permissions.MANAGE_MESSAGES);
-    public static final Command COMMAND_LEAVE = registerCommand("leave", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
-    public static final Command COMMAND_TYPE = registerCommand("type", CommandType.class, Permissions.CHANGE_NICKNAME);
-    public static final Command COMMAND_SHOWHELP = registerCommand("showhelp", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
+    public static final BotCommand COMMAND_PRUNE = registerCommand("prune", CommandPrune.class, Permissions.MANAGE_MESSAGES);
+    public static final BotCommand COMMAND_LEAVE = registerCommand("leave", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
+    public static final BotCommand COMMAND_TYPE = registerCommand("type", CommandType.class, Permissions.CHANGE_NICKNAME);
+    public static final BotCommand COMMAND_SHOWHELP = registerCommand("showhelp", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
+    public static final BotCommand COMMAND_RESTART = registerCommand("restart", CommandRestart.class, Permissions.MANAGE_SERVER);
 
     //Utility commands
-    public static final Command COMMAND_HELP = registerCommand("help", CommandHelp.class, Permissions.SEND_MESSAGES);
-    public static final Command COMMAND_TEST = registerCommand("test", CommandTest.class, Permissions.SEND_MESSAGES);
-    public static final Command COMMAND_SETTING = registerCommand("setting", CommandSetting.class, Permissions.SEND_MESSAGES);
-    public static final Command COMMAND_RABBIT = registerCommand("rabbit", CommandRabbit.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_HELP = registerCommand("help", CommandHelp.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_TEST = registerCommand("test", CommandTest.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_SETTING = registerCommand("setting", CommandSetting.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_RABBIT = registerCommand("rabbit", CommandRabbit.class, Permissions.SEND_MESSAGES);
 
     //Fun commands
-    public static final Command COMMAND_MEME = registerCommand("meme", CommandMeme.class, Permissions.SEND_MESSAGES);
-    public static final Command COMMAND_ROLL = registerCommand("roll", CommandDiceRoll.class, Permissions.SEND_MESSAGES);
-    public static final Command COMMAND_SOUND = registerCommand("sound", CommandSound.class, Permissions.VOICE_SPEAK);
-    public static final Command COMMAND_BOOTY = registerCommand("(", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
-    public static final Command COMMAND_WAIFU = registerCommand("waifu", CommandWaifu.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_MEME = registerCommand("meme", CommandMeme.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_ROLL = registerCommand("roll", CommandDiceRoll.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_SOUND = registerCommand("sound", CommandSound.class, Permissions.VOICE_SPEAK);
+    public static final BotCommand COMMAND_BOOTY = registerCommand("(", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
+    public static final BotCommand COMMAND_WAIFU = registerCommand("waifu", CommandWaifu.class, Permissions.SEND_MESSAGES);
 
     //Game command
-    public static final Command COMMAND_GAME = registerCommand("game", CommandGame.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_GAME = registerCommand("game", CommandGame.class, Permissions.SEND_MESSAGES);
 
     //Clear command
-    public static final Command COMMAND_CLEAR = registerCommand("clear", CommandClear.class, Permissions.MANAGE_SERVER);
+    public static final ThreadedCommand COMMAND_CLEAR = (ThreadedCommand) registerCommand("clear", ThreadedCommandClear.class, Permissions.MANAGE_SERVER);
 
 
     //FUNCTIONS
@@ -65,6 +65,10 @@ public class DiscordBot{
     public static final BotFunction FUNCTION_EAT = registerFunction("eat", FunctionEatFood.class);
     public static final BotFunction FUNCTION_YTTIME = registerFunction("yttime", FunctionGetVideoTime.class);
     public static final BotFunction FUNCTION_WELCOME = registerFunction("welcome", FunctionWelcomeBack.class);
+
+
+    //SETTINGS
+    public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en");
 
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
@@ -81,8 +85,7 @@ public class DiscordBot{
     private SingleSettingsHandler serverSettingsHandler;
     private LocaleHandler localeHandler;
 
-    private ArrayList<Command> commands = new ArrayList<>();
-    private ArrayList<BotFunction> functions = new ArrayList<>();
+    private ArrayList<BotFeature> features = new ArrayList<>();
 
     private String home;
 
@@ -139,11 +142,10 @@ public class DiscordBot{
         }
 
         this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
+        this.serverSettingsHandler.registerNewSetting(SETTING_LOCALE);
 
-        this.localeHandler = LocaleHandler.get(Locale.ENGLISH);
-
-        CommandHandler.getAllRegisteredCommands().forEach(this::addCommand);
-        BotFunction.getAllRegisteredFunctions().forEach(this::addFunction);
+        CommandHandler.getAllRegisteredCommands().forEach(this::enableFeature);
+        BotFunction.getAllRegisteredFunctions().forEach(this::enableFeature);
 
         try{
             getServerSettingsHandler().loadSettings();
@@ -151,6 +153,9 @@ public class DiscordBot{
         catch(IOException e){
             reportException(e, "Failed to load global settings.");
         }
+
+        Locale locale = Locale.getFromCode((String) getServerSettingsHandler().getSetting(SETTING_LOCALE));
+        this.localeHandler = LocaleHandler.get(locale == null ? Locale.ENGLISH : locale);
     }
 
     public static DiscordBot getGuildlessInstance(){
@@ -232,12 +237,22 @@ public class DiscordBot{
         return null;
     }
 
-    public List<Command> getCommands(){
-        return this.commands;
+    public List<BotFeature> getFeatures(){
+        return this.features;
+    }
+
+    public List<BotCommand> getCommands(){
+        return this.features.stream()
+                .filter(f -> f instanceof BotCommand)
+                .map(c -> (BotCommand) c)
+                .collect(Collectors.toList());
     }
 
     public List<BotFunction> getFunctions(){
-        return this.functions;
+        return this.features.stream()
+                .filter(f -> f instanceof BotFunction)
+                .map(c -> (BotFunction) c)
+                .collect(Collectors.toList());
     }
 
     public void type(IChannel channel, String message, Long typingTime){
@@ -309,7 +324,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.commands.CommandHandler}<br>
+     * by this bot's {@link bot.feature.commands.CommandHandler}<br>
      * The message is deleted after the specified time (in millis)
      *
      * @param message Message to send
@@ -322,7 +337,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.commands.CommandHandler}
+     * by this bot's {@link bot.feature.commands.CommandHandler}
      * @param message Message to send
      */
     public void respond(String message){
@@ -332,7 +347,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.commands.CommandHandler}. Message disappears after a short<br>
+     * by this bot's {@link bot.feature.commands.CommandHandler}. Message disappears after a short<br>
      * amount of time (Decided by the <i>longer</i> parameter)
      * @param message Message to send
      * @param longer Whether the message should stay for 6.0 seconds rather than 3.5
@@ -344,7 +359,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.commands.CommandHandler}. Message disappears after 3.5 seconds
+     * by this bot's {@link bot.feature.commands.CommandHandler}. Message disappears after 3.5 seconds
      * @param message Message to send
      */
     public void info(String message){
@@ -355,24 +370,14 @@ public class DiscordBot{
         this.home = home;
     }
 
-    public void addCommand(Command command){
-        this.commands.add(command);
-        command.onEnable(this);
+    public void enableFeature(BotFeature feature){
+        this.features.add(feature);
+        feature.onEnable(this);
     }
 
-    public void removeCommand(Command command){
-        this.commands.add(command);
-        command.onDisable(this);
-    }
-
-    public void addFunction(BotFunction function){
-        this.functions.add(function);
-        function.onEnable(this);
-    }
-
-    public void removeFunction(BotFunction function){
-        this.functions.remove(function);
-        function.onDisable(this);
+    public void disableFeature(BotFeature feature){
+        this.features.remove(feature);
+        feature.onDisable(this);
     }
 
     public void reportException(Exception e, String message){

@@ -27,13 +27,11 @@ public class GameScramble extends Game{
             "You're amazing! But these next words are the hardest of the hard! (Reached level 5)"
     };
 
-    public GameScramble(GameBot bot, int lives){
-        super(bot);
+    public GameScramble(int lives){
         this.lives = lives;
     }
 
-    public GameScramble(GameBot bot){
-        super(bot);
+    public GameScramble(){
         this.lives = 3;
     }
 
@@ -85,7 +83,7 @@ public class GameScramble extends Game{
 
             this.bot.say("Unscramble this word: " + scrambled);
 
-            if(this.bot.nextLine().equalsIgnoreCase(word)){
+            if(/*this.bot.nextLine()*/"".equalsIgnoreCase(word)){
                 correct++;
                 this.bot.say("Correct! (" + correct + "/" + 4 + ")");
             }

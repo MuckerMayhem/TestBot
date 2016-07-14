@@ -8,13 +8,11 @@ public class TicTacToe extends Game{
     private int size;
     private int[][] board;
 
-    public TicTacToe(GameBot bot, int size){
-        super(bot);
+    public TicTacToe(int size){
         this.size = size;
     }
 
-    public TicTacToe(GameBot bot){
-        super(bot);
+    public TicTacToe(){
         this.size = 3;
     }
 
@@ -49,8 +47,8 @@ public class TicTacToe extends Game{
         Random random = new Random();
 
         bot.say("Do you want to go first? ");
-        int turn;
-        if(this.bot.nextLine().toLowerCase().startsWith("y")){
+        int turn = 0;
+        if(/*this.bot.nextLine()*/"".toLowerCase().startsWith("y")){
             turn = 1;
         }
         else turn = -1;
@@ -59,7 +57,7 @@ public class TicTacToe extends Game{
         while(!won){
             if(turn == 1){
                 this.bot.say("Your move? ");
-                String line = this.bot.nextLine();
+                String line = "";//this.bot.nextLine();
                 Scanner lineReader = new Scanner(line);
                 x = lineReader.nextInt();
                 y = lineReader.nextInt();

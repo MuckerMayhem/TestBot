@@ -45,7 +45,6 @@ public class EventListener{
         for(IGuild g : guildQueue){
             new DiscordBot(g);
             System.out.printf("Joined guild '%s' (%s)\n", g.getName(), g.getID());
-            guildQueue.clear();
         }
     }
 
