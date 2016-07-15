@@ -1,4 +1,4 @@
-package bot.feature.commands;
+package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.feature.BotFeature;
@@ -52,7 +52,7 @@ public abstract class BotCommand extends BotFeature{
     /**
      * Gets the name of this Command. Note that the name is localized—it will give the<br>
      * name in the currently set language (Defined by the language the bot of the<br>
-     * {@link bot.feature.commands.CommandHandler} this Command is registered to.)
+     * {@link bot.feature.command.CommandHandler} this Command is registered to.)
      * @return The localized name of this command
      */
     public String getName(Locale locale){

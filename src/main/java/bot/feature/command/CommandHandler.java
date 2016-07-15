@@ -1,4 +1,4 @@
-package bot.feature.commands;
+package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.api.events.EventSubscriber;

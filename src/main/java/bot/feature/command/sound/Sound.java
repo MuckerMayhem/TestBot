@@ -1,4 +1,4 @@
-package bot.feature.commands.sound;
+package bot.feature.command.sound;
 
 import java.io.File;
 import java.net.MalformedURLException;

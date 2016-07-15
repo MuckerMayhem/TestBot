@@ -1,7 +1,7 @@
 package bot;
 
 import bot.feature.BotFeature;
-import bot.feature.commands.*;
+import bot.feature.command.*;
 import bot.feature.function.*;
 import bot.locale.Locale;
 import bot.locale.LocaleHandler;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bot.feature.commands.CommandHandler.registerCommand;
+import static bot.feature.command.CommandHandler.registerCommand;
 import static bot.feature.function.BotFunction.registerFunction;
 
 public class DiscordBot{
@@ -333,7 +333,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.feature.commands.CommandHandler}<br>
+     * by this bot's {@link bot.feature.command.CommandHandler}<br>
      * The message is deleted after the specified time (in millis)
      *
      * @param message Message to send
@@ -346,7 +346,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.feature.commands.CommandHandler}
+     * by this bot's {@link bot.feature.command.CommandHandler}
      * @param message Message to send
      */
     public void respond(String message){
@@ -356,7 +356,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.feature.commands.CommandHandler}. Message disappears after a short<br>
+     * by this bot's {@link bot.feature.command.CommandHandler}. Message disappears after a short<br>
      * amount of time (Decided by the <i>longer</i> parameter)
      * @param message Message to send
      * @param longer Whether the message should stay for 6.0 seconds rather than 3.5
@@ -368,7 +368,7 @@ public class DiscordBot{
     /**
      * Sends a message from this bot in the last channel a user executed<br>
      * a valid command in. Valid commands are commands that are passed<br>
-     * by this bot's {@link bot.feature.commands.CommandHandler}. Message disappears after 3.5 seconds
+     * by this bot's {@link bot.feature.command.CommandHandler}. Message disappears after 3.5 seconds
      * @param message Message to send
      */
     public void info(String message){

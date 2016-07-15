@@ -1,7 +1,7 @@
-package bot.feature.commands;
+package bot.feature.command;
 
 import bot.DiscordBot;
-import bot.feature.commands.sound.Sound;
+import bot.feature.command.sound.Sound;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;

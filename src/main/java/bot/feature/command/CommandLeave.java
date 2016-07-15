@@ -1,13 +1,16 @@
-package bot.feature.commands;
+package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
-import util.DiscordUtil;
 
-public class CommandType extends BotCommand{
+import java.util.Optional;
+
+public class CommandLeave extends BotCommand{
 
     @Override
     public void onRegister(){
@@ -26,9 +29,10 @@ public class CommandType extends BotCommand{
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        if(args.length == 0) return;
+        IUser user = message.getAuthor();
 
-        DiscordUtil.deleteMessage(message);
-        bot.type(message.getChannel(), String.join(" ", args));
+        Optional<IVoiceChannel> channel = DiscordBot.getClient().getOurUser().getVoiceChannel();
+        if(channel.isPresent() && channel.get().getGuild().getID().equals(message.getGuild().getID()))
+            channel.get().leave();
     }
 }

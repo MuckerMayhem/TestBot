@@ -1,7 +1,7 @@
 package bot.locale;
 
-import bot.feature.commands.BotCommand;
-import bot.feature.commands.CommandHandler;
+import bot.feature.command.BotCommand;
+import bot.feature.command.CommandHandler;
 import bot.feature.function.BotFunction;
 import bot.settings.Setting;
 import bot.settings.SettingsHandler;

@@ -1,7 +1,7 @@
-package bot.feature.commands;
+package bot.feature.command;
 
 import bot.DiscordBot;
-import bot.feature.commands.sound.Sound;
+import bot.feature.command.sound.Sound;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
