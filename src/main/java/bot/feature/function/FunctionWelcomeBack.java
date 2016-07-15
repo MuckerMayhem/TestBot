@@ -3,6 +3,7 @@ package bot.feature.function;
 import bot.DiscordBot;
 import bot.settings.BooleanSetting;
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 
 public class FunctionWelcomeBack extends BotFunction{
@@ -23,9 +24,12 @@ public class FunctionWelcomeBack extends BotFunction{
     @Override
     public void onDisable(DiscordBot bot) {}
 
+
+    @Override
+    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event) throws Exception {}
+
     @EventSubscriber
-    public void onVoiceChannelLeave(UserVoiceChannelMoveEvent event){
-        DiscordBot bot = DiscordBot.getInstance(event.getNewChannel().getGuild());
+    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event){
         if(bot == null) return;
 
         if(!bot.checkSetting(event.getUser().getID(), SEE_WELCOME_NOTIFICATIONS)) return;

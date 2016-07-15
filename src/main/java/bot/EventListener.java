@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class EventListener{
 
     private static final String NAME = "Weeb-bot";//Bot's username
-    private static final Image IMAGE = Image.forFile(new File("C:\\Users\\wiize\\Downloads\\kirino.png"));//Bot's avatar
+    private static final Image IMAGE = Image.forFile(new File("kirino.png"));//Bot's avatar
     private static final String GAME = "俺の妹がこんなに可愛いわけがないポータブル";//Game the bot will be displayed as playing
 
     private static ArrayList<IGuild> guildQueue = new ArrayList<>();

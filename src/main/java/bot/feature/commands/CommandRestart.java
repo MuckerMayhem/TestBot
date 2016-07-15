@@ -18,7 +18,7 @@ public class CommandRestart extends BotCommand{
 
         bot.respond(builder.buildMessage(Message.CMD_RESTART_RESTARTING));
         bot.init();
-        bot.respond(builder.buildMessage(Message.CMD_RESTART_FINISHED));
+        bot.respond(builder.withLocale(bot.getLocale()).buildMessage(Message.CMD_RESTART_FINISHED));
     }
 
     @Override

@@ -1,8 +1,11 @@
+message_error:`Il y avait une error pendant cette action: $1. Si ceci se produire des fois multiples, le soumettre à https://github.com/ColeTheKing/TestBot/issues avec une description ce que vous faisiez`
+
+
 command_role_invalid:Le rôle « $1 » est invalide
 command_user_invalid:Le membre « $1 » est invalide
 command_command_invalid:La commande « $1 » est invalide
 
-command_clear_nothere:Cette commande ne peut pas executer ici !
+command_clear_nothere:Cette commande ne peut pas exécuter ici !
 command_clear_1a:Êtes-vous sûr que vous voulez faire ça? **Tous les messages** dans ce salon textuel serons effacé !
 command_clear_1b:Tapez *oui* si vous êtes vraiment sûr
 command_clear_response_1:oui
@@ -13,21 +16,22 @@ command_clear_deleting:Effacement des messages en cours ...
 command_clear_deleted:Effacé $1 de messages
 command_clear_cancel:Annulé
 
+command_game_no_home:Aucun salon d'accueil fixé. Veuillez demander un gestionnaire pour fixer
 command_game_nothere:Veuillez exécuter cette command dans le salon « $1 » si vous souhaitez à jouer avec moi :slight_smile:
 command_game_choose_1:Quel jeu voulez-vous jouer? Jeux disponibles :
 command_game_choose_2:Simplement entrez le numéro du jeu que vous voudrais jouer
 command_game_choose_3:Entrez « instructions » après le numéro pour afficher les instructions de jeu.
-command_game_start:Compris. Allons-y!
+command_game_start:Compris. Allons-y !
 command_game_thanks:Merci pour jouer !
 
-command_help_details:Entrer $1 < command > pour les détails d'une commande specifique
+command_help_details:Entrer $1 < command > pour les détails d'une commande spécifique
 
 command_meme_normal: 
 command_meme_dank:Voici un dank mème pour vous :
 
 command_prune_deleted:$1 messages effacé
 
-command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la commande option pour fixer ça
+command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la commande option pour fixer
 
 command_restart_restarting:Redémarrer en cours ...
 command_restart_finished:Je suis revenu !
@@ -41,7 +45,7 @@ command_setting_no_access:Vous n'avez pas l'autorisation de changer ces settings
 command_setting_enter_number:Entrez le numéro de l'option que vous voudrais changer
 command_setting_enter_number_server:Entrez « serveur » après le numéro pour changer des options à serveur
 command_setting_invalid_number:Entrez un numéro valide
-command_setting_set:L'option « $1 » a reglé à *$2*
+command_setting_set:L'option « $1 » a réglé à *$2*
 
 command_sound_invalid:Le son « $1 » est invalide
 command_sound_nochannel:Vous n'êtes pas dans un salon vocal !
@@ -57,14 +61,15 @@ command_waifu_notify_add:Hé, $1 ! $2 vous a ajouté à sa liste de waifus !
 command_waifu_notify_remove:$1, $2 vous a supprimé de sa liste de waifus ! b-baka !
 
 
-function_break_submitted:Soumis par :
+function_break_intro:Saviez-vous ? 
+function_break_submitted:Soumis par : 
 function_break_from:Fait de $1
 
-function_eat_message:*eats $1*
-function_eat_message_drink:*drinks $1*
+function_eat_message:*J'ai mangé votre $1*
+function_eat_message_drink:*J'ai bu votre $1*
 
-function_vidtime_length:*Duration de vidéo : $1* 
-function_vidtime_blocked:*Cette vidéo est bloqué dans ces regions : $1*
+function_vidtime_length:*Durée de la vidéo : $1* 
+function_vidtime_blocked:*Cette vidéo est bloqué dans les régions suivantes : $1*
 function_vidtime_unblock:*Est-ce bloqué dans votre région ? Utilisez http://www.unblockyoutube.co.uk/ pour l'éviter !*
 
 function_welcome_message:Bon retour parmi nous, $1 !

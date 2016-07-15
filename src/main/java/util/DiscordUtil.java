@@ -1,5 +1,6 @@
 package util;
 
+import bot.DiscordBot;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -59,5 +60,39 @@ public class DiscordUtil{
 
     public static void deleteMessage(IMessage message){
         deleteMessage(message, 0L);
+    }
+
+    public static int deleteAllMessages(IChannel channel){
+        return deleteAllMessages(channel , 0, true, true);
+    }
+
+    private static int deleteAllMessages(IChannel channel, int totalDeleted, boolean load, boolean delete){
+        int size = channel.getMessages().size();
+        int deleted = size > 50 ? 50 : size;
+
+        try{
+            channel.getMessages().load(deleted);
+            load = false;
+            channel.getMessages().deleteFromRange(0, deleted);
+            delete = false;
+        }
+        catch(RateLimitException e){
+            try{
+                Thread.sleep(10L);
+            }
+            catch(InterruptedException e1){
+                e1.printStackTrace();
+            }
+            return deleteAllMessages(channel, totalDeleted, load, delete);
+        }
+        catch(DiscordException | MissingPermissionsException e){
+            DiscordBot.getGuildlessInstance().reportException(e, "");
+            return -1;
+        }
+
+        if(size - deleted > 0)
+            return deleteAllMessages(channel, deleted + deleted, true, true);
+        else
+            return deleted;
     }
 }

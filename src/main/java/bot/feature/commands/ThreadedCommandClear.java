@@ -4,15 +4,13 @@ import bot.DiscordBot;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
-import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
+import util.DiscordUtil;
 
 import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ThreadedCommandClear extends ThreadedCommand{
 
@@ -51,7 +49,7 @@ public class ThreadedCommandClear extends ThreadedCommand{
             bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_CONF_2));
             if(nextLine(message.getChannel()).equalsIgnoreCase(builder.buildMessage(Message.CMD_CLEAR_RESPONSE_2))){
                 IMessage botMessage = bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_DELETING, message.getChannel().getName()));
-                deleteMessages(bot, message.getChannel(), 0);
+                bot.respond(builder.buildMessage(Message.CMD_CLEAR_DELETED, DiscordUtil.deleteAllMessages(message.getChannel())), 3500L);
                 return;
             }
         }
@@ -59,27 +57,31 @@ public class ThreadedCommandClear extends ThreadedCommand{
         bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_CANCELLED), 3500L);
     }
 
-    public void deleteMessages(DiscordBot bot, IChannel channel, int count){
+    /*
+    public void deleteMessages(DiscordBot bot, IChannel channel, int size, int count){
         MessageBuilder builder = new MessageBuilder(bot.getLocale());
 
-        int size = channel.getMessages().size();
-        final int newCount = count + (size < 50 ? size : 50);
+        final int deleted = size < 50 ? size : 50;
+        final int newCount = count + deleted;
         TimerTask task = new TimerTask(){
             @Override
             public void run(){
                 try{
-                    channel.getMessages().deleteFromRange(0, size < 50 ? size - 1 : 49);
+                    channel.getMessages().load(deleted);
+                    channel.getMessages().deleteFromRange(0, deleted);
                 }
                 catch(RateLimitException | DiscordException | MissingPermissionsException e){
                     e.printStackTrace();
                 }
-                if(size > 50)
-                    deleteMessages(bot, channel, newCount);
+
+                if(size - deleted > 50)
+                    deleteMessages(bot, channel, size - deleted, newCount);
                 else
                     bot.say(channel, builder.buildMessage(Message.CMD_CLEAR_DELETED, newCount), 3500L);
             }
         };
         if(size > 0)
-            new Timer().schedule(task, 1000L);
+            new Timer().schedule(task, 500L);
     }
+    */
 }

@@ -10,6 +10,11 @@ public class MessageBuilder{
         this.locale = locale;
     }
 
+    public MessageBuilder withLocale(Locale locale){
+        this.locale = locale;
+        return this;
+    }
+
     public String buildMessage(Message message, Object... args){
         String localized = message.getLocalizedMessage(this.locale);
 

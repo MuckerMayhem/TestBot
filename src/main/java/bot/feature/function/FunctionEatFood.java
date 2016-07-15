@@ -4,6 +4,7 @@ import bot.DiscordBot;
 import bot.settings.BooleanSetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import util.DiscordUtil;
 
 public class FunctionEatFood extends BotFunction{
@@ -23,8 +24,7 @@ public class FunctionEatFood extends BotFunction{
     public void onDisable(DiscordBot bot) {}
 
     @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event){
-        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event){
         if(bot == null) return;
 
         if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_EMOJI_EATING)) return;
@@ -37,6 +37,9 @@ public class FunctionEatFood extends BotFunction{
             }
         }
     }
+
+    @Override
+    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
 
     public enum Food{
         GREEN_APPLE(false, "apple", "\uD83C\uDF4F", ":kissing:"),

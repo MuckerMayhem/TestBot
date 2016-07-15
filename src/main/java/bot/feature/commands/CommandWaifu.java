@@ -26,7 +26,7 @@ public class CommandWaifu extends BotCommand{
     //Setting for this command
     private static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", true);
 
-    private static HashMap<String, ArrayList<String>> waifus = new HashMap<>();
+    private static HashMap<String, WaifuList> waifuLists = new HashMap<>();
 
     @Override
     public void onRegister(){
@@ -36,15 +36,11 @@ public class CommandWaifu extends BotCommand{
     @Override
     public void onEnable(DiscordBot bot){
         try{
-            loadWaifus(bot.getDataFile("waifus.json"));
+            loadWaifus(bot);
         }
         catch(IOException e){
-            e.printStackTrace();
+            bot.reportException(e, "Failed to load waifus");
         }
-
-//        if(!hasAsWaifu(bot, DiscordBot.getClient().getOurUser().getID(), bot.getGuild().getOwnerID())){
-//            addWaifu(bot, DiscordBot.getClient().getOurUser().getID(), bot.getGuild().getOwnerID());
-//        }
     }
 
     @Override
@@ -61,6 +57,12 @@ public class CommandWaifu extends BotCommand{
 
         MessageBuilder builder = new MessageBuilder(bot.getLocale());
 
+        WaifuList list = waifuLists.get(bot.getGuild().getID());
+        if(list == null){
+            bot.respond(builder.buildMessage(Message.MSG_ERROR, "List is null"));
+            return;
+        }
+
         if(args[0].equalsIgnoreCase("list")){
             IUser target = message.getAuthor();
             if(args.length >= 2){
@@ -72,7 +74,7 @@ public class CommandWaifu extends BotCommand{
                 else target = user;
             }
 
-            bot.info("*" + builder.buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(message.getGuild())) + "\n" + String.join("\n", waifus.get(target.getID()).stream()
+            bot.info("*" + builder.buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(message.getGuild())) + "*\n" + String.join("\n", list.getWaifus(target.getID()).stream()
             .filter(i -> DiscordUtil.getUserByID(message.getGuild(), i) != null)
             .map(i -> DiscordUtil.getUserByID(message.getGuild(), i).getDisplayName(message.getGuild()))
             .collect(Collectors.toList())), true);
@@ -87,11 +89,11 @@ public class CommandWaifu extends BotCommand{
             if(user == null){
                 bot.info(builder.buildMessage(Message.CMD_INVALID_USER));
             }
-            else if(hasAsWaifu(bot, userId, user.getID())){
+            else if(list.hasAsWaifu(userId, user.getID())){
                 bot.info(builder.buildMessage(Message.CMD_WAIFU_ALREADY_ON));
             }
             else{
-                addWaifu(bot, userId, user.getID());
+                list.addWaifu(userId, user.getID());
                 bot.info(builder.buildMessage(Message.CMD_WAIFU_ADD, user.getName()));
 
                 if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
@@ -104,11 +106,11 @@ public class CommandWaifu extends BotCommand{
             if(user == null){
                 bot.info(builder.buildMessage(Message.CMD_INVALID_USER));
             }
-            else if(!hasAsWaifu(bot, userId, user.getID())){
+            else if(!list.hasAsWaifu(userId, user.getID())){
                 bot.info(builder.buildMessage(Message.CMD_WAIFU_NOT_ON));
             }
             else{
-                removeWaifu(bot, userId, user.getID());
+                list.removeWaifu(userId, user.getID());
                 bot.info(builder.buildMessage(Message.CMD_WAIFU_REMOVE, user.getName()));
 
                 if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
@@ -118,6 +120,55 @@ public class CommandWaifu extends BotCommand{
         }
     }
 
+    private static void loadWaifus(DiscordBot bot) throws IOException{
+        WaifuList waifus = new WaifuList(bot);
+
+        File file = bot.getDataFile("waifus.json");
+        if(file.exists()){
+            String content = IOUtils.toString(new FileInputStream(file));
+
+            JsonElement element = new JsonParser().parse(content);
+            if(element.isJsonArray()){
+                JsonArray users = element.getAsJsonArray();
+                for(JsonElement e : users){
+                    if(!e.isJsonObject())
+                        continue;
+
+                    String userId = e.getAsJsonObject().get("userId").getAsString();
+                    JsonArray waifuArray = e.getAsJsonObject().get("waifus").getAsJsonArray();
+                    ArrayList<String> waifuList = new ArrayList<>();
+                    for(JsonElement e1 : waifuArray){
+                        waifuList.add(e1.getAsString());
+                        System.out.println(":" + e1.getAsString());
+                    }
+
+                    waifus.setWaifus(userId, waifuList);
+                }
+            }
+        }
+        else file.createNewFile();
+
+        waifuLists.put(bot.getGuild().getID(), waifus);
+    }
+
+    private static void saveWaifus(DiscordBot bot) throws IOException{
+        File file = bot.getDataFile("waifus.json");
+
+        JsonArray users = new JsonArray();
+
+        HashMap<String, ArrayList<String>> waifus = new HashMap<>();
+        for(String s : waifus.keySet()){
+            JsonObject user = new JsonObject();
+            JsonArray userWaifus = new JsonArray();
+            waifus.get(s).forEach(userWaifus::add);
+            user.addProperty("userId", s);
+            user.add("waifus", userWaifus);
+            users.add(user);
+        }
+
+        Gson gson = new GsonBuilder().create();
+        FileUtils.writeStringToFile(file, gson.toJson(users));
+    }
     /*
     @Override
     public String getDetailedDescription(){
@@ -132,79 +183,64 @@ public class CommandWaifu extends BotCommand{
     }
     */
 
-    private static void loadWaifus(File file) throws IOException{
-        if(file.exists()){
-            String content = IOUtils.toString(new FileInputStream(file));
+    public static class WaifuList{
 
-            JsonElement element = new JsonParser().parse(content);
-            if(!element.isJsonArray()) return;
+        private static final ArrayList<String> EMPTY = new ArrayList<>();
 
-            JsonArray users = element.getAsJsonArray();
-            for(JsonElement e : users){
-                if(!e.isJsonObject())
-                    continue;
+        private HashMap<String, ArrayList<String>> waifus = new HashMap<>();
 
-                String userId = e.getAsJsonObject().get("userId").getAsString();
-                JsonArray waifuArray = e.getAsJsonObject().get("waifus").getAsJsonArray();
-                ArrayList<String> waifuList = new ArrayList<>();
-                for(JsonElement e1 : waifuArray){
-                    waifuList.add(e1.getAsString());
-                }
+        private DiscordBot bot;
 
-                waifus.put(userId, waifuList);
+        public WaifuList(DiscordBot bot){
+            this.bot = bot;
+        }
+
+        public HashMap<String, ArrayList<String>> getWaifuMap(){
+            return this.waifus;
+        }
+
+        public ArrayList<String> getWaifus(String userId){
+            return waifus.getOrDefault(userId, EMPTY);
+        }
+
+        public void addWaifu(String firstUserID, String secondUserId){
+            waifus.putIfAbsent(firstUserID, new ArrayList<>());
+            waifus.get(firstUserID).add(secondUserId);
+
+            try{
+                saveWaifus(this.bot);
+            }
+            catch(IOException e){
+                e.printStackTrace();
             }
         }
-        else file.createNewFile();
-    }
 
-    private static void saveWaifus(File file) throws IOException{
-        JsonArray users = new JsonArray();
-        for(String s : waifus.keySet()){
-            JsonObject user = new JsonObject();
-            JsonArray userWaifus = new JsonArray();
-            waifus.get(s).forEach(userWaifus::add);
-            user.addProperty("userId", s);
-            user.add("waifus", userWaifus);
-            users.add(user);
+        public void setWaifus(String userId, ArrayList<String> waifus){
+            this.waifus.put(userId, waifus);
         }
 
-        Gson gson = new GsonBuilder().create();
-        FileUtils.writeStringToFile(file, gson.toJson(users));
-    }
+        public void removeWaifu(String firstUserId, String secondUserId){
+            waifus.putIfAbsent(firstUserId, new ArrayList<>());
+            waifus.get(firstUserId).remove(secondUserId);
 
-    private boolean hasAsWaifu(DiscordBot bot, String firstUserId, String secondUserId){
-        if(waifus.containsKey(firstUserId) && waifus.get(firstUserId) != null){
-            return waifus.get(firstUserId).contains(secondUserId);
+            try{
+                saveWaifus(this.bot);
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
         }
 
-        return false;
-    }
+        private boolean hasAsWaifu(String firstUserId, String secondUserId){
+            if(waifus.containsKey(firstUserId) && waifus.get(firstUserId) != null){
+                return waifus.get(firstUserId).contains(secondUserId);
+            }
 
-    private boolean hasAsWaifu(DiscordBot bot, IUser firstUser, IUser secondUser){
-        return hasAsWaifu(bot, firstUser.getID(), secondUser.getID());
-    }
-
-    private void addWaifu(DiscordBot bot, String firstUserID, String secondUserId){
-        waifus.putIfAbsent(firstUserID, new ArrayList<>());
-        waifus.get(firstUserID).add(secondUserId);
-
-        try{
-            saveWaifus(bot.getDataFile("waifus.json"));
+            return false;
         }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
 
-    private void removeWaifu(DiscordBot bot, String firstUserId, String secondUserId){
-        waifus.putIfAbsent(firstUserId, new ArrayList<>());
-        waifus.get(firstUserId).remove(secondUserId);
-
-        try{
-            saveWaifus(bot.getDataFile("waifus.json"));
-        }
-        catch(IOException e){
-            e.printStackTrace();
+        private boolean hasAsWaifu(IUser firstUser, IUser secondUser){
+            return hasAsWaifu(firstUser.getID(), secondUser.getID());
         }
     }
 }

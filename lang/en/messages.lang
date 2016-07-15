@@ -1,3 +1,6 @@
+message_error:`An error occurred while trying to complete that action: $1. If this happens again please submit to https://github.com/ColeTheKing/TestBot/issues and include a description of what you were doing.`
+
+
 command_role_invalid:Invalid role '$1'
 command_user_invalid:Invalid user '$1'
 command_command_invalid:Invalid command '$1'
@@ -13,6 +16,7 @@ command_clear_deleting:Deleting all messages in channel *$1*
 command_clear_deleted:Deleted $1 messages
 command_clear_cancel:Cancelled.
 
+command_game_no_home:No home channel set. Please ask an administrator to set it.
 command_game_nothere:Please run this command in the '$1' channel if you wish to play a game with me :slight_smile:
 command_game_choose_1:Which game would you like to play with me? Available games:
 command_game_choose_2:Just enter the number of the game you would like to play.
@@ -57,7 +61,8 @@ command_waifu_notify_add:Hey, $1! $2 has added you to their waifu list!
 command_waifu_notify_remove:$1, $2 has removed you from their waifu list! b-baka!
 
 
-function_break_submitted:Submitted by: 
+function_break_intro:Did you know?
+function_break_submitted:Submitted by: $1
 function_break_from:Fact from $1
 
 function_eat_message:*eats $1*

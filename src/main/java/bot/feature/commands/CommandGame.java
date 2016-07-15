@@ -1,7 +1,9 @@
 package bot.feature.commands;
 
 import bot.DiscordBot;
+import bot.locale.Message;
 import bot.locale.MessageBuilder;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -27,13 +29,18 @@ public class CommandGame extends BotCommand{
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
         MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
-        /*
-        if(message.getChannel() != gameBot.getHome()){
-            gameBot.info(builder.buildMessage(Message.CMD_GAME_NOT_HERE, gameBot.getHome().getName()));
+        
+        IChannel home = bot.getHome();
+        if(home == null){
+            bot.info(builder.buildMessage(Message.CMD_GAME_NO_HOME));
+            return;
+        }
+        else if(message.getChannel() != bot.getHome()){
+            bot.info(builder.buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()));
             return;
         }
 
+        /*
         if(args.length == 0){
             gameBot.say(builder.buildMessage(Message.CMD_GAME_CHOOSE_1) + "\n" +
                     "1. Tic-tac-toe");

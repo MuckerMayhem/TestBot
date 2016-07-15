@@ -1,14 +1,16 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.locale.Message;
+import bot.locale.MessageBuilder;
 import bot.settings.BooleanSetting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
 import java.io.IOException;
@@ -54,8 +56,6 @@ public class FunctionBreakMessages extends BotFunction{
                 String author = object.get("submitted by").getAsString();
                 facts.put(fact, author);
             }
-
-            facts.put("Cole is bae ❤", "wiizerdofwiierd");
         }
 
         System.out.println("Successfully loaded facts list.");
@@ -67,11 +67,9 @@ public class FunctionBreakMessages extends BotFunction{
     @Override
     public void onDisable(DiscordBot bot) {}
 
-    @EventSubscriber
-    public void onMessageEvent(MessageReceivedEvent event){
-        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+    @Override
+    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event){
         if(bot == null) return;
-
 
         if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_WALL_BREAKING)) return;
 
@@ -85,7 +83,7 @@ public class FunctionBreakMessages extends BotFunction{
 
             if(counts.get(channel) >= MAX_MESSAGES + RANDOM.nextInt(7) - 3){
                 try{
-                    String fact = randomFact();
+                    String fact = randomFact(bot);
                     DiscordBot.getGuildlessInstance().say(event.getMessage().getChannel(), fact);
                     if(fact.equalsIgnoreCase(lastFact)){
                         DiscordBot.getGuildlessInstance().type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
@@ -106,12 +104,21 @@ public class FunctionBreakMessages extends BotFunction{
         messages.put(channel, event.getMessage().getAuthor().getID());
     }
 
-    private String randomFact() throws IOException{
+    @Override
+    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
+
+    private String randomFact(DiscordBot bot) throws IOException{
+        MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
+
         StringBuilder builder = new StringBuilder();
         String fact = new ArrayList<>(facts.keySet()).get(new Random().nextInt(facts.size()));
-        builder.append("Did you know? ").append(fact).append("\n*Fact from http://mentalfloss.com/");
+
+        builder.append(msgBuilder.buildMessage(Message.FUNC_BREAK_INTRO))
+                .append(fact).append("\n")
+                .append(msgBuilder.buildMessage(Message.FUNC_BREAK_FROM, " http://mentalfloss.com/"));
+
         if(!facts.get(fact).isEmpty()){
-            builder.append(" Submitted by: ").append(facts.get(fact));
+            builder.append(" ").append(msgBuilder.buildMessage(Message.FUNC_BREAK_SUBMITTED, facts.get(fact)));
         }
         builder.append("*");
 

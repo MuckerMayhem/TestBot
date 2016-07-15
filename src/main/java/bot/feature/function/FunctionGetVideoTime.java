@@ -4,12 +4,8 @@ import bot.DiscordBot;
 import bot.settings.ArraySetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import util.YoutubeUtil;
-
-import java.io.IOException;
 
 public class FunctionGetVideoTime extends BotFunction{
 
@@ -32,8 +28,7 @@ public class FunctionGetVideoTime extends BotFunction{
 
 
     @EventSubscriber
-    public void onMessageEvent(MessageReceivedEvent event) throws IOException, RateLimitException, DiscordException, MissingPermissionsException{
-        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
+    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event) throws Exception{
         if(bot == null) return;
 
         for(String s : (String[]) bot.getServerSettingsHandler().getSetting(SETTING_YTBLACKLIST)){
@@ -74,6 +69,9 @@ public class FunctionGetVideoTime extends BotFunction{
 
         bot.say(event.getMessage().getChannel(), builder.toString());
     }
+
+    @Override
+    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
 
     private static String underlineRegions(String regions){
         for(String s : IMPORTANT_REGIONS){

@@ -46,7 +46,7 @@ public class LocaleHandler{
                 ln++;
                 if(line.isEmpty()) continue;
 
-                String[] split = line.split(":");
+                String[] split = line.split(":", 2);
                 try{
                     values.put(split[0], split[1]);
                 }
@@ -70,7 +70,7 @@ public class LocaleHandler{
                 ln++;
                 if(line.isEmpty()) continue;
 
-                String[] split = line.split(":");
+                String[] split = line.split(":", 2);
                 try{
                     values.put(split[0], split[1]);
                 }
@@ -94,7 +94,7 @@ public class LocaleHandler{
                 ln++;
                 if(line.isEmpty()) continue;
 
-                String[] split = line.split(":");
+                String[] split = line.split(":", 2);
                 try{
                     values.put(split[0], split[1]);
                 }
@@ -116,7 +116,7 @@ public class LocaleHandler{
                 String line = input.nextLine();
                 if(line.isEmpty()) continue;
 
-                String[] split = line.split(":");
+                String[] split = line.split(":", 2);
                 values.put(split[0], split[1]);
             }
         }

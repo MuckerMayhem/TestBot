@@ -1,7 +1,7 @@
 rabbit_room.name:Salon de rabb.it
 rabbit_room.desc:Nom de votre salon de rabb.it
 notify_welcome.name:Notifications accueil
-notify_welcome.desc:Recevoir un notification accueil quand vous revenez
+notify_welcome.desc:Accueillir vous quand vous revenez du salon AFK
 eat_emoji.name:Manger des emojis
 eat_emoji.desc:Le bot mange vos emojis
 notify_waifu.name:Notifications waifu

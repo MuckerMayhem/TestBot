@@ -2,6 +2,9 @@ package bot.locale;
 
 public enum Message{
 
+    MSG_ERROR("message_error"),
+
+
     CMD_INVALID_ROLE("command_role_invalid"),
     CMD_INVALID_USER("command_user_invalid"),
     CMD_INVALID_CMD("command_command_invalid"),
@@ -17,6 +20,7 @@ public enum Message{
     CMD_CLEAR_DELETED("command_clear_deleted"),
     CMD_CLEAR_CANCELLED("command_clear_cancel"),
 
+    CMD_GAME_NO_HOME("command_game_no_home"),
     CMD_GAME_NOT_HERE("command_game_nothere"),
     CMD_GAME_CHOOSE_1("command_game_choose_1"),
     CMD_GAME_CHOOSE_2("command_game_choose_2"),
@@ -60,6 +64,8 @@ public enum Message{
     CMD_WAIFU_NOTIFY_ADD("command_waifu_notify_add"),
     CMD_WAIFU_NOTIFY_REMOVE("command_waifu_notify_remove"),
 
+
+    FUNC_BREAK_INTRO("function_break_intro"),
     FUNC_BREAK_SUBMITTED("function_break_submitted"),
     FUNC_BREAK_FROM("function_break_from"),
 

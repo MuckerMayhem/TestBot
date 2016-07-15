@@ -123,6 +123,7 @@ public class DiscordBot{
 
         client.getDispatcher().registerListener(new EventListener());
         client.getDispatcher().registerListener(new CommandHandler());
+        BotFunction.getAllRegisteredFunctions().forEach(client.getDispatcher()::registerListener);
 
         instance = new DiscordBot();
 
@@ -253,6 +254,10 @@ public class DiscordBot{
                 .filter(f -> f instanceof BotFunction)
                 .map(c -> (BotFunction) c)
                 .collect(Collectors.toList());
+    }
+
+    public boolean featureEnabled(BotFeature feature){
+        return this.features.contains(feature);
     }
 
     public void type(IChannel channel, String message, Long typingTime){
