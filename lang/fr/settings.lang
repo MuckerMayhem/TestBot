@@ -14,3 +14,5 @@ blacklist_videoinfo.name:Blacklist de détails des vidéos
 blacklist_videoinfo.desc:Les salons textuels que le bot n'envoyer pas les détails de vidéo à
 locale.name:Langue
 locale.desc:Langue du bot
+bot_home.name:Salon d'accueil
+bot_home.desc:Le salon défaut pour le bot de parler

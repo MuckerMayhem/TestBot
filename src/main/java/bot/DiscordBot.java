@@ -68,7 +68,8 @@ public class DiscordBot{
 
 
     //SETTINGS
-    public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en");
+    public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en", true);
+    public static final StringSetting SETTING_HOME = new StringSetting("bot_home", "", true);
 
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
@@ -144,6 +145,7 @@ public class DiscordBot{
 
         this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
         this.serverSettingsHandler.registerNewSetting(SETTING_LOCALE);
+        this.serverSettingsHandler.registerNewSetting(SETTING_HOME);
 
         CommandHandler.getAllRegisteredCommands().forEach(this::enableFeature);
         BotFunction.getAllRegisteredFunctions().forEach(this::enableFeature);
@@ -157,6 +159,8 @@ public class DiscordBot{
 
         Locale locale = Locale.getFromCode((String) getServerSettingsHandler().getSetting(SETTING_LOCALE));
         this.localeHandler = LocaleHandler.get(locale == null ? Locale.ENGLISH : locale);
+
+        this.home = (String) getServerSettingsHandler().getSetting(SETTING_HOME);
     }
 
     public static DiscordBot getGuildlessInstance(){

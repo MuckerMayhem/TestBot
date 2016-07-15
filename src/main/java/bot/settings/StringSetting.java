@@ -4,6 +4,10 @@ public class StringSetting extends Setting{
 
     private String[] validValues;
 
+    public StringSetting(String name, Object defaultValue, boolean requiresRestart){
+        super(name, defaultValue, requiresRestart);
+    }
+    
     public StringSetting(String name, String defaultValue){
         super(name, defaultValue);
     }

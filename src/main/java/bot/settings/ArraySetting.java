@@ -4,6 +4,10 @@ import java.util.Arrays;
 
 public class ArraySetting extends Setting{
 
+    public ArraySetting(String name, Object defaultValue, boolean requiresRestart){
+        super(name, defaultValue, requiresRestart);
+    }
+    
     public ArraySetting(String name, Object defaultValue){
         super(name, defaultValue);
     }

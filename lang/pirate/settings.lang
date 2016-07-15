@@ -14,3 +14,5 @@ blacklist_videoinfo.name:Video info blacklist
 blacklist_videoinfo.desc:Channels to NOT send video info in
 locale.name:Speak
 locale.desc:Speak o' the bot
+bot_home.name:Captain's quarters
+bot_home.desc:The channel where t' captain speaks

@@ -32,11 +32,11 @@ public class CommandGame extends BotCommand{
         
         IChannel home = bot.getHome();
         if(home == null){
-            bot.info(builder.buildMessage(Message.CMD_GAME_NO_HOME));
+            bot.info(builder.buildMessage(Message.CMD_GAME_NO_HOME), true);
             return;
         }
         else if(message.getChannel() != bot.getHome()){
-            bot.info(builder.buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()));
+            bot.info(builder.buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()), true);
             return;
         }
 

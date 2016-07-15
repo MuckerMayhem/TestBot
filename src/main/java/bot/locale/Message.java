@@ -50,6 +50,7 @@ public enum Message{
     CMD_SETTING_ENTER_NUMBER_SERVER("command_setting_enter_number_server"),
     CMD_SETTING_INVALID_NUMBER("command_setting_invalid_number"),
     CMD_SETTING_SET("command_setting_set"),
+    CMD_SETTING_RESTART_REQUIRED("command_setting_restart_required"),
 
     CMD_SOUND_INVALID("command_sound_invalid"),
     CMD_SOUND_NOCHANNEL("command_sound_nochannel"),

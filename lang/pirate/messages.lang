@@ -46,6 +46,7 @@ command_setting_enter_number:Enter t' number of t' settin' ye wanna change
 command_setting_enter_number_server:Enter 'server' before t' number to change server settings
 command_setting_invalid_number:Arrrg! That not be a number ye scallywag!
 command_setting_set:Settin' "$1" set to *$2*
+command_setting_restart_required:Aye! Ye have t' restart fer this change t' take effect, y'hear?
 
 command_sound_invalid:Arrrg! Invalid sound '$1'
 command_sound_nochannel:You be not in a voice channel!

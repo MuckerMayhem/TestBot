@@ -46,6 +46,7 @@ command_setting_enter_number:Enter the number of the setting you want to change
 command_setting_enter_number_server:Enter 'server' before the number to change a server setting
 command_setting_invalid_number:Please enter a valid number
 command_setting_set:Setting "$1" set to *$2*
+command_setting_restart_required:A restart is required for this change to take effect
 
 command_sound_invalid:Invalid sound '$1'
 command_sound_nochannel:You are not in a voice channel!

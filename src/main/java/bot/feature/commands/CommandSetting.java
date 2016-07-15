@@ -108,6 +108,7 @@ public class CommandSetting extends BotCommand{
 
         handler.setSetting(userId, setting, value);
         bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_SET, setting.getName(bot.getLocale()), setting.getValueAsString(value)));
+        if(setting.requiresRestart()) bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_RESTART_REQUIRED, true));
     }
 
     /*

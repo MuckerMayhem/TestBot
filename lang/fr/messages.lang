@@ -46,6 +46,7 @@ command_setting_enter_number:Entrez le numéro de l'option que vous voudrais cha
 command_setting_enter_number_server:Entrez « serveur » après le numéro pour changer des options à serveur
 command_setting_invalid_number:Entrez un numéro valide
 command_setting_set:L'option « $1 » a réglé à *$2*
+command_setting_restart_required:Il faut démarrer le bot pour ce changement de prendre effet
 
 command_sound_invalid:Le son « $1 » est invalide
 command_sound_nochannel:Vous n'êtes pas dans un salon vocal !

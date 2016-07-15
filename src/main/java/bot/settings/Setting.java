@@ -7,10 +7,16 @@ public abstract class Setting implements Comparable<Setting>{
 
     protected String name;
     protected Object defaultValue;
+    protected boolean requiresRestart;
 
-    public Setting(String name, Object defaultValue){
+    public Setting(String name, Object defaultValue, boolean requiresRestart){
         this.name = name;
         this.defaultValue = defaultValue;
+        this.requiresRestart = requiresRestart;
+    }
+    
+    public Setting(String name, Object defaultValue){
+        this(name, defaultValue, false);
     }
 
     public abstract Object getDefaultValue();
@@ -19,6 +25,10 @@ public abstract class Setting implements Comparable<Setting>{
 
     public String getName(){
         return this.name;
+    }
+    
+    public boolean requiresRestart(){
+        return this.requiresRestart;
     }
 
     public String getName(Locale locale){

@@ -14,3 +14,5 @@ blacklist_videoinfo.name:Video info blacklist
 blacklist_videoinfo.desc:Channels to NOT send video info in
 locale.name:Language
 locale.desc:Language of the bot
+bot_home.name:Home channel
+bot_home.desc:The default channel for the bot to speak in
