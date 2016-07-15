@@ -18,6 +18,7 @@ rabbit.name:rabbit
 rabbit.desc:Show your rabbit room
 setting.name:setting
 setting.desc:Change a setting
+setting.args:list,reset,server
 showhelp.name:showhelp
 showhelp.desc:Show t' detailed description of a command
 sound.name:sound
@@ -28,5 +29,6 @@ type.name:type
 type.desc:Make t' bot type a message
 waifu.name:matey
 waifu.desc:Manage yer mateys
+waifu.args:list,add,remove
 restart.name:restart
 restart.desc:Restart the bot

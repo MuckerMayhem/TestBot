@@ -31,7 +31,7 @@ public class CommandPrune extends BotCommand{
     }
 
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws DiscordException, MissingPermissionsException, RateLimitException{
         if(args.length == 0) return;
 
         MessageBuilder builder = new MessageBuilder(bot.getLocale());

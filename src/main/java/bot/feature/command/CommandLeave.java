@@ -4,9 +4,6 @@ import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 
 import java.util.Optional;
 
@@ -28,7 +25,7 @@ public class CommandLeave extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         IUser user = message.getAuthor();
 
         Optional<IVoiceChannel> channel = DiscordBot.getClient().getOurUser().getVoiceChannel();

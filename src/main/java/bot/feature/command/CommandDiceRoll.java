@@ -7,9 +7,6 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Presences;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -35,7 +32,7 @@ public class CommandDiceRoll extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         int value = 6;
         String random = "";
         try{

@@ -391,9 +391,10 @@ public class DiscordBot{
 
     public void reportException(Exception e, String message){
         System.err.print(message + " | Details:\n" +
-                "Class name: " + e.getClass().getName() + "\n" +
+                "Class: " + e.getClass().getName() + "\n" +
                 "Message: " + e.getMessage() + "\n" +
-                "Guild ID: " + this.guild.getID());
+                "Guild ID: " + this.guild.getID() + "\n" +
+                "At: " + e.getStackTrace()[0]);
     }
 
     /*Maybe used for logging later?

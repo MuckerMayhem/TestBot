@@ -5,13 +5,9 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 import util.Util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -158,9 +154,10 @@ public class CommandHandler{
 
                 bot.lastEvent = event;
                 try{
-                    c.execute(bot, message, args);
+                    c.newInstance().execute(bot, message, args);
+//                    c.execute(bot, message, args);
                 }
-                catch(DiscordException | RateLimitException | MissingPermissionsException | IOException e){
+                catch(Exception e){
                     bot.reportException(e, "Exception occurred while executing command '" + c.getRegisteredName() + "'");
                     return;
                 }

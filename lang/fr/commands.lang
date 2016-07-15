@@ -18,6 +18,7 @@ rabbit.name:rabbit
 rabbit.desc:Envoyer un lien à votre salon de rabb.it
 setting.name:option
 setting.desc:Changer votre options
+setting.args:liste,reinitialiser,serveur
 showhelp.name:aider
 showhelp.desc:Afficher la description détaillé pour une commande
 sound.name:son
@@ -28,5 +29,6 @@ type.name:taper
 type.desc:Taper un message en tant que le bot
 waifu.name:waifu
 waifu.desc:Gérer les waifus!
+waifu.args:liste,ajoute,supprime
 restart.name:redemarrer
 restart.desc:Redémarrer le bot

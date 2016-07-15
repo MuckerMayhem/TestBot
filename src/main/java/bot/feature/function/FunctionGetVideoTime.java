@@ -1,6 +1,8 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.locale.Message;
+import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -35,6 +37,8 @@ public class FunctionGetVideoTime extends BotFunction{
             if(event.getMessage().getChannel().getName().equals(s)) return;
         }
 
+        MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
+        
         String content = event.getMessage().getContent();
 
         //Accounts for most youtube links that Discord can expand
@@ -56,12 +60,12 @@ public class FunctionGetVideoTime extends BotFunction{
 
         String[] videoInfo = YoutubeUtil.getVideoInfo(videoId);
 
-        StringBuilder builder = new StringBuilder("*Video length: ").append(YoutubeUtil.formatTime((String) videoInfo[2])).append("*");
+        StringBuilder builder = new StringBuilder("*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_LENGTH, YoutubeUtil.formatTime((String) videoInfo[2]))).append("*");
         if(!videoInfo[3].isEmpty()){
-            builder.append("\n*This video blocked in regions: ").append(underlineRegions(videoInfo[3])).append("*");
+            builder.append("\n*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_BLOCKED, underlineRegions(videoInfo[3]))).append("*");
             for(String s : IMPORTANT_REGIONS){
                 if(videoInfo[3].contains(s)){
-                    builder.append("\n*Blocked in your region? use http://www.unblockyoutube.co.uk/ to get around it!*");
+                    builder.append("\n").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_UNBLOCK));
                     break;
                 }
             }

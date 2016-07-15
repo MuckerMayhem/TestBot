@@ -2,12 +2,8 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
 import java.util.Arrays;
@@ -32,29 +28,27 @@ public class ThreadedCommandClear extends ThreadedCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         String[] whitelist = (String[]) bot.getServerSettingsHandler().getSetting(WHITELIST_CLEAR);
 
         if(!Arrays.asList(whitelist).contains(message.getChannel().getName())){
-            bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_NOT_HERE), 3000L);
+            bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_NOT_HERE), 3000L);
             return;
         }
 
-        bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_PROMPT_1));
-        bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_CONF_1));
-        if(nextLine(message.getChannel()).equalsIgnoreCase(builder.buildMessage(Message.CMD_CLEAR_RESPONSE_1))){
-            bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_PROMPT_2));
-            bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_CONF_2));
-            if(nextLine(message.getChannel()).equalsIgnoreCase(builder.buildMessage(Message.CMD_CLEAR_RESPONSE_2))){
-                IMessage botMessage = bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_DELETING, message.getChannel().getName()));
-                bot.respond(builder.buildMessage(Message.CMD_CLEAR_DELETED, DiscordUtil.deleteAllMessages(message.getChannel())), 3500L);
+        bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_PROMPT_1));
+        bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_CONF_1));
+        if(nextLine(message.getChannel()).equalsIgnoreCase(buildMessage(Message.CMD_CLEAR_RESPONSE_1))){
+            bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_PROMPT_2));
+            bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_CONF_2));
+            if(nextLine(message.getChannel()).equalsIgnoreCase(buildMessage(Message.CMD_CLEAR_RESPONSE_2))){
+                IMessage botMessage = bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_DELETING, message.getChannel().getName()));
+                bot.respond(buildMessage(Message.CMD_CLEAR_DELETED, DiscordUtil.deleteAllMessages(message.getChannel())), 3500L);
                 return;
             }
         }
 
-        bot.say(message.getChannel(), builder.buildMessage(Message.CMD_CLEAR_CANCELLED), 3500L);
+        bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_CANCELLED), 3500L);
     }
 
     /*
@@ -77,7 +71,7 @@ public class ThreadedCommandClear extends ThreadedCommand{
                 if(size - deleted > 50)
                     deleteMessages(bot, channel, size - deleted, newCount);
                 else
-                    bot.say(channel, builder.buildMessage(Message.CMD_CLEAR_DELETED, newCount), 3500L);
+                    bot.say(channel, buildMessage(Message.CMD_CLEAR_DELETED, newCount), 3500L);
             }
         };
         if(size > 0)

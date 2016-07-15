@@ -2,11 +2,6 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
-
-import java.io.IOException;
 
 public class CommandShowHelp extends BotCommand{
 
@@ -26,7 +21,7 @@ public class CommandShowHelp extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         if(args.length == 0) return;
 
         BotCommand command = CommandHandler.getCommandByName(args[0]);

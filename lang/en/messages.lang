@@ -69,9 +69,9 @@ function_break_from:Fact from $1
 function_eat_message:*eats $1*
 function_eat_message_drink:*drinks $1*
 
-function_vidtime_length:*Video length: $1* 
-function_vidtime_blocked:*This video is blocked in regions: $1*
-function_vidtime_unblock:*Blocked in your region? use http://www.unblockyoutube.co.uk/ to get around it!*
+function_vidtime_length:Video length: $1
+function_vidtime_blocked:This video is blocked in regions: $1
+function_vidtime_unblock:Blocked in your region? use http://www.unblockyoutube.co.uk/ to get around it!
 
 function_welcome_message:Welcome back, $1!
 

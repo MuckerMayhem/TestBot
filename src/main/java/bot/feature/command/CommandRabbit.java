@@ -2,14 +2,8 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import bot.settings.StringSetting;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
-
-import java.io.IOException;
 
 public class CommandRabbit extends BotCommand{
 
@@ -27,12 +21,10 @@ public class CommandRabbit extends BotCommand{
     public void onDisable(DiscordBot bot) {}
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
-        String rabbit = (String) bot.getUserSetting(message.getAuthor().getID(), RABBIT_NAME);
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
+        String rabbit = (String) getUserSetting(message.getAuthor().getID(), RABBIT_NAME);
         if(rabbit.isEmpty()){
-            bot.info(builder.buildMessage(Message.CMD_RABBIT_NOT_FOUND), true);
+            bot.info(buildMessage(Message.CMD_RABBIT_NOT_FOUND), true);
             return;
         }
 

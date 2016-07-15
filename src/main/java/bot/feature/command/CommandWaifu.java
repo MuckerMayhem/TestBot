@@ -2,16 +2,12 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import bot.settings.BooleanSetting;
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
 import java.io.File;
@@ -47,7 +43,7 @@ public class CommandWaifu extends BotCommand{
     public void onDisable(DiscordBot bot) {}
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         String userId = message.getAuthor().getID();
 
         if(args.length == 0){
@@ -55,15 +51,13 @@ public class CommandWaifu extends BotCommand{
             return;
         }
 
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
         WaifuList list = waifuLists.get(bot.getGuild().getID());
         if(list == null){
-            bot.respond(builder.buildMessage(Message.MSG_ERROR, "List is null"));
+            bot.respond(buildMessage(Message.MSG_ERROR, "List is null"));
             return;
         }
 
-        if(args[0].equalsIgnoreCase("list")){
+        if(args[0].equalsIgnoreCase(getLocalArgs()[0])){
             IUser target = message.getAuthor();
             if(args.length >= 2){
                 IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
@@ -74,7 +68,7 @@ public class CommandWaifu extends BotCommand{
                 else target = user;
             }
 
-            bot.info("*" + builder.buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(message.getGuild())) + "*\n" + String.join("\n", list.getWaifus(target.getID()).stream()
+            bot.info("*" + buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(message.getGuild())) + "*\n" + String.join("\n", list.getWaifus(target.getID()).stream()
             .filter(i -> DiscordUtil.getUserByID(message.getGuild(), i) != null)
             .map(i -> DiscordUtil.getUserByID(message.getGuild(), i).getDisplayName(message.getGuild()))
             .collect(Collectors.toList())), true);
@@ -84,37 +78,37 @@ public class CommandWaifu extends BotCommand{
             return;
         }
 
-        if(args[0].equalsIgnoreCase("add")){
+        if(args[0].equalsIgnoreCase(getLocalArgs()[1])){
             IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
-                bot.info(builder.buildMessage(Message.CMD_INVALID_USER));
+                bot.info(buildMessage(Message.CMD_INVALID_USER));
             }
             else if(list.hasAsWaifu(userId, user.getID())){
-                bot.info(builder.buildMessage(Message.CMD_WAIFU_ALREADY_ON));
+                bot.info(buildMessage(Message.CMD_WAIFU_ALREADY_ON));
             }
             else{
                 list.addWaifu(userId, user.getID());
-                bot.info(builder.buildMessage(Message.CMD_WAIFU_ADD, user.getName()));
+                bot.info(buildMessage(Message.CMD_WAIFU_ADD, user.getName()));
 
                 if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
-                    bot.say(bot.getHome(), builder.buildMessage(Message.CMD_WAIFU_NOTIFY_ADD, user.mention(), message.getAuthor().getDisplayName(message.getGuild())));
+                    bot.say(bot.getHome(), buildMessage(Message.CMD_WAIFU_NOTIFY_ADD, user.mention(), message.getAuthor().getDisplayName(message.getGuild())));
                 }
             }
         }
-        else if(args[0].equalsIgnoreCase("remove")){
+        else if(args[0].equalsIgnoreCase(getLocalArgs()[2])){
             IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
-                bot.info(builder.buildMessage(Message.CMD_INVALID_USER));
+                bot.info(buildMessage(Message.CMD_INVALID_USER));
             }
             else if(!list.hasAsWaifu(userId, user.getID())){
-                bot.info(builder.buildMessage(Message.CMD_WAIFU_NOT_ON));
+                bot.info(buildMessage(Message.CMD_WAIFU_NOT_ON));
             }
             else{
                 list.removeWaifu(userId, user.getID());
-                bot.info(builder.buildMessage(Message.CMD_WAIFU_REMOVE, user.getName()));
+                bot.info(buildMessage(Message.CMD_WAIFU_REMOVE, user.getName()));
 
                 if(bot.checkSetting(user.getID(), SEE_WAIFU_NOTIFICATIONS)){
-                    bot.say(bot.getHome(), builder.buildMessage(Message.CMD_WAIFU_NOTIFY_REMOVE, user.mention(), message.getAuthor().getDisplayName(message.getGuild())));
+                    bot.say(bot.getHome(), buildMessage(Message.CMD_WAIFU_NOTIFY_REMOVE, user.mention(), message.getAuthor().getDisplayName(message.getGuild())));
                 }
             }
         }

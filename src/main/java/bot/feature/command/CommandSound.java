@@ -7,9 +7,7 @@ import bot.locale.MessageBuilder;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.audio.AudioPlayer;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -74,7 +72,7 @@ public class CommandSound extends BotCommand
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws MissingPermissionsException{
         Sound sound;
         if(args.length == 0){
             sound = Sound.values()[new Random().nextInt(Sound.values().length)];
@@ -84,7 +82,7 @@ public class CommandSound extends BotCommand
         MessageBuilder builder = new MessageBuilder(bot.getLocale());
 
         if(sound == null){
-            bot.info(builder.buildMessage(Message.CMD_SOUND_INVALID, args[0]));
+            bot.info(buildMessage(Message.CMD_SOUND_INVALID, args[0]));
             return;
         }
 
@@ -142,7 +140,7 @@ public class CommandSound extends BotCommand
             new Timer().schedule(task, (duration * times) + 400L);
         }
         else{
-            bot.info(builder.buildMessage(Message.CMD_SOUND_NOCHANNEL));
+            bot.info(buildMessage(Message.CMD_SOUND_NOCHANNEL));
         }
     }
 

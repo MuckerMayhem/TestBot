@@ -3,21 +3,16 @@ package bot.feature.command;
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
-
-import java.io.IOException;
 
 public abstract class ThreadedCommand extends BotCommand{
 
     @Override
-    public void execute(DiscordBot bot, IMessage message, String[] args){
+    public void execute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         new Thread(() -> {
             try{
-                this.onExecute(bot, message, args);
+                super.execute(bot, message, args);
             }
-            catch(RateLimitException | DiscordException | MissingPermissionsException | IOException e){
+            catch(Exception e){
                 bot.reportException(e, "Exception in ThreadedCommand '" + this.name + "'");
             }
         }).run();

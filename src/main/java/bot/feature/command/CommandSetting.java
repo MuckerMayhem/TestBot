@@ -2,17 +2,11 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import bot.settings.Setting;
 import bot.settings.SettingsHandler;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
-
-import java.io.IOException;
 
 public class CommandSetting extends BotCommand{
 
@@ -32,37 +26,35 @@ public class CommandSetting extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException, IOException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         String userId = message.getAuthor().getID();
 
         if(args.length == 0){
             bot.info(getDetailedDescription(), true);
             return;
         }
-
-        MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
-
+   
         boolean serverAccess = DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), Permissions.MANAGE_SERVER);
-        if(args[0].equalsIgnoreCase("list")){
-            StringBuilder builder = new StringBuilder(msgBuilder.buildMessage(Message.CMD_SETTING_LIST) + "\n" +
+        if(args[0].equalsIgnoreCase(getLocalArgs()[0])){
+            StringBuilder builder = new StringBuilder(buildMessage(Message.CMD_SETTING_LIST) + "\n" +
                     DiscordBot.getUserSettingsHandler().getSettings(userId).toString(bot.getLocale()));
 
             if(serverAccess)
-                builder.append(msgBuilder.buildMessage(Message.CMD_SETTING_MORE))
+                builder.append(buildMessage(Message.CMD_SETTING_MORE))
                         .append("\n")
                         .append(bot.getServerSettingsHandler().getSettings().toString(bot.getLocale()));
 
-            builder.append("\n").append(msgBuilder.buildMessage(Message.CMD_SETTING_ENTER_NUMBER));
-            if(serverAccess) builder.append("\n").append(msgBuilder.buildMessage(Message.CMD_SETTING_ENTER_NUMBER_SERVER));
+            builder.append("\n").append(buildMessage(Message.CMD_SETTING_ENTER_NUMBER));
+            if(serverAccess) builder.append("\n").append(buildMessage(Message.CMD_SETTING_ENTER_NUMBER_SERVER));
 
             bot.respond(builder.toString(), 5000L * DiscordBot.getUserSettingsHandler().getRegisteredSettings().size());
 
             return;
         }
 
-        if(args[0].equalsIgnoreCase("reset")){
+        if(args[0].equalsIgnoreCase(getLocalArgs()[1])){
             DiscordBot.getUserSettingsHandler().resetUserSettings(userId);
-            bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_RESET));
+            bot.info(buildMessage(Message.CMD_SETTING_RESET));
             return;
         }
 
@@ -73,13 +65,13 @@ public class CommandSetting extends BotCommand{
 
         SettingsHandler handler = DiscordBot.getUserSettingsHandler();
         int index = 0;
-        if(args.length >= 3 && args[0].equalsIgnoreCase("server")){
+        if(args.length >= 3 && args[0].equalsIgnoreCase(getLocalArgs()[2])){
             if(serverAccess){
                 handler = bot.getServerSettingsHandler();
                 index++;
             }
             else{
-                bot.respond(msgBuilder.buildMessage(Message.CMD_SETTING_NO_ACCESS));
+                bot.respond(buildMessage(Message.CMD_SETTING_NO_ACCESS));
                 return;
             }
         }
@@ -89,12 +81,12 @@ public class CommandSetting extends BotCommand{
             choice = Integer.parseInt(args[index]) - 1;
         }
         catch(NumberFormatException e){
-            bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_INVALID_NUMBER));
+            bot.info(buildMessage(Message.CMD_SETTING_INVALID_NUMBER));
             return;
         }
 
         if(choice >= handler.getSettings(userId).getSettings().size()){
-            bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_INVALID_SETTING, args[index]));
+            bot.info(buildMessage(Message.CMD_SETTING_INVALID_SETTING, args[index]));
             return;
         }
 
@@ -102,13 +94,13 @@ public class CommandSetting extends BotCommand{
 
         Object value = setting.parse(args[index + 1]);
         if(value == null){
-            bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_INVALID_VALUE, args[1]));
+            bot.info(buildMessage(Message.CMD_SETTING_INVALID_VALUE, args[1]));
             return;
         }
 
         handler.setSetting(userId, setting, value);
-        bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_SET, setting.getName(bot.getLocale()), setting.getValueAsString(value)));
-        if(setting.requiresRestart()) bot.info(msgBuilder.buildMessage(Message.CMD_SETTING_RESTART_REQUIRED, true));
+        bot.info(buildMessage(Message.CMD_SETTING_SET, setting.getName(bot.getLocale()), setting.getValueAsString(value)));
+        if(setting.requiresRestart()) bot.info(buildMessage(Message.CMD_SETTING_RESTART_REQUIRED), true);
     }
 
     /*

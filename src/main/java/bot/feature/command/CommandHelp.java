@@ -2,11 +2,7 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
 import java.util.Arrays;
@@ -31,11 +27,9 @@ public class CommandHelp extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         if(args.length == 0){
-            bot.respond("\n" + builder.buildMessage(Message.CMD_HELP_DETAILS, getHandle(bot.getLocale())) + "\n" +
+            bot.respond("\n" + buildMessage(Message.CMD_HELP_DETAILS, getHandle(bot.getLocale())) + "\n" +
                     String.join("\n", CommandHandler.getAllRegisteredCommands()
                             .stream()
                             .filter(c -> DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions()))
@@ -53,7 +47,7 @@ public class CommandHelp extends BotCommand{
                 BotCommand command = optional.get();
                 bot.respond(command.getDetailedDescription());
             }
-            else bot.info(builder.buildMessage(Message.CMD_INVALID_CMD, args[0]));
+            else bot.info(buildMessage(Message.CMD_INVALID_CMD, args[0]));
         }
     }
 }

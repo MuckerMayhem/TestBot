@@ -2,9 +2,6 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
 public class CommandType extends BotCommand{
@@ -25,7 +22,7 @@ public class CommandType extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         if(args.length == 0) return;
 
         DiscordUtil.deleteMessage(message);

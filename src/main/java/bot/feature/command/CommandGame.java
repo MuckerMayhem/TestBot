@@ -2,12 +2,8 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 
 public class CommandGame extends BotCommand{
 
@@ -27,16 +23,15 @@ public class CommandGame extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws RateLimitException, DiscordException, MissingPermissionsException{
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-        
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         IChannel home = bot.getHome();
+        
         if(home == null){
-            bot.info(builder.buildMessage(Message.CMD_GAME_NO_HOME), true);
+            bot.info(buildMessage(Message.CMD_GAME_NO_HOME), true);
             return;
         }
         else if(message.getChannel() != bot.getHome()){
-            bot.info(builder.buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()), true);
+            bot.info(buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()), true);
             return;
         }
 

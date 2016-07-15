@@ -18,7 +18,7 @@ public class LocaleHandler{
 
     private Locale locale;
 
-    private HashMap<BotCommand, String[]> commands = new HashMap<>();
+    private HashMap<Class<? extends BotCommand>, String[]> commands = new HashMap<>();
     private HashMap<Setting, String[]> settings = new HashMap<>();
     private HashMap<BotFunction, String> functions = new HashMap<>();
     private HashMap<Message, String> messages = new HashMap<>();
@@ -122,15 +122,17 @@ public class LocaleHandler{
         }
 
         CommandHandler.getAllRegisteredCommands().stream().forEach(c -> {
-            String[] info = new String[2];
+            String[] info = new String[3];
 
             String name = values.get(c.getRegisteredName() + ".name");
             String desc = values.get(c.getRegisteredName() + ".desc");
+            String args = values.get(c.getRegisteredName() + ".args");
 
             info[0] = name == null ? c.getRegisteredName() : name;
             info[1] = desc == null ? "command." + c.getRegisteredName() + ".desc" : desc;
+            info[2] = args;
 
-            localeHandler.commands.put(c, info);
+            localeHandler.commands.put(c.getClass(), info);
         });
 
         Arrays.stream(Message.values()).forEach(m -> {
@@ -185,7 +187,7 @@ public class LocaleHandler{
         if(this.locale == null)
             return command.getRegisteredName();
 
-        return this.commands.get(command)[0];
+        return this.commands.get(command.getClass())[0];
     }
 
     public String getLocalizedName(BotFunction function){
@@ -206,7 +208,7 @@ public class LocaleHandler{
         if(this.locale == null)
             return "command." + command.getRegisteredName() + ".desc";
 
-        return this.commands.get(command)[1];
+        return this.commands.get(command.getClass())[1];
     }
 
     public String getLocalizedDescription(Setting setting){
@@ -214,5 +216,12 @@ public class LocaleHandler{
             return "setting." + setting.getName() + ".desc";
 
         return this.settings.get(setting)[1];
+    }
+    
+    public String[] getLocalizedArguments(BotCommand command){
+        if(this.locale == null)
+            return new String[0];
+        
+        return this.commands.get(command.getClass())[2].split(",");
     }
 }
