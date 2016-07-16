@@ -6,6 +6,9 @@ import bot.feature.function.*;
 import bot.locale.Locale;
 import bot.locale.LocaleHandler;
 import bot.settings.*;
+import gui.BotGui;
+import logging.BotLogger;
+import logging.BotLogger.Level;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -83,6 +86,8 @@ public class DiscordBot{
 
     private IGuild guild;
 
+    private BotLogger logger;
+    
     private SingleSettingsHandler serverSettingsHandler;
     private LocaleHandler localeHandler;
 
@@ -96,9 +101,20 @@ public class DiscordBot{
         this.guild = guild;
         instances.put(guild, this);
         init();
+        BotGui.getGui().getGuildPanel().update();
     }
 
     public static void main(String[] args) throws Exception{
+        System.runFinalizersOnExit(true);
+        
+        if(args.length >= 2 && args[1].equals("-nogui")){
+            BotGui.disableGui();
+        }
+        
+        if(!BotGui.isDisabled()){
+            new BotGui("TestBot").setVisible(true); 
+        }
+        
         if(args.length == 0){
             System.out.println("Please run again with correct arguments... (Missing token)");
             System.exit(0);
@@ -110,7 +126,6 @@ public class DiscordBot{
                 System.out.println("Done!");
         }
 
-        IDiscordClient client;
         try{
             System.out.println("Client logging in...");
             client = login(args[0]);
@@ -143,6 +158,13 @@ public class DiscordBot{
                 System.out.println("Done!");
         }
 
+        this.logger = new BotLogger(this);
+        
+        if(BotGui.isDisabled())
+            this.logger.addOutput(System.out);
+        else
+            this.logger.addOutput(BotGui.getGui().getLogPanel().getLogPanel(this.guild));
+        
         this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
         this.serverSettingsHandler.registerNewSetting(SETTING_LOCALE);
         this.serverSettingsHandler.registerNewSetting(SETTING_HOME);
@@ -161,8 +183,18 @@ public class DiscordBot{
         this.localeHandler = LocaleHandler.get(locale == null ? Locale.ENGLISH : locale);
 
         this.home = (String) getServerSettingsHandler().getSetting(SETTING_HOME);
+        
+        log(Level.INFO, "Bot initialized.");
     }
 
+    public static Set<IGuild> getGuilds(){
+        return instances.keySet();
+    }
+    
+    public static Collection<DiscordBot> getInstances(){
+        return instances.values();
+    }
+    
     public static DiscordBot getGuildlessInstance(){
         return instance;
     }
@@ -171,6 +203,10 @@ public class DiscordBot{
         return instances.get(guild);
     }
 
+    public static DiscordBot getInstance(String guildId){
+        return getInstance(client.getGuildByID(guildId));
+    }
+    
     @Deprecated
     public static IDiscordClient login(String email, String password) throws DiscordException{
         return new ClientBuilder().withLogin(email, password).login();
@@ -212,6 +248,10 @@ public class DiscordBot{
         return this.guild;
     }
 
+    public BotLogger getLogger(){
+        return this.logger;
+    }
+    
     public LocaleHandler getLocaleHandler(){
         return this.localeHandler;
     }
@@ -280,6 +320,11 @@ public class DiscordBot{
         type(channel, message, message.length() * 100L);
     }
 
+    public void type(String message){
+        if(getHome() == null) return;
+        type(getHome(), message, message.length() * 100L);
+    }
+
     /**
      * Sends a message from this bot in the specified channel<br>
      * Message is automatically deleted after the specified amount of time (in millis)<br>
@@ -327,6 +372,7 @@ public class DiscordBot{
      * @param message Message to send
      */
     public void say(String message){
+        if(getHome() == null) return;
         say(getHome(), message);
     }
 
@@ -388,32 +434,29 @@ public class DiscordBot{
         this.features.remove(feature);
         feature.onDisable(this);
     }
-
+    
+    public void log(Level level, String message){
+        if(this.logger == null) return;
+        
+        this.logger.log(level, message);
+    }
+    
+    public void logf(Level level, String message, Object... args){
+        if(this.logger == null) return;
+        
+        this.logger.logf(level, message, args);
+    }
+    
     public void reportException(Exception e, String message){
-        System.err.print(message + " | Details:\n" +
+        System.err.println(message + " | Details:\n" +
                 "Class: " + e.getClass().getName() + "\n" +
                 "Message: " + e.getMessage() + "\n" +
                 "Guild ID: " + this.guild.getID() + "\n" +
                 "At: " + e.getStackTrace()[0]);
     }
-
-    /*Maybe used for logging later?
-    public enum Level{
-
-        INFO("\u001B[0m"),
-        WARN("\u001B[33m"),
-        ERROR("\u001B[31m"),
-        DEBUG("\u001B[32m");
-
-        private String prefix;
-
-        Level(String prefix){
-            this.prefix = prefix;
-        }
-
-        private String getPrefix(){
-            return this.prefix;
-        }
+    
+    @Override
+    public void finalize(){
+        log(Level.WARN, "Instance shutting down.");
     }
-    */
 }

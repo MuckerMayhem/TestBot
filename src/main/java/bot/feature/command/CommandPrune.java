@@ -5,9 +5,6 @@ import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import util.DiscordUtil;
 
 import java.util.List;
@@ -31,7 +28,7 @@ public class CommandPrune extends BotCommand{
     }
 
     @Override
-    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws DiscordException, MissingPermissionsException, RateLimitException{
+    public void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(args.length == 0) return;
 
         MessageBuilder builder = new MessageBuilder(bot.getLocale());

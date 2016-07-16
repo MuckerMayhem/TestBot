@@ -1,8 +1,10 @@
 package bot;
 
+import gui.BotGui;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.GuildCreateEvent;
+import sx.blah.discord.handle.impl.events.GuildLeaveEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.DiscordException;
@@ -23,7 +25,7 @@ public class EventListener{
     @EventSubscriber
     public void onReady(ReadyEvent event){
         IDiscordClient client = event.getClient();
-
+        
         try{
             client.changeUsername(NAME);
         }
@@ -51,5 +53,10 @@ public class EventListener{
     @EventSubscriber
     public void onGuildCreate(GuildCreateEvent event){
         guildQueue.add(event.getGuild());
+    }
+    
+    @EventSubscriber
+    public void onGuildRemove(GuildLeaveEvent event){
+        BotGui.getGui().getGuildPanel().update();
     }
 }

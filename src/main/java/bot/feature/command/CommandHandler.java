@@ -1,6 +1,7 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import logging.BotLogger.Level;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
@@ -161,8 +162,8 @@ public class CommandHandler{
                     bot.reportException(e, "Exception occurred while executing command '" + c.getRegisteredName() + "'");
                     return;
                 }
-
-                System.out.printf("(%s) Command '%s' run by user %s with arguments: %s\n", message.getGuild().getName(), c.name, message.getAuthor().getName(), String.join(", ", args));
+                
+                bot.logf(Level.INFO, "Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));
 
                 return;
             }
