@@ -1,6 +1,10 @@
-package gui;
+package gui.window.main.guild;
 
 import bot.DiscordBot;
+import gui.AbstractBotPanel;
+import gui.BotGui;
+import gui.window.main.log.LogPanel;
+import gui.window.main.view.ViewPanel;
 import sx.blah.discord.handle.obj.IGuild;
 
 import javax.swing.*;
@@ -9,6 +13,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
+/**
+ * Represents the left panel in the BotGui
+ * Shows a list of guilds the bot is connected to.<br>
+ * Clicking a guild shows its information in the {@link ViewPanel}
+ * @see ViewPanel
+ * @see LogPanel
+ */
 public class GuildPanel extends AbstractBotPanel{
 
     private JList<String> guildList;

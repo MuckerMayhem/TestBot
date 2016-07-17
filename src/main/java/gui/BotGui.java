@@ -1,14 +1,18 @@
 package gui;
 
+import gui.window.main.guild.GuildPanel;
+import gui.window.main.log.LogPanel;
+import gui.window.main.view.ViewPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class BotGui extends JFrame{
     
+    public String selectedGuild;
+    
     private static BotGui gui;
     private static boolean disabled;
-
-    protected String selectedGuild;
     
     private BotPanel mainPanel;
     
@@ -19,7 +23,7 @@ public class BotGui extends JFrame{
     public BotGui(String title){
         super(title);
         
-        this.setSize(950, 500);
+        this.setSize(700, 800);
         
         this.mainPanel = new BotPanel(this, new GridLayout(1, 2));
         add(this.mainPanel);
@@ -27,7 +31,7 @@ public class BotGui extends JFrame{
         this.guildPanel = new GuildPanel(this, new GridLayout());
         mainPanel.add(guildPanel);
         
-        this.viewPanel = new ViewPanel(this, new GridLayout(2, 3));
+        this.viewPanel = new ViewPanel(this);
         mainPanel.add(viewPanel);
         
         this.logPanel = new LogPanel(this);

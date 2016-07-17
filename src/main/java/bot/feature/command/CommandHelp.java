@@ -27,7 +27,9 @@ public class CommandHelp extends BotCommand{
     }
 
     @Override
-    protected void onExecute(DiscordBot bot, IMessage message, String[] args){
+    protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
+        if(true) throw new NullPointerException("Test exception");
+        
         if(args.length == 0){
             bot.respond("\n" + buildMessage(Message.CMD_HELP_DETAILS, getHandle(bot.getLocale())) + "\n" +
                     String.join("\n", CommandHandler.getAllRegisteredCommands()

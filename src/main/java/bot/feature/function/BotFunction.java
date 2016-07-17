@@ -13,7 +13,6 @@ public abstract class BotFunction extends BotFeature{
 
     private static ArrayList<BotFunction> global_functions = new ArrayList<>();
 
-    private String name;
     private Class<? extends BotFunction> mainClass;
 
     public static List<BotFunction> getAllRegisteredFunctions(){
@@ -55,7 +54,7 @@ public abstract class BotFunction extends BotFeature{
                 this.onMessageReceived(bot, event);
             }
             catch(Exception e){
-                bot.reportException(e, "Exception occurred while handling function " + this.name);
+                bot.log(e, "Exception occurred while handling function " + this.name);
             }
         }
     }
@@ -68,7 +67,7 @@ public abstract class BotFunction extends BotFeature{
                 this.onVoiceChannelMove(bot, event);
             }
             catch(Exception e){
-                bot.reportException(e, "Exception occurred while handling function " + this.name);
+                bot.log(e, "Exception occurred while handling function " + this.name);
             }
         }
     }

@@ -1,8 +1,12 @@
-package gui;
+package gui.window.main.view.settings;
 
 import bot.DiscordBot;
 import bot.settings.Setting;
 import bot.settings.SingleSettingsHandler;
+import gui.AbstractBotPanel;
+import gui.BotGui;
+import gui.BotPanel;
+import gui.window.message.MessagePanel;
 import sx.blah.discord.handle.obj.IGuild;
 
 import javax.swing.*;
@@ -63,6 +67,15 @@ public class SettingsPanel extends AbstractBotPanel{
             }
         });
         buttonPanel.add(logButton);
+        
+        JButton messageButton = new JButton("Message...");
+        messageButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new MessagePanel(gui, bot).open();
+            }
+        });
+        buttonPanel.add(messageButton);
         
         JButton restartButton = new JButton("Restart");
         restartButton.addActionListener(new ActionListener(){

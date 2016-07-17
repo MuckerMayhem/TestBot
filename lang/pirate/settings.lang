@@ -16,3 +16,5 @@ locale.name:Speak
 locale.desc:Speak o' the bot
 bot_home.name:Captain's quarters
 bot_home.desc:The channel where t' captain speaks
+anonymous_logging.name:Anonymous logging
+anonymous_logging.desc:Display IDs in place of names in the server-side log

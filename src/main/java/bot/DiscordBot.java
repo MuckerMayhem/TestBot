@@ -1,5 +1,6 @@
 package bot;
 
+import bot.event.BotEventDispatcher;
 import bot.feature.BotFeature;
 import bot.feature.command.*;
 import bot.feature.function.*;
@@ -73,6 +74,7 @@ public class DiscordBot{
     //SETTINGS
     public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en", true);
     public static final StringSetting SETTING_HOME = new StringSetting("bot_home", "", true);
+    public static final BooleanSetting SETTING_ANONYMOUS = new BooleanSetting("anonymous_logging", true, false);
 
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
@@ -90,6 +92,8 @@ public class DiscordBot{
     
     private SingleSettingsHandler serverSettingsHandler;
     private LocaleHandler localeHandler;
+    
+    private BotEventDispatcher eventDispatcher;
 
     private ArrayList<BotFeature> features = new ArrayList<>();
 
@@ -101,7 +105,6 @@ public class DiscordBot{
         this.guild = guild;
         instances.put(guild, this);
         init();
-        BotGui.getGui().getGuildPanel().update();
     }
 
     public static void main(String[] args) throws Exception{
@@ -147,7 +150,7 @@ public class DiscordBot{
             userSettingsHandler.loadSettings();//All settings should be registered by this time, and can now be loaded
         }
         catch(IOException e){
-            getGuildlessInstance().reportException(e, "Failed to load user settings.");
+            getGuildlessInstance().log(e, "Failed to load user settings.");
         }
     }
 
@@ -168,7 +171,10 @@ public class DiscordBot{
         this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
         this.serverSettingsHandler.registerNewSetting(SETTING_LOCALE);
         this.serverSettingsHandler.registerNewSetting(SETTING_HOME);
+        this.serverSettingsHandler.registerNewSetting(SETTING_ANONYMOUS);
 
+        this.eventDispatcher = new BotEventDispatcher(this);
+                
         CommandHandler.getAllRegisteredCommands().forEach(this::enableFeature);
         BotFunction.getAllRegisteredFunctions().forEach(this::enableFeature);
 
@@ -176,7 +182,7 @@ public class DiscordBot{
             getServerSettingsHandler().loadSettings();
         }
         catch(IOException e){
-            reportException(e, "Failed to load global settings.");
+            log(e, "Could not load server settings");
         }
 
         Locale locale = Locale.getFromCode((String) getServerSettingsHandler().getSetting(SETTING_LOCALE));
@@ -232,6 +238,10 @@ public class DiscordBot{
         return getUserSettingsHandler().getUserSetting(userId, setting);
     }
 
+    public boolean anonymous(){
+        return (Boolean) getServerSettingsHandler().getSetting(SETTING_ANONYMOUS);
+    }
+    
     public boolean checkSetting(String userId, BooleanSetting setting){
         return (Boolean) getUserSetting(userId, setting);
     }
@@ -260,6 +270,10 @@ public class DiscordBot{
         return this.serverSettingsHandler;
     }
 
+    public BotEventDispatcher getEventDispatcher(){
+        return this.eventDispatcher;
+    }
+    
     public Locale getLocale(){
         return getLocaleHandler().getLocale();
     }
@@ -343,15 +357,15 @@ public class DiscordBot{
             }
             catch(RateLimitException e){
                 try{
-                    Thread.sleep(10L);//Try again in 10 millis if rate limited
+                    Thread.sleep(e.getRetryDelay());//Try again if rate limited
                 }
                 catch(InterruptedException e1){
-                    e1.printStackTrace();
+                    log(e1);
                 }
                 return say(channel, message, time);
             }
             catch(DiscordException | MissingPermissionsException e){
-                System.err.print(e.getMessage());
+                log(e);
             }
         }
         return null;
@@ -435,24 +449,40 @@ public class DiscordBot{
         feature.onDisable(this);
     }
     
+    public void logo(Level level, String message, Object... args){
+        if(this.logger == null) return;
+        
+        this.logger.logo(level, message, args);
+    }
+    
+    public void logf(Level level, String message, Object... args){
+        if(this.logger == null) return;
+
+        this.logger.logf(level, message, args);
+    }
+    
     public void log(Level level, String message){
         if(this.logger == null) return;
         
         this.logger.log(level, message);
     }
     
-    public void logf(Level level, String message, Object... args){
-        if(this.logger == null) return;
+    public void log(Exception e, String message){
+        if(this.logger == null){
+            System.err.print(message + ": " + e.getClass().getSimpleName() + "\nMessage: " + e.getMessage());
+            return;
+        }
         
-        this.logger.logf(level, message, args);
+        this.logger.log(e, message);
     }
     
-    public void reportException(Exception e, String message){
-        System.err.println(message + " | Details:\n" +
-                "Class: " + e.getClass().getName() + "\n" +
-                "Message: " + e.getMessage() + "\n" +
-                "Guild ID: " + this.guild.getID() + "\n" +
-                "At: " + e.getStackTrace()[0]);
+    public void log(Exception e){
+        if(this.logger == null){
+            System.err.print(e.getClass().getSimpleName() + "\nMessage: " + e.getMessage());
+            return;
+        }
+        
+        this.logger.log(e);
     }
     
     @Override

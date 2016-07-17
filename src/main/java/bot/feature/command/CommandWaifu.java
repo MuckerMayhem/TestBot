@@ -35,7 +35,7 @@ public class CommandWaifu extends BotCommand{
             loadWaifus(bot);
         }
         catch(IOException e){
-            bot.reportException(e, "Failed to load waifus");
+            bot.log(e, "Failed to load waifus");
         }
     }
 
@@ -145,7 +145,7 @@ public class CommandWaifu extends BotCommand{
         waifuLists.put(bot.getGuild().getID(), waifus);
     }
 
-    private static void saveWaifus(DiscordBot bot) throws IOException{
+    private static void saveWaifus(DiscordBot bot){
         File file = bot.getDataFile("waifus.json");
 
         JsonArray users = new JsonArray();
@@ -161,7 +161,12 @@ public class CommandWaifu extends BotCommand{
         }
 
         Gson gson = new GsonBuilder().create();
-        FileUtils.writeStringToFile(file, gson.toJson(users));
+        try{
+            FileUtils.writeStringToFile(file, gson.toJson(users));
+        }
+        catch(IOException e){
+            bot.log(e, "Failed to save waifus");
+        }
     }
     /*
     @Override
@@ -201,12 +206,7 @@ public class CommandWaifu extends BotCommand{
             waifus.putIfAbsent(firstUserID, new ArrayList<>());
             waifus.get(firstUserID).add(secondUserId);
 
-            try{
-                saveWaifus(this.bot);
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
+            saveWaifus(this.bot);
         }
 
         public void setWaifus(String userId, ArrayList<String> waifus){
@@ -217,12 +217,7 @@ public class CommandWaifu extends BotCommand{
             waifus.putIfAbsent(firstUserId, new ArrayList<>());
             waifus.get(firstUserId).remove(secondUserId);
 
-            try{
-                saveWaifus(this.bot);
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
+            saveWaifus(this.bot);
         }
 
         private boolean hasAsWaifu(String firstUserId, String secondUserId){

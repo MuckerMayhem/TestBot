@@ -42,7 +42,7 @@ public class CommandSound extends BotCommand
             player.provide();
         }
         catch(UnsupportedAudioFileException | IOException e){
-            System.err.print("Could not play sound " + sound.getName() + ": " + e.getClass().getSimpleName());
+            bot.log(e, "Could not play sound " + sound.getName());
             return;
         }
 
@@ -126,7 +126,7 @@ public class CommandSound extends BotCommand
                 player.provide();
             }
             catch(UnsupportedAudioFileException | IOException e){
-                System.err.print("Could not play sound " + sound.getName() + ": " + e.getClass().getSimpleName());
+                bot.log(e, "Could not play sound " + sound.getName());
                 return;
             }
 
@@ -176,7 +176,7 @@ public class CommandSound extends BotCommand
             }
         }
         catch(IOException | UnsupportedAudioFileException e){
-            System.err.printf("Failed to load sound '%s': %s", sound.getName(), e.getClass().getSimpleName());
+            System.err.printf("Failed to load sound '%s': %s", sound.getName(), e.getClass().getSimpleName() + "\n");
             return -1;
         }
 

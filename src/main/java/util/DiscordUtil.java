@@ -20,6 +20,13 @@ public class DiscordUtil{
         return false;
     }
 
+    public static IChannel getChannelByName(IGuild guild, String name){
+        for(IChannel c : guild.getChannels()){
+            if(c.getName().equals(name)) return c;
+        }
+        return null;
+    }
+    
     public static IUser getUserByMention(IGuild guild, String mention){
         String tag = mention.replaceAll("[<>!]", "");
         if(tag.startsWith("@")){
@@ -78,7 +85,7 @@ public class DiscordUtil{
         }
         catch(RateLimitException e){
             try{
-                Thread.sleep(10L);
+                Thread.sleep(e.getRetryDelay());
             }
             catch(InterruptedException e1){
                 e1.printStackTrace();
@@ -86,7 +93,7 @@ public class DiscordUtil{
             return deleteAllMessages(channel, totalDeleted, load, delete);
         }
         catch(DiscordException | MissingPermissionsException e){
-            DiscordBot.getGuildlessInstance().reportException(e, "");
+            DiscordBot.getGuildlessInstance().log(e, "");
             return -1;
         }
 

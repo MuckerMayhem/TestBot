@@ -50,32 +50,4 @@ public class ThreadedCommandClear extends ThreadedCommand{
 
         bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_CANCELLED), 3500L);
     }
-
-    /*
-    public void deleteMessages(DiscordBot bot, IChannel channel, int size, int count){
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
-        final int deleted = size < 50 ? size : 50;
-        final int newCount = count + deleted;
-        TimerTask task = new TimerTask(){
-            @Override
-            public void run(){
-                try{
-                    channel.getMessages().load(deleted);
-                    channel.getMessages().deleteFromRange(0, deleted);
-                }
-                catch(RateLimitException | DiscordException | MissingPermissionsException e){
-                    e.printStackTrace();
-                }
-
-                if(size - deleted > 50)
-                    deleteMessages(bot, channel, size - deleted, newCount);
-                else
-                    bot.say(channel, buildMessage(Message.CMD_CLEAR_DELETED, newCount), 3500L);
-            }
-        };
-        if(size > 0)
-            new Timer().schedule(task, 500L);
-    }
-    */
 }

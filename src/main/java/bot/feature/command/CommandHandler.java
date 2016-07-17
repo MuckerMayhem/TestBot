@@ -2,8 +2,10 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import logging.BotLogger.Level;
+import logging.LogWrapper;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
 import util.DiscordUtil;
@@ -128,6 +130,8 @@ public class CommandHandler{
         }
 
         IMessage message = event.getMessage();
+        IChannel channel = message.getChannel();
+        
         String content = event.getMessage().getContent();
 
         if(!content.startsWith(commandPrefix)) return;
@@ -156,15 +160,23 @@ public class CommandHandler{
                 bot.lastEvent = event;
                 try{
                     c.newInstance().execute(bot, message, args);
-//                    c.execute(bot, message, args);
                 }
                 catch(Exception e){
-                    bot.reportException(e, "Exception occurred while executing command '" + c.getRegisteredName() + "'");
+                    bot.logo(Level.ERROR, "Exception while executing command '%s': %s\nMessage: %s\nChannel ID: %s\nUser ID: %s\nAt: %s", 
+                            c, 
+                            e.getClass(), 
+                            e.getMessage(), 
+                            channel, 
+                            message.getAuthor(), 
+                            e.getStackTrace()[0]);
                     return;
                 }
                 
-                bot.logf(Level.INFO, "Command '%s' run by user %s with arguments: %s\n", c.name, message.getAuthor().getName(), String.join(", ", args));
-
+                bot.logo(Level.INFO, "%s executed command '%s' in channel %s with arguments: %s", 
+                        new LogWrapper(message.getAuthor()), 
+                        c.name, 
+                        new LogWrapper(channel), 
+                        String.join(", ", args));
                 return;
             }
         }

@@ -19,8 +19,7 @@ import java.util.List;
 public abstract class BotCommand extends BotFeature{
 
     Permissions permissions;
-
-    String name;
+    
     String description;
     String[] aliases;
 
@@ -44,14 +43,6 @@ public abstract class BotCommand extends BotFeature{
 
     public Permissions getRequiredPermissions(){
         return this.permissions;
-    }
-
-    /**
-     * Gets the name this command was registered under
-     * @return The name this command was registered under
-     */
-    public String getRegisteredName(){
-        return this.name;
     }
     
     /**

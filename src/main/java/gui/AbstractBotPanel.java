@@ -28,6 +28,10 @@ public abstract class AbstractBotPanel extends JPanel{
 
     protected abstract void onUpdate();
     
+    public BotGui getGui(){
+        return this.gui;
+    }
+    
     public void update(){
         this.onUpdate();
         

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 public class EventListener{
 
+    //https://discordapp.com/oauth2/authorize?client_id=195313542130302977&scope=bot&permissions=8 Bot authorization url
+    
     private static final String NAME = "Weeb-bot";//Bot's username
     private static final Image IMAGE = Image.forFile(new File("kirino.png"));//Bot's avatar
     private static final String GAME = "俺の妹がこんなに可愛いわけがないポータブル";//Game the bot will be displayed as playing
@@ -48,6 +50,8 @@ public class EventListener{
             new DiscordBot(g);
             System.out.printf("Joined guild '%s' (%s)\n", g.getName(), g.getID());
         }
+        
+        BotGui.getGui().getGuildPanel().update();
     }
 
     @EventSubscriber

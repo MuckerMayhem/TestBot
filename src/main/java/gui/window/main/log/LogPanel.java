@@ -1,6 +1,8 @@
-package gui;
+package gui.window.main.log;
 
 import bot.DiscordBot;
+import gui.AbstractBotPanel;
+import gui.BotGui;
 import sx.blah.discord.handle.obj.IGuild;
 
 import javax.swing.*;
@@ -10,6 +12,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+/**
+ * Represents the right panel in the BotGui
+ * Contains two panels:<ul>
+ *     <li>An info panel that shows the information of the currently selected guild</li>
+ *     <li>A settings panel that shows the settings of the currently selected guild</li>
+ * </ul>
+ */
 public class LogPanel extends AbstractBotPanel{
     
     private static HashMap<String, LogTextPane> textPanes = new HashMap<>();
@@ -67,9 +76,5 @@ public class LogPanel extends AbstractBotPanel{
             }
         });
         add(detachButton, new GridBagConstraints(0, 10, 1, 1, 0.05, 0.05, GridBagConstraints.PAGE_END, 1, new Insets(0, 0, 0, 0), 0, 0));
-        
-        //Refresh
-        revalidate();
-        repaint();
     }
 }

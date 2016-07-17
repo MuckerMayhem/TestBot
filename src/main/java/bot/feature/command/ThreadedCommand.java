@@ -13,7 +13,7 @@ public abstract class ThreadedCommand extends BotCommand{
                 super.execute(bot, message, args);
             }
             catch(Exception e){
-                bot.reportException(e, "Exception in ThreadedCommand '" + this.name + "'");
+                bot.log(e, "Exception in ThreadedCommand '" + this.name + "'");
             }
         }).run();
     }

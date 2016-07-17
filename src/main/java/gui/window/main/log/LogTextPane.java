@@ -1,5 +1,7 @@
-package gui;
+package gui.window.main.log;
 
+import gui.BotGui;
+import gui.BotTextPane;
 import sx.blah.discord.handle.obj.IGuild;
 
 import javax.swing.*;
@@ -8,7 +10,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class LogTextPane extends JTextPane{
+public class LogTextPane extends BotTextPane{
     
     private BotGui gui;
     
@@ -21,7 +23,7 @@ public class LogTextPane extends JTextPane{
         this.setEditable(false);
         this.logPanel = parent;
         this.guild = guild;
-        this.gui = parent.gui;
+        this.gui = parent.getGui();
     }
  
     public JFrame detach(){
@@ -49,10 +51,6 @@ public class LogTextPane extends JTextPane{
     
     public boolean isDetached(){
         return this.detached;
-    }
-    
-    public void println(String x){
-        this.setText(getText() + x);
     }
 
     public class LogPanelPopoutListener implements WindowListener{

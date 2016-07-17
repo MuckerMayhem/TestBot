@@ -1,6 +1,8 @@
-package gui;
+package gui.window.main.view.info;
 
 import bot.DiscordBot;
+import gui.AbstractBotPanel;
+import gui.BotGui;
 import sx.blah.discord.handle.obj.IGuild;
 
 import javax.swing.*;
@@ -33,7 +35,7 @@ public class InfoPanel extends AbstractBotPanel{
         if(bot == null) return;
 
         //Update name
-        this.nameLabel.setText("Guild name: " + guild.getName());
+        this.nameLabel.setText("Guild name: " + (bot.anonymous() ? guild.getID() : guild.getName()));
         
         //Update region
         this.regionLabel.setText("Region: " + guild.getRegion().getName());
