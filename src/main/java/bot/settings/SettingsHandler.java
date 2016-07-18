@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public abstract class SettingsHandler{
 
-    private static ArrayList<Setting> global_settings = new ArrayList<>();
+    private static final ArrayList<Setting> global_settings = new ArrayList<>();
 
-    protected ArrayList<Setting> settings = new ArrayList<>();
-    protected File file;
+    protected final ArrayList<Setting> settings = new ArrayList<>();
+    protected final File file;
 
     public SettingsHandler(File file){
         this.file = file;

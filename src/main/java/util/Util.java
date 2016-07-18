@@ -136,9 +136,9 @@ public class Util{
     /**
      * Returns true if array <i>a1</i> contains all strings from array <i>a2</i>
      * Case-insensitive
-     * @param a1
-     * @param a2
-     * @return
+     * @param a1 First array
+     * @param a2 Second array
+     * @return Whether array a1 contains all Strings from a2
      */
     public static boolean containsAll(String[] a1, String... a2){
         int count = 0;
@@ -162,9 +162,9 @@ public class Util{
     /**
      * Returns true if array <i>a</i> contains string <i>toFind</i>
      * Case-insensitive
-     * @param a
-     * @param toFind
-     * @return
+     * @param a Array to search
+     * @param toFind String to search for
+     * @return Whether the array contains the specified String
      */
     public static boolean contains(String[] a, String toFind){
         for(String s : a){

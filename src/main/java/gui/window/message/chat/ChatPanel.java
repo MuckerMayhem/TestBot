@@ -18,9 +18,8 @@ import java.awt.*;
 
 public class ChatPanel extends AbstractBotPanel{
 
-    private MessagePanel messagePanel;
-    
-    private JTextPane chatPane;
+    private final MessagePanel messagePanel;
+    private final JTextPane chatPane;
             
     public ChatPanel(MessagePanel parent){
         super(parent.getGui(), new GridLayout());

@@ -12,16 +12,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
+//TODO: Combine maps into one to simplify value getting
 public class LocaleHandler{
 
-    private static HashMap<Locale, LocaleHandler> locales = new HashMap<>();
+    private static final HashMap<Locale, LocaleHandler> locales = new HashMap<>();
 
     private Locale locale;
 
-    private HashMap<Class<? extends BotCommand>, String[]> commands = new HashMap<>();
-    private HashMap<Setting, String[]> settings = new HashMap<>();
-    private HashMap<BotFunction, String> functions = new HashMap<>();
-    private HashMap<Message, String> messages = new HashMap<>();
+    private final HashMap<Class<? extends BotCommand>, String[]> commands = new HashMap<>();
+    private final HashMap<Setting, String[]> settings = new HashMap<>();
+    private final HashMap<BotFunction, String> functions = new HashMap<>();
+    private final HashMap<Message, String> messages = new HashMap<>();
 
     public static LocaleHandler load(Locale locale) throws FileNotFoundException{
         File file = new File("lang" + File.separator + locale.getCode());
@@ -32,7 +33,7 @@ public class LocaleHandler{
 
         HashMap<String, String> values = new HashMap<>();
 
-        int ln = 0;
+        int ln;
 
         File commands = new File(file + File.separator + "commands.lang");
         if(commands.exists()){

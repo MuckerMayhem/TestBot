@@ -110,10 +110,10 @@ public class FunctionEatFood extends BotFunction{
         DOG(false, "dog", "\uD83D\uDC36", ":thinking:"),
         POOP(false, "poop", "\uD83D\uDCA9", ":scream:");
 
-        private boolean drink;
-        private String name;
-        private String unicode;
-        private String expression;
+        private final boolean drink;
+        private final String name;
+        private final String unicode;
+        private final String expression;
 
         Food(boolean drink, String name, String unicode, String expression){
             this.drink = drink;

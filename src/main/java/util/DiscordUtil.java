@@ -6,6 +6,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,6 +21,11 @@ public class DiscordUtil{
         return false;
     }
 
+    public static IVoiceChannel getVoiceChannel(IGuild guild, IUser user){
+        Optional<IVoiceChannel> channel = user.getConnectedVoiceChannels().stream().filter(v -> v.getGuild() == guild).findFirst();
+        return channel.orElseGet(null);
+    }
+    
     public static IChannel getChannelByName(IGuild guild, String name){
         for(IChannel c : guild.getChannels()){
             if(c.getName().equals(name)) return c;
@@ -30,8 +36,7 @@ public class DiscordUtil{
     public static IUser getUserByMention(IGuild guild, String mention){
         String tag = mention.replaceAll("[<>!]", "");
         if(tag.startsWith("@")){
-            IUser user = getUserByID(guild, tag.substring(1, tag.length()));
-            return user;
+            return getUserByID(guild, tag.substring(1, tag.length()));
         }
         return null;
     }

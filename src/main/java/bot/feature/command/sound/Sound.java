@@ -42,8 +42,8 @@ public enum Sound{
     NYAT("nyat", new File("sound/NYAT.mp3")),
     FUCKINGNOOT("fuckingnoot", new File("sound/fuckingnoot.mp3"));
 
-    private String name;
-    private String[] aliases;
+    private final String name;
+    private final String[] aliases;
 
     private String url;
     private File path;
@@ -100,8 +100,7 @@ public enum Sound{
     public URL getUrl() throws MalformedURLException{
         return new URL(this.url);
     }
-
-    @Deprecated
+    
     public File getPath(){
         return this.path;
     }

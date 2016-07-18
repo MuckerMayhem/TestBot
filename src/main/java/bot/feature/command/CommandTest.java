@@ -6,6 +6,7 @@ import sx.blah.discord.handle.obj.IMessage;
 
 import java.util.Arrays;
 
+//TODO: Remove when bot is published
 public class CommandTest extends BotCommand{
 
     @Override

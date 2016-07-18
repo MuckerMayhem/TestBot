@@ -2,6 +2,7 @@ package bot;
 
 import bot.event.BotEventDispatcher;
 import bot.feature.BotFeature;
+import bot.feature.FeatureSet;
 import bot.feature.command.*;
 import bot.feature.function.*;
 import bot.locale.Locale;
@@ -17,6 +18,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.handle.obj.Status.StatusType;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -31,11 +33,16 @@ import java.util.stream.Collectors;
 import static bot.feature.command.CommandHandler.registerCommand;
 import static bot.feature.function.BotFunction.registerFunction;
 
+//TODO: Separate features into sets
+//TODO: Don't immediately register every feature
+@SuppressWarnings("unused")
 public class DiscordBot{
 
-    private static UserSettingsHandler userSettingsHandler = new UserSettingsHandler(new File(getGlobalDataFolder() + File.separator + "usersettings.json"));
+    private static final HashMap<IGuild, DiscordBot> instances = new HashMap<>();//All bot instances
+    
+    private static final UserSettingsHandler userSettingsHandler = new UserSettingsHandler(new File(getGlobalDataFolder() + File.separator + "usersettings.json"));
 
-    //COMMANDS
+    //Commands
     //Admin commands
     public static final BotCommand COMMAND_PRUNE = registerCommand("prune", CommandPrune.class, Permissions.MANAGE_MESSAGES);
     public static final BotCommand COMMAND_LEAVE = registerCommand("leave", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
@@ -63,7 +70,7 @@ public class DiscordBot{
     public static final ThreadedCommand COMMAND_CLEAR = (ThreadedCommand) registerCommand("clear", ThreadedCommandClear.class, Permissions.MANAGE_SERVER);
 
 
-    //FUNCTIONS
+    //Functions
 //    public static final BotFunction FUNCTION_HIGHNOON = registerFunction("highnoon", FunctionHighNoon.class);
     public static final BotFunction FUNCTION_BREAKWALLS = registerFunction("breakwalls", FunctionBreakMessages.class);
     public static final BotFunction FUNCTION_EAT = registerFunction("eat", FunctionEatFood.class);
@@ -71,22 +78,25 @@ public class DiscordBot{
     public static final BotFunction FUNCTION_WELCOME = registerFunction("welcome", FunctionWelcomeBack.class);
 
 
-    //SETTINGS
+    //Settings
     public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en", true);
     public static final StringSetting SETTING_HOME = new StringSetting("bot_home", "", true);
     public static final BooleanSetting SETTING_ANONYMOUS = new BooleanSetting("anonymous_logging", true, false);
-
+    
+    //Feature sets
+//    public static final FeatureSet MEME = BotFeature.registerFeature();
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
 
     private static IDiscordClient client;
     private static DiscordBot instance;
-    private static HashMap<IGuild, DiscordBot> instances = new HashMap<>();//All bot instances
 
+    private final IGuild guild;
+    
+    private final ArrayList<BotFeature> features = new ArrayList<>();
+    
     public MessageReceivedEvent lastEvent;
-
-    private IGuild guild;
 
     private BotLogger logger;
     
@@ -95,21 +105,20 @@ public class DiscordBot{
     
     private BotEventDispatcher eventDispatcher;
 
-    private ArrayList<BotFeature> features = new ArrayList<>();
-
     private String home;
-
-    public DiscordBot() {}
-
+    
+    public DiscordBot(){
+        this.guild = null;
+    }
+    
     public DiscordBot(IGuild guild){
         this.guild = guild;
         instances.put(guild, this);
         init();
     }
 
+    //TODO: Add more arguments
     public static void main(String[] args) throws Exception{
-        System.runFinalizersOnExit(true);
-        
         if(args.length >= 2 && args[1].equals("-nogui")){
             BotGui.disableGui();
         }
@@ -283,8 +292,8 @@ public class DiscordBot{
     }
 
     public String getGame(){
-        if(client.getOurUser().getGame().isPresent())
-            return client.getOurUser().getGame().get();
+        if(client.getOurUser().getStatus().getType() == StatusType.GAME)
+            return client.getOurUser().getStatus().getStatusMessage();
 
         return null;
     }
@@ -443,10 +452,18 @@ public class DiscordBot{
         this.features.add(feature);
         feature.onEnable(this);
     }
+    
+    public void enableFeatures(FeatureSet features){
+        features.forEach(this::enableFeature);
+    }
 
     public void disableFeature(BotFeature feature){
         this.features.remove(feature);
         feature.onDisable(this);
+    }
+    
+    public void disableFeatures(FeatureSet features){
+        features.forEach(this::disableFeature);
     }
     
     public void logo(Level level, String message, Object... args){
@@ -483,10 +500,5 @@ public class DiscordBot{
         }
         
         this.logger.log(e);
-    }
-    
-    @Override
-    public void finalize(){
-        log(Level.WARN, "Instance shutting down.");
     }
 }

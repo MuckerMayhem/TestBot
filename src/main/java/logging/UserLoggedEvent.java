@@ -5,7 +5,7 @@ import sx.blah.discord.handle.obj.IUser;
 
 public class UserLoggedEvent extends BotEvent{
     
-    private IUser user;
+    private final IUser user;
     
     public UserLoggedEvent(IUser user){
         this.user = user;

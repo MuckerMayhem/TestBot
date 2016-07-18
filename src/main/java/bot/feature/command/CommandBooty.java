@@ -3,15 +3,17 @@ package bot.feature.command;
 import bot.DiscordBot;
 import bot.feature.command.sound.Sound;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class CommandBooty extends BotCommand{
 
-    private static String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
-    private static String[] theBooty2x = {"͡⊙", "͜ʖ", "͡⊙)"};
-    private static String[] theBooty3x = {"͡◉", "͜ʖ", "͡◉)"};
-    private static String[] theBootySlow = {"͡o", "͜ʖ", "͡o)"};
+    private static final String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
+    private static final String[] theBooty2x = {"͡⊙", "͜ʖ", "͡⊙)"};
+    private static final String[] theBooty3x = {"͡◉", "͜ʖ", "͡◉)"};
+    private static final String[] theBootySlow = {"͡o", "͜ʖ", "͡o)"};
 
     @Override
     public void onRegister(){
@@ -32,12 +34,12 @@ public class CommandBooty extends BotCommand{
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         if(args.length < 3) return;
 
-        if(!message.getAuthor().getVoiceChannel().isPresent()) return;
+        Optional<IVoiceChannel> channel = message.getAuthor().getConnectedVoiceChannels().stream().filter(c -> c.getGuild() == bot.getGuild()).findFirst();
 
-        if(Arrays.equals(theBooty, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTY);
-        else if(Arrays.equals(theBooty2x, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTY2X);
-        else if(Arrays.equals(theBooty3x, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTY3X);
-        else if(Arrays.equals(theBootySlow, args)) CommandSound.playSound(bot, message.getAuthor().getVoiceChannel().get(), Sound.BOOTYSLOW);
+        if(Arrays.equals(theBooty, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTY);
+        else if(Arrays.equals(theBooty2x, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTY2X);
+        else if(Arrays.equals(theBooty3x, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTY3X);
+        else if(Arrays.equals(theBootySlow, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTYSLOW);
     }
 
     @Override

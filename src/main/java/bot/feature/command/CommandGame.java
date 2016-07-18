@@ -28,13 +28,14 @@ public class CommandGame extends BotCommand{
         
         if(home == null){
             bot.info(buildMessage(Message.CMD_GAME_NO_HOME), true);
-            return;
+//            return;
         }
         else if(message.getChannel() != bot.getHome()){
             bot.info(buildMessage(Message.CMD_GAME_NOT_HERE, bot.getHome().getName()), true);
-            return;
+//            return;
         }
 
+        //TODO: Re-implement games
         /*
         if(args.length == 0){
             gameBot.say(builder.buildMessage(Message.CMD_GAME_CHOOSE_1) + "\n" +

@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class InfoPanel extends AbstractBotPanel{
     
-    private JLabel nameLabel;
-    private JLabel regionLabel;
+    private final JLabel nameLabel;
+    private final JLabel regionLabel;
 
     public InfoPanel(BotGui gui){
         super(gui, new GridLayout(4, 1));

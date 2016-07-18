@@ -42,7 +42,7 @@ public class ThreadedCommandClear extends ThreadedCommand{
             bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_PROMPT_2));
             bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_CONF_2));
             if(nextLine(message.getChannel()).equalsIgnoreCase(buildMessage(Message.CMD_CLEAR_RESPONSE_2))){
-                IMessage botMessage = bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_DELETING, message.getChannel().getName()));
+                bot.say(message.getChannel(), buildMessage(Message.CMD_CLEAR_DELETING, message.getChannel().getName()));
                 bot.respond(buildMessage(Message.CMD_CLEAR_DELETED, DiscordUtil.deleteAllMessages(message.getChannel())), 3500L);
                 return;
             }

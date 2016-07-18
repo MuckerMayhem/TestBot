@@ -14,18 +14,12 @@ import sx.blah.discord.handle.obj.Permissions;
 
 import java.io.File;
 import java.util.InputMismatchException;
-import java.util.List;
 
+//TODO: Re-implement detailed descriptions
+//TODO: Possibly remake with constructor
 public abstract class BotCommand extends BotFeature{
 
     Permissions permissions;
-    
-    String description;
-    String[] aliases;
-
-    private List<CommandHandler> handlers;
-    
-    private Class<? extends BotCommand> mainClass;
     
     private MessageBuilder builder;
     
@@ -36,10 +30,6 @@ public abstract class BotCommand extends BotFeature{
     private boolean debug;
 
     protected abstract void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception;
-
-    public List<CommandHandler> getHandlers(){
-        return this.handlers;
-    }
 
     public Permissions getRequiredPermissions(){
         return this.permissions;
@@ -75,15 +65,7 @@ public abstract class BotCommand extends BotFeature{
     public String getDetailedDescription(){
         return "No detailed description for this command";
     }
-
-    public String[] getAliases(){
-        return this.aliases;
-    }
-
-    public Class<? extends BotCommand> getMainClass(){
-        return this.mainClass;
-    }
-
+  
     public boolean debug(){
         return this.debug;
     }
@@ -175,7 +157,7 @@ public abstract class BotCommand extends BotFeature{
             return this.getClass().newInstance();
         }
         catch(InstantiationException | IllegalAccessException e){
-            e.printStackTrace();
+            bot.log(e, "Could not create new " + this.getClass().getSimpleName() + " instance.");
         }
         return null;
     }

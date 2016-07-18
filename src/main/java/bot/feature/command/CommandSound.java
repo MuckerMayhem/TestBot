@@ -3,12 +3,12 @@ package bot.feature.command;
 import bot.DiscordBot;
 import bot.feature.command.sound.Sound;
 import bot.locale.Message;
-import bot.locale.MessageBuilder;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.audio.AudioPlayer;
+import util.DiscordUtil;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
@@ -21,6 +21,8 @@ import java.util.TimerTask;
 public class CommandSound extends BotCommand
 {
     public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
+        if(channel == null) return;
+        
         long duration = getDuration(sound);
         if(duration <= 0){
             return;
@@ -30,7 +32,8 @@ public class CommandSound extends BotCommand
             channel.join();
         }
         catch(MissingPermissionsException e){
-            e.printStackTrace();
+            bot.log(e, "Failed to join voice channel.");
+            return;
         }
 
         AudioPlayer player = new AudioPlayer(channel.getGuild());
@@ -42,7 +45,7 @@ public class CommandSound extends BotCommand
             player.provide();
         }
         catch(UnsupportedAudioFileException | IOException e){
-            bot.log(e, "Could not play sound " + sound.getName());
+            bot.log(e, "Failed to play sound '" + sound.getName() + "'");
             return;
         }
 
@@ -79,8 +82,6 @@ public class CommandSound extends BotCommand
         }
         else sound = Sound.get(args[0]);
 
-        MessageBuilder builder = new MessageBuilder(bot.getLocale());
-
         if(sound == null){
             bot.info(buildMessage(Message.CMD_SOUND_INVALID, args[0]));
             return;
@@ -109,8 +110,12 @@ public class CommandSound extends BotCommand
         }
         if(volume > 3.0F) volume = 3.0F;
 
-        if(message.getAuthor().getVoiceChannel().isPresent()){
-            IVoiceChannel channel = message.getAuthor().getVoiceChannel().get();
+        IVoiceChannel channel = DiscordUtil.getVoiceChannel(bot.getGuild(), message.getAuthor());
+
+        if(channel == null){
+            bot.info(buildMessage(Message.CMD_SOUND_NOCHANNEL));
+        }
+        else{
             channel.join();
 
             AudioPlayer player = new AudioPlayer(message.getGuild());
@@ -138,9 +143,6 @@ public class CommandSound extends BotCommand
             };
 
             new Timer().schedule(task, (duration * times) + 400L);
-        }
-        else{
-            bot.info(buildMessage(Message.CMD_SOUND_NOCHANNEL));
         }
     }
 

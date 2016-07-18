@@ -7,6 +7,7 @@ import sx.blah.discord.handle.obj.IMessage;
 
 import java.util.Random;
 
+//TODO: Meme it up
 public class CommandMeme extends BotCommand{
 
     @Override
@@ -41,7 +42,7 @@ public class CommandMeme extends BotCommand{
     public enum Meme{
         MEME("https://66.media.tumblr.com/3446c4a8a6f25de2dded665b7d731c20/tumblr_o6mg36XCOQ1tgbyedo1_540.gif");
 
-        private String imgUrl;
+        private final String imgUrl;
 
         Meme(String imgUrl){
            this.imgUrl = imgUrl;
@@ -55,7 +56,7 @@ public class CommandMeme extends BotCommand{
     public enum DankMeme{
         MEME("https://66.media.tumblr.com/3446c4a8a6f25de2dded665b7d731c20/tumblr_o6mg36XCOQ1tgbyedo1_540.gif");
 
-        private String imgUrl;
+        private final String imgUrl;
 
         DankMeme(String imgUrl){
             this.imgUrl = imgUrl;

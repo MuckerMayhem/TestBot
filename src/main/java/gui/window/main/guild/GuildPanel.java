@@ -22,7 +22,7 @@ import java.awt.*;
  */
 public class GuildPanel extends AbstractBotPanel{
 
-    private JList<String> guildList;
+    private final JList<String> guildList;
     
     public GuildPanel(BotGui gui, LayoutManager layout){
         super(gui, layout);
@@ -57,8 +57,8 @@ public class GuildPanel extends AbstractBotPanel{
 
     public static class GuildListSelectionListener implements ListSelectionListener{
 
-        private BotGui gui;
-        private JList guildList;
+        private final BotGui gui;
+        private final JList guildList;
 
         public GuildListSelectionListener(BotGui gui, JList guildList){
             this.gui = gui;

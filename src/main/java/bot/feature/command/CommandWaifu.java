@@ -17,12 +17,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+//TODO: Optimize
 public class CommandWaifu extends BotCommand{
 
+    private static final HashMap<String, WaifuList> waifuLists = new HashMap<>();
+    
     //Setting for this command
     private static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", true);
-
-    private static HashMap<String, WaifuList> waifuLists = new HashMap<>();
 
     @Override
     public void onRegister(){
@@ -68,10 +69,11 @@ public class CommandWaifu extends BotCommand{
                 else target = user;
             }
 
-            bot.info("*" + buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(message.getGuild())) + "*\n" + String.join("\n", list.getWaifus(target.getID()).stream()
-            .filter(i -> DiscordUtil.getUserByID(message.getGuild(), i) != null)
-            .map(i -> DiscordUtil.getUserByID(message.getGuild(), i).getDisplayName(message.getGuild()))
-            .collect(Collectors.toList())), true);
+            bot.info("*" + buildMessage(Message.CMD_WAIFU_LIST, target.getDisplayName(getGuild())) + "*\n" + String.join("\n", list.getWaifus(target.getID()).stream()
+                    .map(i -> DiscordUtil.getUserByID(getGuild(), i))
+                    .filter(u -> u != null)
+                    .map(u -> u.getDisplayName(getGuild()))
+                    .collect(Collectors.toList())), true);
         }
         else if(args.length < 2){
             bot.info(getDetailedDescription(), true);
@@ -149,8 +151,8 @@ public class CommandWaifu extends BotCommand{
         File file = bot.getDataFile("waifus.json");
 
         JsonArray users = new JsonArray();
-
-        HashMap<String, ArrayList<String>> waifus = new HashMap<>();
+        
+        HashMap<String, ArrayList<String>> waifus = waifuLists.get(bot.getGuild().getID()).waifus;
         for(String s : waifus.keySet()){
             JsonObject user = new JsonObject();
             JsonArray userWaifus = new JsonArray();
@@ -186,9 +188,9 @@ public class CommandWaifu extends BotCommand{
 
         private static final ArrayList<String> EMPTY = new ArrayList<>();
 
-        private HashMap<String, ArrayList<String>> waifus = new HashMap<>();
+        private final HashMap<String, ArrayList<String>> waifus = new HashMap<>();
 
-        private DiscordBot bot;
+        private final DiscordBot bot;
 
         public WaifuList(DiscordBot bot){
             this.bot = bot;

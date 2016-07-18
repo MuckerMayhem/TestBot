@@ -25,14 +25,15 @@ public class FunctionBreakMessages extends BotFunction{
 
     private static final Random RANDOM = new Random();
 
+    private static final HashMap<IChannel, String> messages = new HashMap<>();
+    private static final HashMap<IChannel, Integer> counts = new HashMap<>();
+    private static final HashMap<String, String> facts = new HashMap<>();
+    
     //Setting for this function
     private static final BooleanSetting ALLOW_WALL_BREAKING = new BooleanSetting("break_walls", true);
 
     private static MessageReceivedEvent lastEvent = null;
-    private static HashMap<IChannel, String> messages = new HashMap<>();
-    private static HashMap<IChannel, Integer> counts = new HashMap<>();
-
-    private static HashMap<String, String> facts = new HashMap<>();
+    
     private static String lastFact = "";
 
     @Override
@@ -40,7 +41,7 @@ public class FunctionBreakMessages extends BotFunction{
         DiscordBot.getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
 
         if(facts.isEmpty()){
-            Document doc = null;
+            Document doc;
             try{
                 doc = Jsoup.connect("http://mentalfloss.com/api/1.0/views/amazing_facts.json").ignoreContentType(true).get();
             }

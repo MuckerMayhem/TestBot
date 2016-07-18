@@ -16,10 +16,10 @@ import java.awt.*;
 
 public class MessagePanel extends AbstractBotPanel implements BotEventListener{
     
-    private DiscordBot bot;
+    private final DiscordBot bot;
     
-    private MessageInputPanel inputPanel;
-    private ChatPanel chatPanel;
+    private final MessageInputPanel inputPanel;
+    private final ChatPanel chatPanel;
  
     public MessagePanel(BotGui gui, DiscordBot bot){
         super(gui, new GridLayout(2, 1));

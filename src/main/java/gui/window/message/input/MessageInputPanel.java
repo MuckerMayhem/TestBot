@@ -11,20 +11,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class MessageInputPanel extends AbstractBotPanel{
     
-    private MessagePanel messagePanel;
-    private DiscordBot bot;
+    private final MessagePanel messagePanel;
+    private final DiscordBot bot;
     
-    private JTextArea textArea;
-    private JComboBox<String> channelList;
-    private JButton sendButton;
-    private JButton mentionButton;
+    private final JTextArea textArea;
+    private final JComboBox<String> channelList;
+    private final JButton sendButton;
+    private final JButton mentionButton;
  
     public MessageInputPanel(MessagePanel parent, DiscordBot bot){
         super(parent.getGui(), new GridLayout(2, 1));
@@ -37,62 +33,36 @@ public class MessageInputPanel extends AbstractBotPanel{
         this.textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        textArea.getDocument().addDocumentListener(new DocumentListener(){
-            @Override
-            public void insertUpdate(DocumentEvent e){
-                sendButton.setEnabled(!textArea.getText().trim().isEmpty());
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e){
-                sendButton.setEnabled(!textArea.getText().trim().isEmpty());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {}
-        });
+        textArea.getDocument().addDocumentListener(new InputPanelDocumentListener());
         add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         //Panel to hold the buttons and list
         JPanel buttonPanel = new JPanel(new FlowLayout());
         
         this.channelList = new JComboBox<>();
-        channelList.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e){
-                messagePanel.getChatPanel().update();
-            }
-        });
+        channelList.addItemListener(e -> messagePanel.getChatPanel().update());
         buttonPanel.add(channelList);
         
         //Send button
         this.sendButton = new JButton("Send");
         sendButton.setEnabled(false);
-        sendButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
+        sendButton.addActionListener(e -> {
 
-                String text = textArea.getText();
+            String text = textArea.getText();
 
-                IChannel channel = bot.getGuild().getChannels().get(channelList.getSelectedIndex());
-                if(channel == null) return;
+            IChannel channel = bot.getGuild().getChannels().get(channelList.getSelectedIndex());
+            if(channel == null) return;
 
-                bot.say(channel, text);
-                bot.log(Level.INFO, "Sent message: " + text);
-                textArea.setText("");
-            }
+            bot.say(channel, text);
+            bot.log(Level.INFO, "Sent message: " + text);
+            textArea.setText("");
         });
         buttonPanel.add(sendButton);
         
         //Mention button
         this.mentionButton = new JButton("Insert mention");
         mentionButton.setEnabled(bot.getLogger().getLastUser() != null);
-        mentionButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                textArea.setText(textArea.getText() + "<@!" + bot.getLogger().getLastUser() + ">");
-            }
-        });
+        mentionButton.addActionListener(e -> textArea.setText(textArea.getText() + "<@!" + bot.getLogger().getLastUser() + ">"));
         buttonPanel.add(mentionButton);
         
         add(buttonPanel);
@@ -133,5 +103,20 @@ public class MessageInputPanel extends AbstractBotPanel{
             index++;
         }
         if(home != null) channelList.setSelectedIndex(homeIndex);
+    }
+
+    private class InputPanelDocumentListener implements DocumentListener{
+        @Override
+        public void insertUpdate(DocumentEvent e){
+            sendButton.setEnabled(!textArea.getText().trim().isEmpty());
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e){
+            sendButton.setEnabled(!textArea.getText().trim().isEmpty());
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {}
     }
 }

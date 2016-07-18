@@ -19,12 +19,12 @@ public class BotLogger{
 
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     
-    private DiscordBot bot;
+    private final DiscordBot bot;
+
+    private final List<PrintStream> outputs = new ArrayList<>();
+    private final List<LogTextPane> panes = new ArrayList<>();
     
     private String lastUser;
-    
-    private List<PrintStream> outputs = new ArrayList<>();
-    private List<LogTextPane> panes = new ArrayList<>();
     
     public BotLogger(DiscordBot bot){
         this.bot = bot;
@@ -73,9 +73,11 @@ public class BotLogger{
      * @param message Message to log
      * @param args Arguments to be formatted into the message
      */
+    //TODO: Find a better way of doing this so this spaghetti can be trashed
     public void logo(Level level, String message, Object... args){
         for(int i = 0;i < args.length;i++){
             Object o = args[i];
+            
             if(o instanceof IGuild)
                 args[i] = this.bot.anonymous() ? ((IGuild) o).getID() : ((IGuild) o).getName();
             else if(o instanceof IChannel)
@@ -151,9 +153,9 @@ public class BotLogger{
         ERROR("\u001B[31m", Color.RED, "[ERROR]"),
         DEBUG("\u001B[32m", Color.GREEN, "[DEBUG]");
 
-        private String colorCode;
-        private Color color;
-        private String prefix;
+        private final String colorCode;
+        private final Color color;
+        private final String prefix;
 
         Level(String colorCode, Color color, String prefix){
             this.colorCode = colorCode;

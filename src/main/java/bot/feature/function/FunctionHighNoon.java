@@ -1,5 +1,6 @@
 package bot.feature.function;
 
+//TODO: Re-implement this
 /*
 public class FunctionHighNoon extends BotFunction{
 

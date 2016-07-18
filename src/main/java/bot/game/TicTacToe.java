@@ -41,13 +41,13 @@ public class TicTacToe extends Game{
     public void play(){
         this.board = new int[this.size][this.size];
 
-        int x = 0;
-        int y = 0;
+        int x;
+        int y;
 
         Random random = new Random();
 
         bot.say("Do you want to go first? ");
-        int turn = 0;
+        int turn;
         if(/*this.bot.nextLine()*/"".toLowerCase().startsWith("y")){
             turn = 1;
         }
@@ -121,10 +121,10 @@ public class TicTacToe extends Game{
     private void printBoard(){
         StringBuilder builder = new StringBuilder();
 
-        for(int i = 0;i < board.length;i++){
+        for(int[] i : board){
             builder.append("\n-------------\n");
-            for(int j = 0;j < board[i].length;j++){
-                builder.append("|" + getRepresentation(board[i][j]));
+            for(int j : i){
+                builder.append("|").append(getRepresentation(j));
             }
             builder.append("|\n");
         }
@@ -156,9 +156,9 @@ public class TicTacToe extends Game{
         if(col == 3 || row == 3 || diag == 3 || idiag == 3) return player;
 
         int count = 0;
-        for(int i = 0;i < board.length;i++){
-            for(int j = 0;j < board[i].length;j++){
-                if(board[i][j] != 0) count++;
+        for(int[] i : board){
+            for(int j : i){
+                if(j != 0) count++;
             }
         }
         if(count == 9) return 2;

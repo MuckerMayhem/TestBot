@@ -12,10 +12,9 @@ import java.awt.event.WindowListener;
 
 public class LogTextPane extends BotTextPane{
     
-    private BotGui gui;
-    
-    private LogPanel logPanel;
-    private IGuild guild;
+    private final LogPanel logPanel;
+    private final IGuild guild;
+    private final BotGui gui;
     
     private boolean detached;
     
@@ -55,7 +54,7 @@ public class LogTextPane extends BotTextPane{
 
     public class LogPanelPopoutListener implements WindowListener{
 
-        private String guildId;
+        private final String guildId;
 
         public LogPanelPopoutListener(String guildId){
             this.guildId = guildId;

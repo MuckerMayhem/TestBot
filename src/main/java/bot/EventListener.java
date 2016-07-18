@@ -7,6 +7,7 @@ import sx.blah.discord.handle.impl.events.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.GuildLeaveEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.Status;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.Image;
 import sx.blah.discord.util.RateLimitException;
@@ -22,7 +23,7 @@ public class EventListener{
     private static final Image IMAGE = Image.forFile(new File("kirino.png"));//Bot's avatar
     private static final String GAME = "俺の妹がこんなに可愛いわけがないポータブル";//Game the bot will be displayed as playing
 
-    private static ArrayList<IGuild> guildQueue = new ArrayList<>();
+    private static final ArrayList<IGuild> guildQueue = new ArrayList<>();
 
     @EventSubscriber
     public void onReady(ReadyEvent event){
@@ -42,7 +43,7 @@ public class EventListener{
             System.err.println("Exception occurred while trying to change client avatar: " + e.getMessage());
         }
 
-        client.changeGameStatus(GAME);
+        client.changeStatus(Status.game(GAME));
 
         System.out.println("Client ready. Initializing DiscordBot instances...");
 

@@ -6,8 +6,8 @@ public enum Locale{
     FRENCH("fr", "French"),
     PIRATE("pirate", "Pirate Speak");
 
-    private String code;
-    private String name;
+    private final String code;
+    private final String name;
 
     Locale(String code, String name){
         this.code = code;

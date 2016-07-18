@@ -2,10 +2,8 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
-
-import java.util.Optional;
+import util.DiscordUtil;
 
 public class CommandLeave extends BotCommand{
 
@@ -26,10 +24,9 @@ public class CommandLeave extends BotCommand{
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
-        IUser user = message.getAuthor();
-
-        Optional<IVoiceChannel> channel = DiscordBot.getClient().getOurUser().getVoiceChannel();
-        if(channel.isPresent() && channel.get().getGuild().getID().equals(message.getGuild().getID()))
-            channel.get().leave();
+        IVoiceChannel channel = DiscordUtil.getVoiceChannel(bot.getGuild(), DiscordBot.getClient().getOurUser());
+        if(channel == null) return;
+        
+        channel.leave();
     }
 }

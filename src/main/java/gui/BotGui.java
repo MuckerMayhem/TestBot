@@ -4,6 +4,7 @@ import gui.window.main.guild.GuildPanel;
 import gui.window.main.log.LogPanel;
 import gui.window.main.view.ViewPanel;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,11 +15,11 @@ public class BotGui extends JFrame{
     private static BotGui gui;
     private static boolean disabled;
     
-    private BotPanel mainPanel;
+    private final BotPanel mainPanel;
     
-    private GuildPanel guildPanel;
-    private ViewPanel viewPanel;
-    private LogPanel logPanel;
+    private final GuildPanel guildPanel;
+    private final ViewPanel viewPanel;
+    private final LogPanel logPanel;
     
     public BotGui(String title){
         super(title);
@@ -98,7 +99,7 @@ public class BotGui extends JFrame{
     }
 
     @Override
-    public void add(Component c, Object constraints){
+    public void add(@Nonnull Component c, Object constraints){
         super.add(c, constraints);
         if(c instanceof AbstractBotPanel){
             ((AbstractBotPanel) c).gui = this;
@@ -115,8 +116,6 @@ public class BotGui extends JFrame{
     }
     
     public void update(){
-        this.guildPanel.update();
-        this.viewPanel.update();
         this.logPanel.update();
         updateLogPanelStatus();
     }

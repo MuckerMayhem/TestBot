@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  */
 public class Settings implements Iterable<Setting>{
 
-    private static HashMap<SettingsHandler, Settings> defaults = new HashMap<>();
+    private static final HashMap<SettingsHandler, Settings> defaults = new HashMap<>();
 
-    private TreeMap<Setting, Object> values = new TreeMap<>();
+    private final TreeMap<Setting, Object> values = new TreeMap<>();
 
     private boolean canModify;
 
@@ -25,7 +25,7 @@ public class Settings implements Iterable<Setting>{
 
     public Settings(SettingsHandler handler){
         for(Setting s : handler.getRegisteredSettings()){
-            values.put(s, s.getDefaultValue());
+            values.put(s, s.defaultValue);
         }
 
         this.canModify = true;
@@ -48,7 +48,7 @@ public class Settings implements Iterable<Setting>{
     }
 
     public Object get(Setting setting){
-        return values.getOrDefault(setting, setting.getDefaultValue());
+        return values.getOrDefault(setting, setting.defaultValue);
     }
 
     public void set(Setting setting, Object value){
@@ -80,7 +80,9 @@ public class Settings implements Iterable<Setting>{
         for(Setting s : getSettings()){
             String value = s.getValueAsString(get(s));
 
-            builder.append(index + ". " + s.getName(locale))
+            builder.append(index)
+                    .append(". ")
+                    .append(s.getName(locale))
                     .append(": ")
                     .append(pad(value, leftPadding - s.getName(locale).length(), rightPadding - value.length()))
                     .append(" | ")

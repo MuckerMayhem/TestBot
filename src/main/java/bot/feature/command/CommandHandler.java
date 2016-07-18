@@ -12,15 +12,15 @@ import util.DiscordUtil;
 import util.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandHandler{
 
+    private static final ArrayList<BotCommand> global_commands = new ArrayList<>();
+    
     private static final String[] EMPTY = {};
 
     private static String commandPrefix = "!";
-    private static ArrayList<BotCommand> global_commands = new ArrayList<>();
 
     private DiscordBot bot;
 
@@ -46,24 +46,12 @@ public class CommandHandler{
         return null;
     }
 
-    public static BotCommand registerCommand(boolean debug, String name, Class<? extends BotCommand> mainClass, Permissions permissions, String... aliases){
+    public static BotCommand registerCommand(boolean debug, String name, Class<? extends BotCommand> mainClass, Permissions permissions){
         for(BotCommand c : global_commands){
 
             if(c.name.equalsIgnoreCase(name)){
                 System.out.println("Could not register command '" + name + "': Command with this name has already been registered");
                 return null;
-            }
-            for(String s : c.aliases){
-                if(s.equalsIgnoreCase(name)){
-                    System.out.println("Could not register command '" + name + "': Conflict with alias of same name for command '" + c.name + "'");
-                    return null;
-                }
-                for(String s1 : aliases){
-                    if(s1.equalsIgnoreCase(s)){
-                        System.out.println("Could not register command '" + name + "': Duplicate alias '" + s +  "' for command '" + c.name + "'");
-                        return null;
-                    }
-                }
             }
         }
 
@@ -72,8 +60,7 @@ public class CommandHandler{
             instance = mainClass.newInstance();
             instance.permissions = permissions == null ? Permissions.SEND_MESSAGES : permissions;
             instance.name = name;
-            instance.aliases = aliases;
-
+            
             instance.setDebug(debug);
 
             instance.onRegister();
@@ -85,7 +72,7 @@ public class CommandHandler{
             return null;
         }
 
-        System.out.println("Command '" + name + "' registered with aliases " + Arrays.toString(aliases));
+        System.out.println("Command '" + name + "' registered");
 
         return instance;
     }
@@ -94,11 +81,10 @@ public class CommandHandler{
      * Register a new command on a bot. Uses the command prefix set by {@link #setCommandPrefix(String)}
      * @param name Identifier used to execute this command
      * @param mainClass Main class of your command. Should extend {@link BotCommand}
-     * @param aliases Aliases your command can be executed with
      * @return true if the command was successfully registered, otherwise false
      */
-    public static BotCommand registerCommand(String name, Class<? extends BotCommand> mainClass, Permissions permissions, String... aliases){
-        return registerCommand(false, name, mainClass, permissions, aliases);
+    public static BotCommand registerCommand(String name, Class<? extends BotCommand> mainClass, Permissions permissions){
+        return registerCommand(false, name, mainClass, permissions);
     }
 
     /**
@@ -139,14 +125,7 @@ public class CommandHandler{
         String command = content.split(" ")[0].substring(1);
 
         for(BotCommand c : bot.getCommands()){
-            boolean alias = false;
-            for(String s : c.aliases){
-                if(command.equalsIgnoreCase(s)){
-                    alias = true;
-                    break;
-                }
-            }
-            if(alias || command.equalsIgnoreCase(c.getName(bot.getLocale()))){
+            if(command.equalsIgnoreCase(c.getName(bot.getLocale()))){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
                 if(!c.debug()){
                     DiscordUtil.deleteMessage(message, 2000L);

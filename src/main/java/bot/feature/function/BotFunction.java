@@ -9,9 +9,10 @@ import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: Possibly remake with constructor
 public abstract class BotFunction extends BotFeature{
 
-    private static ArrayList<BotFunction> global_functions = new ArrayList<>();
+    private static final ArrayList<BotFunction> global_functions = new ArrayList<>();
 
     private Class<? extends BotFunction> mainClass;
 

@@ -8,8 +8,6 @@ import sx.blah.discord.handle.obj.IGuild;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 /**
@@ -21,7 +19,7 @@ import java.util.HashMap;
  */
 public class LogPanel extends AbstractBotPanel{
     
-    private static HashMap<String, LogTextPane> textPanes = new HashMap<>();
+    private static final HashMap<String, LogTextPane> textPanes = new HashMap<>();
     
     private boolean showing;
 
@@ -62,18 +60,15 @@ public class LogPanel extends AbstractBotPanel{
         
         //Add detach button
         JButton detachButton = new JButton("Detach log window");
-        detachButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                JFrame popup = getLogPanel(bot.getGuild()).detach();
-                popup.pack();
-                popup.setSize(500, 900);
-                popup.setVisible(true);
-                
-                toggleShowing();
-                gui.updateLogPanelStatus();
-                gui.getViewPanel().getSettingsPanel().update();
-            }
+        detachButton.addActionListener(e -> {
+            JFrame popup = getLogPanel(bot.getGuild()).detach();
+            popup.pack();
+            popup.setSize(500, 900);
+            popup.setVisible(true);
+            
+            toggleShowing();
+            gui.updateLogPanelStatus();
+            gui.getViewPanel().getSettingsPanel().update();
         });
         add(detachButton, new GridBagConstraints(0, 10, 1, 1, 0.05, 0.05, GridBagConstraints.PAGE_END, 1, new Insets(0, 0, 0, 0), 0, 0));
     }

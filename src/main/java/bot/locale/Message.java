@@ -82,7 +82,7 @@ public enum Message{
     GAME_TIC_TAC_TOE("game_tictactoe"),
     GAME_SCRAMBLE("game_scramble");
 
-    private String name;
+    private final String name;
 
     Message(String name){
         this.name = name;

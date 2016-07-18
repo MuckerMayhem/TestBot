@@ -2,6 +2,7 @@ package bot.game;
 
 import bot.DiscordBot;
 
+//TODO: Do something with this
 public abstract class Game{
 
     protected DiscordBot bot;

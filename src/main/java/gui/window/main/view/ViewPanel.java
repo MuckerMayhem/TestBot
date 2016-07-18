@@ -17,9 +17,9 @@ import java.awt.*;
  */
 public class ViewPanel extends AbstractBotPanel{
 
-    private InfoPanel infoPanel;
-    private FeaturesPanel featuresPanel;
-    private SettingsPanel settingsPanel;
+    private final InfoPanel infoPanel;
+    private final FeaturesPanel featuresPanel;
+    private final SettingsPanel settingsPanel;
 
     public ViewPanel(BotGui gui){
         super(gui, new GridLayout(3, 3));

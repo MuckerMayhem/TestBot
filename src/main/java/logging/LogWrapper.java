@@ -3,9 +3,9 @@ package logging;
 /**
  * Wrapper class for objects that have multiple ways of being displayed in the log
  */
-public class LogWrapper{
+public final class LogWrapper{
     
-    private Object object;
+    private final Object object;
     
     public LogWrapper(Object object){
         this.object = object;

@@ -10,9 +10,9 @@ import java.util.List;
 
 public class BotEventDispatcher{
     
-    private List<BotEventListener> listeners = new ArrayList<>();
+    private final List<BotEventListener> listeners = new ArrayList<>();
     
-    private DiscordBot bot;
+    private final DiscordBot bot;
     
     public BotEventDispatcher(DiscordBot bot){
         this.bot = bot;

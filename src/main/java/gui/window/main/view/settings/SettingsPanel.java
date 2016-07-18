@@ -12,12 +12,10 @@ import sx.blah.discord.handle.obj.IGuild;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SettingsPanel extends AbstractBotPanel{
     
-    private static String[] headers = {"Setting", "Value"};
+    private static final String[] headers = {"Setting", "Value"};
 
     public SettingsPanel(BotGui gui){
         super(gui, new GridLayout(2, 1));
@@ -58,32 +56,19 @@ public class SettingsPanel extends AbstractBotPanel{
         //Show / hide log button
         JButton logButton = new JButton(gui.getLogPanel().isShowing() ? "Hide log" : "Show log");
         logButton.setEnabled(!gui.getLogPanel().getLogPanel(guild).isDetached());
-        logButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                gui.getLogPanel().toggleShowing();
-                gui.updateLogPanelStatus();
-                update();
-            }
+        logButton.addActionListener(e -> {
+            gui.getLogPanel().toggleShowing();
+            gui.updateLogPanelStatus();
+            update();
         });
         buttonPanel.add(logButton);
         
         JButton messageButton = new JButton("Message...");
-        messageButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                new MessagePanel(gui, bot).open();
-            }
-        });
+        messageButton.addActionListener(e -> new MessagePanel(gui, bot).open());
         buttonPanel.add(messageButton);
         
         JButton restartButton = new JButton("Restart");
-        restartButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                bot.init();
-            }
-        });
+        restartButton.addActionListener(e -> bot.init());
         buttonPanel.add(restartButton);
     }
 }

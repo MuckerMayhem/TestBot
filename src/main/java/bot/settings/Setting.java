@@ -3,11 +3,13 @@ package bot.settings;
 import bot.locale.Locale;
 import bot.locale.LocaleHandler;
 
+import javax.annotation.Nonnull;
+
 public abstract class Setting implements Comparable<Setting>{
 
-    protected String name;
-    protected Object defaultValue;
-    protected boolean requiresRestart;
+    protected final String name;
+    protected final Object defaultValue;
+    protected final boolean requiresRestart;
 
     public Setting(String name, Object defaultValue, boolean requiresRestart){
         this.name = name;
@@ -44,7 +46,7 @@ public abstract class Setting implements Comparable<Setting>{
     }
 
     @Override
-    public int compareTo(Setting other){
+    public int compareTo(@Nonnull Setting other){
         return this.name.compareTo(other.name);
     }
 }

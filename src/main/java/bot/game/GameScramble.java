@@ -12,7 +12,7 @@ public class GameScramble extends Game{
     private int lives;
     private int correct;
 
-    private static String[][] words = {
+    private static final String[][] words = {
             {"apple", "cancer", "earth", "hotel", "road"},//Easy
             {"always", "computer", "ocean", "rifle", "under"},//Medium
             {"helicopter", "mechanic", "telephone"},//Hard
@@ -20,7 +20,7 @@ public class GameScramble extends Game{
             {"conditioning", "distasteful", "hitchhikers"}//Impossible
     };
 
-    private static String[] intros = {
+    private static final String[] intros = {
             "Ready to move on to something a little harder? (Reached level 2)",
             "Was that too easy? Well they're about to get harder! (Reached level 3)",
             "Excellent! Think you can handle these ones? (Reached level 4)",

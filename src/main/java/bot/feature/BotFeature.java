@@ -2,9 +2,14 @@ package bot.feature;
 
 import bot.DiscordBot;
 
+//TODO: Move feature registration here
 public abstract class BotFeature{
 
     public String name;
+
+    public static BotFeature registerFeature(){
+        return null;
+    }
     
     public abstract void onRegister();
 
@@ -18,9 +23,5 @@ public abstract class BotFeature{
      */
     public String getRegisteredName(){
         return this.name;
-    }
-    
-    public static void registerFeature(){
-
     }
 }

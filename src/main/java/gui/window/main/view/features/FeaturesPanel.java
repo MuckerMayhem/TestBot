@@ -2,6 +2,7 @@ package gui.window.main.view.features;
 
 import bot.DiscordBot;
 import bot.feature.BotFeature;
+import com.sun.istack.internal.NotNull;
 import gui.AbstractBotPanel;
 import gui.BotGui;
 import sx.blah.discord.handle.obj.IGuild;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class FeaturesPanel extends AbstractBotPanel{
 
-    private static String[] headers = {"Name", "Type"};
+    private static final String[] headers = {"Name", "Type"};
     
     public FeaturesPanel(BotGui gui){
         super(gui, new GridLayout());
@@ -38,23 +39,26 @@ public class FeaturesPanel extends AbstractBotPanel{
             data[index] = new Object[]{f.getRegisteredName(), f.getClass().getSuperclass().getSimpleName()};
             index++;
         }
+        
+        add(new JScrollPane(new FeaturesTable(data, headers)));
+    }
+    
+    private static class FeaturesTable extends JTable{
+        
+        public FeaturesTable(@NotNull Object[][] rowData, @NotNull Object[] columnNames){
+            super(rowData, columnNames);
+            getTableHeader().setReorderingAllowed(false);
+        }
 
-        JTable table = new JTable(data, headers){
-            {
-                getTableHeader().setReorderingAllowed(false);
-            }
-            
-            @Override
-            public boolean isCellEditable(int row, int column){
-                return false;
-            }
+        @Override
+        public boolean isCellEditable(int row, int column){
+            return false;
+        }
 
-            @Override
-            public Class<?> getColumnClass(int column){
-                if(column == 2) return Boolean.class;
-                return super.getColumnClass(column);
-            }
-        };
-        add(new JScrollPane(table));
+        @Override
+        public Class<?> getColumnClass(int column){
+            if(column == 2) return Boolean.class;
+            return super.getColumnClass(column);
+        }
     }
 }
