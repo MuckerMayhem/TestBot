@@ -10,21 +10,19 @@ import java.util.stream.Collectors;
 
 public class CommandHelp extends BotCommand{
 
-    @Override
-    public void onRegister(){
-
+    public CommandHelp(){
+        super("help");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
-
+    @Override
+    public void onDisable(DiscordBot bot) {}
+    
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(args.length == 0){

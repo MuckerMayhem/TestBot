@@ -85,7 +85,7 @@ public class BotLogger{
             else if(o instanceof IUser){
                 args[i] = ((IUser) o).getID() + (this.bot.anonymous() ? "" : " (" + ((IUser) o).getName() + ")");
                 this.lastUser = ((IUser) o).getID();
-                bot.getEventDispatcher().dispatchEvent(new UserLoggedEvent((IUser) o));
+                bot.getEventDispatcher().dispatchEvent(new UserLoggedEvent(this.bot, (IUser) o));
             }
             else if(o instanceof IMessage)
                 args[i] = ((IMessage) o).getContent();
@@ -98,7 +98,7 @@ public class BotLogger{
                 if(w instanceof IUser){
                     args[i] = this.bot.anonymous() ? ((IUser) w).getID() : ((IUser) w).getName();
                     this.lastUser = ((IUser) w).getID();
-                    bot.getEventDispatcher().dispatchEvent(new UserLoggedEvent((IUser) w));
+                    bot.getEventDispatcher().dispatchEvent(new UserLoggedEvent(this.bot, (IUser) w));
                 }
                 else if(w instanceof IChannel)
                     args[i] = this.bot.anonymous() ? ((IChannel) w).getID() : ((IChannel) w).getName();

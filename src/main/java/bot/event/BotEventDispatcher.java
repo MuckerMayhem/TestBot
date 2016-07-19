@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BotEventDispatcher{
     
-    private final List<BotEventListener> listeners = new ArrayList<>();
+    private final List<Object> listeners = new ArrayList<>();
     
     private final DiscordBot bot;
     
@@ -22,22 +22,22 @@ public class BotEventDispatcher{
         return bot;
     }
 
-    public void registerListener(BotEventListener listener){
+    public void registerListener(Object listener){
         this.listeners.add(listener);
     }
     
-    public void unregisterListener(BotEventListener listener){
+    public void unregisterListener(Object listener){
         this.listeners.remove(listener);
     }
     
     public void dispatchEvent(BotEvent event){
-        for(BotEventListener listener : this.listeners){
-            for(Method m : listener.getClass().getMethods()){
+        for(Object o : this.listeners){
+            for(Method m : o.getClass().getMethods()){
                 if(m.isAnnotationPresent(BotEventSubscriber.class)){
                     for(Class<?> c : m.getParameterTypes()){
                         if(c == event.getClass()){
                             try{
-                                m.invoke(listener, event);
+                                m.invoke(o, event);
                                 return;
                             }
                             catch(IllegalAccessException | InvocationTargetException e){

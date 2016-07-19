@@ -2,23 +2,22 @@ package bot.feature.command;
 
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 
 public class CommandShowHelp extends BotCommand{
 
-    @Override
-    public void onRegister(){
-
+    public CommandShowHelp(){
+        super("showhelp", Permissions.MANAGE_MESSAGES);
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

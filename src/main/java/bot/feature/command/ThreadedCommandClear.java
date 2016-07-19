@@ -4,6 +4,7 @@ import bot.DiscordBot;
 import bot.locale.Message;
 import bot.settings.ArraySetting;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 import util.DiscordUtil;
 
 import java.util.Arrays;
@@ -12,10 +13,12 @@ public class ThreadedCommandClear extends ThreadedCommand{
 
     private static final ArraySetting WHITELIST_CLEAR = new ArraySetting("clear_whitelist", new String[] {});
 
-    @Override
-    public void onRegister(){
-
+    public ThreadedCommandClear(){
+        super("clear", Permissions.MANAGE_SERVER);
     }
+
+    @Override
+    public void onRegister() {}
 
     @Override
     public void onEnable(DiscordBot bot){
@@ -24,7 +27,7 @@ public class ThreadedCommandClear extends ThreadedCommand{
 
     @Override
     public void onDisable(DiscordBot bot){
-
+        //TODO: Unregister setting
     }
 
     @Override

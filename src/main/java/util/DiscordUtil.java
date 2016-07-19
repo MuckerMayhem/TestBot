@@ -6,13 +6,14 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DiscordUtil{
 
-    public static boolean userHasPermission(IUser user, IGuild guild, Permissions permission){
+    public static boolean userHasPermission(IUser user, IGuild guild, @Nonnull Permissions permission){
         for(IRole r : user.getRolesForGuild(guild)){
             for(Permissions p : r.getPermissions()){
                 if(p == permission) return true;

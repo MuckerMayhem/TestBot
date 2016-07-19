@@ -10,20 +10,18 @@ import util.DiscordUtil;
 
 public class CommandSetting extends BotCommand{
 
-    @Override
-    public void onRegister(){
-
+    public CommandSetting(){
+        super("setting");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

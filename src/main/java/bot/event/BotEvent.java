@@ -7,6 +7,10 @@ public abstract class BotEvent{
     private DiscordBot bot;
     private boolean cancelled;
     
+    public BotEvent(DiscordBot bot){
+        this.bot = bot;
+    }
+    
     public boolean isCancelled(){
         return this.cancelled;
     }

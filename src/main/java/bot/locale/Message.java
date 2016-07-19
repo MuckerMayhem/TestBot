@@ -20,6 +20,9 @@ public enum Message{
     CMD_CLEAR_DELETED("command_clear_deleted"),
     CMD_CLEAR_CANCELLED("command_clear_cancel"),
 
+    CMD_FEATURE_LIST("command_feature_list"),
+    CMD_FEATURE_ARGS("command_feature_args"),
+    
     CMD_GAME_NO_HOME("command_game_no_home"),
     CMD_GAME_NOT_HERE("command_game_nothere"),
     CMD_GAME_CHOOSE_1("command_game_choose_1"),

@@ -16,20 +16,18 @@ public class CommandDiceRoll extends BotCommand{
 
     private static final Random RANDOM = new Random();
 
-    @Override
-    public void onRegister(){
-
+    public CommandDiceRoll(){
+        super("roll");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
-
-    }
+    public void onEnable(DiscordBot bot) {}
+    
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

@@ -32,3 +32,6 @@ waifu.desc:Gérer les waifus!
 waifu.args:liste,ajoute,supprime
 restart.name:redemarrer
 restart.desc:Redémarrer le bot
+feature.name:fonction
+feature.desc:Gérer les fonctionnalités du bot
+feature.args:liste,activer,desactiver

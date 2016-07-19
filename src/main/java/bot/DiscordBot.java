@@ -1,6 +1,7 @@
 package bot;
 
 import bot.event.BotEventDispatcher;
+import bot.event.EventRouter;
 import bot.feature.BotFeature;
 import bot.feature.FeatureSet;
 import bot.feature.command.*;
@@ -17,7 +18,6 @@ import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.handle.obj.Status.StatusType;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
@@ -30,8 +30,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bot.feature.command.CommandHandler.registerCommand;
-import static bot.feature.function.BotFunction.registerFunction;
+import static bot.feature.BotFeature.registerFeature;
 
 //TODO: Separate features into sets
 //TODO: Don't immediately register every feature
@@ -44,47 +43,46 @@ public class DiscordBot{
 
     //Commands
     //Admin commands
-    public static final BotCommand COMMAND_PRUNE = registerCommand("prune", CommandPrune.class, Permissions.MANAGE_MESSAGES);
-    public static final BotCommand COMMAND_LEAVE = registerCommand("leave", CommandLeave.class, Permissions.VOICE_MOVE_MEMBERS);
-    public static final BotCommand COMMAND_TYPE = registerCommand("type", CommandType.class, Permissions.CHANGE_NICKNAME);
-    public static final BotCommand COMMAND_SHOWHELP = registerCommand("showhelp", CommandShowHelp.class, Permissions.MANAGE_MESSAGES);
-    public static final BotCommand COMMAND_RESTART = registerCommand("restart", CommandRestart.class, Permissions.MANAGE_SERVER);
+    public static final BotCommand COMMAND_PRUNE    = (BotCommand) registerFeature(new CommandPrune());
+    public static final BotCommand COMMAND_LEAVE    = (BotCommand) registerFeature(new CommandLeave());
+    public static final BotCommand COMMAND_TYPE     = (BotCommand) registerFeature(new CommandType());
+    public static final BotCommand COMMAND_SHOWHELP = (BotCommand) registerFeature(new CommandShowHelp());
+    public static final BotCommand COMMAND_RESTART  = (BotCommand) registerFeature(new CommandRestart());
+    public static final BotCommand COMMAND_FEATURE  = (BotCommand) registerFeature(new CommandFeature());
 
     //Utility commands
-    public static final BotCommand COMMAND_HELP = registerCommand("help", CommandHelp.class, Permissions.SEND_MESSAGES);
-    public static final BotCommand COMMAND_TEST = registerCommand("test", CommandTest.class, Permissions.SEND_MESSAGES);
-    public static final BotCommand COMMAND_SETTING = registerCommand("setting", CommandSetting.class, Permissions.SEND_MESSAGES);
-    public static final BotCommand COMMAND_RABBIT = registerCommand("rabbit", CommandRabbit.class, Permissions.SEND_MESSAGES);
-
+    public static final BotCommand COMMAND_HELP     = (BotCommand) registerFeature(new CommandHelp());
+    public static final BotCommand COMMAND_TEST     = (BotCommand) registerFeature(new CommandTest());
+    public static final BotCommand COMMAND_SETTING  = (BotCommand) registerFeature(new CommandSetting());
+    public static final BotCommand COMMAND_RABBIT   = (BotCommand) registerFeature(new CommandRabbit());
+    
     //Fun commands
-    public static final BotCommand COMMAND_MEME = registerCommand("meme", CommandMeme.class, Permissions.SEND_MESSAGES);
-    public static final BotCommand COMMAND_ROLL = registerCommand("roll", CommandDiceRoll.class, Permissions.SEND_MESSAGES);
-    public static final BotCommand COMMAND_SOUND = registerCommand("sound", CommandSound.class, Permissions.VOICE_SPEAK);
-    public static final BotCommand COMMAND_BOOTY = registerCommand("(", CommandBooty.class, Permissions.VOICE_SPEAK);//( ͡° ͜ʖ ͡°)
-    public static final BotCommand COMMAND_WAIFU = registerCommand("waifu", CommandWaifu.class, Permissions.SEND_MESSAGES);
+    public static final BotCommand COMMAND_MEME     = (BotCommand) registerFeature(new CommandMeme());
+    public static final BotCommand COMMAND_ROLL     = (BotCommand) registerFeature(new CommandDiceRoll());
+    public static final BotCommand COMMAND_WAIFU    = (BotCommand) registerFeature(new CommandWaifu());
+    public static final BotCommand COMMAND_SOUND    = (BotCommand) registerFeature(new CommandSound());
+    public static final BotCommand COMMAND_BOOTY    = (BotCommand) registerFeature(new CommandBooty());
 
-    //Game command
-    public static final BotCommand COMMAND_GAME = registerCommand("game", CommandGame.class, Permissions.SEND_MESSAGES);
-
-    //Clear command
-    public static final ThreadedCommand COMMAND_CLEAR = (ThreadedCommand) registerCommand("clear", ThreadedCommandClear.class, Permissions.MANAGE_SERVER);
-
+    //Threaded commands
+    public static final ThreadedCommand COMMAND_GAME  = (ThreadedCommand) registerFeature(new ThreadedCommandGame());
+    public static final ThreadedCommand COMMAND_CLEAR = (ThreadedCommand) registerFeature(new ThreadedCommandClear());
+    
 
     //Functions
-//    public static final BotFunction FUNCTION_HIGHNOON = registerFunction("highnoon", FunctionHighNoon.class);
-    public static final BotFunction FUNCTION_BREAKWALLS = registerFunction("breakwalls", FunctionBreakMessages.class);
-    public static final BotFunction FUNCTION_EAT = registerFunction("eat", FunctionEatFood.class);
-    public static final BotFunction FUNCTION_YTTIME = registerFunction("yttime", FunctionGetVideoTime.class);
-    public static final BotFunction FUNCTION_WELCOME = registerFunction("welcome", FunctionWelcomeBack.class);
+//    public static final BotFunction FUNCTION_HIGHNOON   = (BotFunction) registerFeature(new FunctionAnnounceNoon("highnoon"));
+    public static final BotFunction FUNCTION_BREAKWALLS = (BotFunction) registerFeature(new FunctionBreakMessages());
+    public static final BotFunction FUNCTION_EAT        = (BotFunction) registerFeature(new FunctionEatFood());
+    public static final BotFunction FUNCTION_YTTIME     = (BotFunction) registerFeature(new FunctionGetVideoTime());
+    public static final BotFunction FUNCTION_WELCOME    = (BotFunction) registerFeature(new FunctionWelcomeBack());
 
 
     //Settings
-    public static final StringSetting SETTING_LOCALE = new StringSetting("locale", "en", true);
-    public static final StringSetting SETTING_HOME = new StringSetting("bot_home", "", true);
-    public static final BooleanSetting SETTING_ANONYMOUS = new BooleanSetting("anonymous_logging", true, false);
+    public static final StringSetting  SETTING_LOCALE     = new StringSetting("locale", "en", true);
+    public static final StringSetting  SETTING_HOME       = new StringSetting("bot_home", "", true);
+    public static final BooleanSetting SETTING_ANONYMOUS  = new BooleanSetting("anonymous_logging", true, false);
     
     //Feature sets
-//    public static final FeatureSet MEME = BotFeature.registerFeature();
+    public static final FeatureSet MEMES = (FeatureSet) BotFeature.registerFeature(new FeatureSet("memes", COMMAND_MEME, COMMAND_BOOTY));
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
@@ -151,7 +149,7 @@ public class DiscordBot{
 
         client.getDispatcher().registerListener(new EventListener());
         client.getDispatcher().registerListener(new CommandHandler());
-        BotFunction.getAllRegisteredFunctions().forEach(client.getDispatcher()::registerListener);
+        client.getDispatcher().registerListener(new EventRouter());
 
         instance = new DiscordBot();
 
@@ -184,8 +182,7 @@ public class DiscordBot{
 
         this.eventDispatcher = new BotEventDispatcher(this);
                 
-        CommandHandler.getAllRegisteredCommands().forEach(this::enableFeature);
-        BotFunction.getAllRegisteredFunctions().forEach(this::enableFeature);
+        BotFeature.getAllRegisteredFeatures().forEach(this::enableFeature);
 
         try{
             getServerSettingsHandler().loadSettings();
@@ -453,19 +450,11 @@ public class DiscordBot{
         feature.onEnable(this);
     }
     
-    public void enableFeatures(FeatureSet features){
-        features.forEach(this::enableFeature);
-    }
-
     public void disableFeature(BotFeature feature){
         this.features.remove(feature);
         feature.onDisable(this);
     }
-    
-    public void disableFeatures(FeatureSet features){
-        features.forEach(this::disableFeature);
-    }
-    
+
     public void logo(Level level, String message, Object... args){
         if(this.logger == null) return;
         

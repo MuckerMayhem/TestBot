@@ -1,75 +1,37 @@
 package bot.feature.function;
 
-import bot.DiscordBot;
 import bot.feature.BotFeature;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
+import bot.locale.Locale;
+import bot.locale.LocaleHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-//TODO: Possibly remake with constructor
 public abstract class BotFunction extends BotFeature{
-
-    private static final ArrayList<BotFunction> global_functions = new ArrayList<>();
-
-    private Class<? extends BotFunction> mainClass;
-
-    public static List<BotFunction> getAllRegisteredFunctions(){
-        return global_functions;
+    
+    public BotFunction(String name){
+        super(name);
     }
 
-    public static BotFunction registerFunction(String name, Class<? extends BotFunction> mainClass){
-        BotFunction instance;
-        try{
-            instance = mainClass.newInstance();
-            instance.name = name;
-            instance.mainClass = mainClass;
-
-            instance.onRegister();
-
-            global_functions.add(instance);
-        }
-        catch(InstantiationException | IllegalAccessException e){
-            System.err.print("Failed to register function '" + name + "': " + e.getClass().getSimpleName());
-            return null;
-        }
-
-        return instance;
+    /**
+     * Gets the name of this Function in the specified locale
+     * @return The localized name of this feature
+     * @param locale Locale to localize the name to
+     */
+    @Override
+    public String getName(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedName(this);
     }
 
-    public abstract void onMessageReceived(DiscordBot bot, MessageReceivedEvent event) throws Exception;
-
-    public abstract void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception;
-
-    public String getName(){
-        return this.name;
+    @Override
+    public String getTypeName(){
+        return "Function";
     }
-
-    @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event){
-        DiscordBot bot = DiscordBot.getInstance(event.getMessage().getGuild());
-        if(bot != null && bot.featureEnabled(this)){
-            try{
-                this.onMessageReceived(bot, event);
-            }
-            catch(Exception e){
-                bot.log(e, "Exception occurred while handling function " + this.name);
-            }
-        }
-    }
-
-    @EventSubscriber
-    public void onVoiceChannelMove(UserVoiceChannelMoveEvent event){
-        DiscordBot bot = DiscordBot.getInstance(event.getNewChannel().getGuild());
-        if(bot != null && bot.featureEnabled(this)){
-            try{
-                this.onVoiceChannelMove(bot, event);
-            }
-            catch(Exception e){
-                bot.log(e, "Exception occurred while handling function " + this.name);
-            }
-        }
+    
+    /**
+     * Gets the description of this Function in the specified locale
+     * @return The localized description of this function
+     * @param locale Locale to localize the name to
+     */
+    @Override
+    public String getDescription(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedDescription(this);
     }
 }

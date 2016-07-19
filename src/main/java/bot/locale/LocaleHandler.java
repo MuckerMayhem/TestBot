@@ -1,29 +1,38 @@
 package bot.locale;
 
+import bot.feature.FeatureSet;
 import bot.feature.command.BotCommand;
-import bot.feature.command.CommandHandler;
 import bot.feature.function.BotFunction;
 import bot.settings.Setting;
-import bot.settings.SettingsHandler;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
 //TODO: Combine maps into one to simplify value getting
 public class LocaleHandler{
-
+    
     private static final HashMap<Locale, LocaleHandler> locales = new HashMap<>();
+    
+    private static final String COMMAND = "command.";
+    private static final String FUNCTION = "function.";
+    private static final String SET = "set.";
+    private static final String MESSAGE = "message.";
+    private static final String SETTING = "setting.";
+    
+    private static final String NAME = ".name";
+    private static final String DESCRIPTION = ".desc";
+    private static final String ARGUMENTS = ".args";
+    
+    private static final String PRETTY = ".pretty";
 
     private Locale locale;
 
-    private final HashMap<Class<? extends BotCommand>, String[]> commands = new HashMap<>();
-    private final HashMap<Setting, String[]> settings = new HashMap<>();
-    private final HashMap<BotFunction, String> functions = new HashMap<>();
-    private final HashMap<Message, String> messages = new HashMap<>();
-
+    private HashMap<String, String> values = new HashMap<>();
+    
     public static LocaleHandler load(Locale locale) throws FileNotFoundException{
         File file = new File("lang" + File.separator + locale.getCode());
         if(!file.isDirectory()) return null;
@@ -35,35 +44,13 @@ public class LocaleHandler{
 
         int ln;
 
-        File commands = new File(file + File.separator + "commands.lang");
-        if(commands.exists()){
-            System.out.println("Loading command strings for locale '" + locale.getCode() + "'");
+        for(File f : file.listFiles((dir, name) -> {
+            return name.toLowerCase().endsWith(".lang");
+        })){
+            
+            System.out.println("Loading " + f.getName() + " for locale '" + locale.getCode() + "'");
 
-            Scanner input = new Scanner(commands);
-
-            ln = 0;
-            while(input.hasNextLine()){
-                String line = input.nextLine();
-                ln++;
-                if(line.isEmpty()) continue;
-
-                String[] split = line.split(":", 2);
-                try{
-                    values.put(split[0], split[1]);
-                }
-                catch(ArrayIndexOutOfBoundsException e){
-                    System.err.println("Invalid string found in file '" + commands.getPath() + "' (Line: " + ln + ")");
-                    values.put(split[0], "");
-                }
-            }
-            input.close();
-        }
-
-        File functions = new File(file + File.separator + "functions.lang");
-        if(functions.exists()){
-            System.out.println("Loading function strings for locale '" + locale.getCode() + "'");
-
-            Scanner input = new Scanner(functions);
+            Scanner input = new Scanner(f);
 
             ln = 0;
             while(input.hasNextLine()){
@@ -73,86 +60,18 @@ public class LocaleHandler{
 
                 String[] split = line.split(":", 2);
                 try{
-                    values.put(split[0], split[1]);
+                    values.put(FilenameUtils.getBaseName(f.getName()) + "." + split[0], split[1]);
                 }
                 catch(ArrayIndexOutOfBoundsException e){
-                    System.err.println("Invalid string found in file '" + functions.getPath() + "' (Line: " + ln + ")");
+                    System.err.println("Invalid string found in file '" + f.getPath() + "' (Line: " + ln + ")");
                     values.put(split[0], "");
                 }
             }
             input.close();
         }
 
-        File messages = new File(file + File.separator + "messages.lang");
-        if(messages.exists()){
-            System.out.println("Loading message strings for locale '" + locale.getCode() + "'");
-
-            Scanner input = new Scanner(messages);
-
-            ln = 0;
-            while(input.hasNextLine()){
-                String line = input.nextLine();
-                ln++;
-                if(line.isEmpty()) continue;
-
-                String[] split = line.split(":", 2);
-                try{
-                    values.put(split[0], split[1]);
-                }
-                catch(ArrayIndexOutOfBoundsException e){
-                    System.err.println("Invalid string found in file '" + messages.getPath() + "' (Line: " + ln + ")");
-                    values.put(split[0], "");
-                }
-            }
-            input.close();
-        }
-
-        File settings = new File(file + File.separator + "settings.lang");
-        if(settings.exists()){
-            System.out.println("Loading setting strings for locale '" + locale.getCode() + "'");
-
-            Scanner input = new Scanner(settings);
-
-            while(input.hasNextLine()){
-                String line = input.nextLine();
-                if(line.isEmpty()) continue;
-
-                String[] split = line.split(":", 2);
-                values.put(split[0], split[1]);
-            }
-        }
-
-        CommandHandler.getAllRegisteredCommands().stream().forEach(c -> {
-            String[] info = new String[3];
-
-            String name = values.get(c.getRegisteredName() + ".name");
-            String desc = values.get(c.getRegisteredName() + ".desc");
-            String args = values.get(c.getRegisteredName() + ".args");
-
-            info[0] = name == null ? c.getRegisteredName() : name;
-            info[1] = desc == null ? "command." + c.getRegisteredName() + ".desc" : desc;
-            info[2] = args;
-
-            localeHandler.commands.put(c.getClass(), info);
-        });
-
-        Arrays.stream(Message.values()).forEach(m -> {
-            String value = values.get(m.getName());
-            localeHandler.messages.put(m, value == null ? m.getName() : value);
-        });
-
-        SettingsHandler.getAllRegisteredSettings().stream().forEach(s -> {
-            String[] info = new String[2];
-
-            String name = values.get(s.getName() + ".name");
-            String desc = values.get(s.getName() + ".desc");
-
-            info[0] = name == null ? s.getName() : name;
-            info[1] = desc == null ? "setting." + s.getName() + ".desc" : desc;
-
-            localeHandler.settings.put(s, info);
-        });
-
+        localeHandler.values = values;
+        
         return localeHandler;
     }
 
@@ -178,51 +97,101 @@ public class LocaleHandler{
     }
 
     public String getLocalizedMessage(Message message){
+        String key = MESSAGE + message.getName();
+        
         if(this.locale == null)
-            return message.getName();
+            return key;
 
-        return this.messages.get(message);
+        return this.values.getOrDefault(key, key);
     }
 
     public String getLocalizedName(BotCommand command){
+        String key = COMMAND + command.getRegisteredName() + NAME;
+        
         if(this.locale == null)
-            return command.getRegisteredName();
-
-        return this.commands.get(command.getClass())[0];
+            return key;
+        
+        return this.values.getOrDefault(key, key);
     }
 
+    public String getPrettyName(BotCommand command){
+        String key = COMMAND + command.getRegisteredName() + PRETTY;
+        
+        if(this.locale == null)
+            return key;
+        
+        return this.values.getOrDefault(key, StringUtils.capitalize(getLocalizedName(command) + " command"));
+    }
+    
     public String getLocalizedName(BotFunction function){
+        String key = FUNCTION + function.getRegisteredName() + NAME;
+        
         if(this.locale == null)
-            return "function." + function.getClass().getSimpleName().toLowerCase();
-
-        return this.functions.get(function);
+            return key;
+        
+        return this.values.getOrDefault(key, key);
     }
 
-    public String getLocalizedName(Setting setting){
+    public String getLocalizedName(FeatureSet featureSet){
+        String key = SET + featureSet.getRegisteredName() + NAME;
+        
         if(this.locale == null)
-            return "setting." + setting.getName() + ".name";
-
-        return this.settings.get(setting)[0];
+            return key;
+        
+        return this.values.getOrDefault(key, key);
+    }
+    
+    public String getLocalizedName(Setting setting){
+        String key = SETTING + setting.getName() + NAME;
+        
+        if(this.locale == null)
+            return key;
+        
+        return this.values.getOrDefault(key, key);
     }
 
     public String getLocalizedDescription(BotCommand command){
+        String key = COMMAND + command.getRegisteredName() + DESCRIPTION;
+        
         if(this.locale == null)
-            return "command." + command.getRegisteredName() + ".desc";
+            return key;
 
-        return this.commands.get(command.getClass())[1];
+        return this.values.getOrDefault(key, key);
     }
 
-    public String getLocalizedDescription(Setting setting){
+    public String getLocalizedDescription(BotFunction function){
+        String key = FUNCTION + function.getRegisteredName() + DESCRIPTION;
+        
         if(this.locale == null)
-            return "setting." + setting.getName() + ".desc";
+            return key;
+        
+        return this.values.getOrDefault(key, key);
+    }
+    
+    public String getLocalizedDescription(FeatureSet featureSet){
+        String key = SET + featureSet.getRegisteredName() + DESCRIPTION;
+        
+        if(this.locale == null)
+            return key;
+        
+        return this.values.getOrDefault(key, key);
+    }
+    
+    public String getLocalizedDescription(Setting setting){
+        String key = SETTING + setting.getName() + DESCRIPTION;
+        
+        if(this.locale == null)
+            return key;
 
-        return this.settings.get(setting)[1];
+        return this.values.getOrDefault(key, key);
     }
     
     public String[] getLocalizedArguments(BotCommand command){
+        String key = COMMAND + command.getRegisteredName() + ARGUMENTS;
+        
         if(this.locale == null)
             return new String[0];
         
-        return this.commands.get(command.getClass())[2].split(",");
+        return this.values.get(key).split(",");
     }
 }

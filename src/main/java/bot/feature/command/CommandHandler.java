@@ -7,7 +7,6 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.Permissions;
 import util.DiscordUtil;
 import util.Util;
 
@@ -44,47 +43,6 @@ public class CommandHandler{
             if(c.getRegisteredName().equalsIgnoreCase(name)) return c;
         }
         return null;
-    }
-
-    public static BotCommand registerCommand(boolean debug, String name, Class<? extends BotCommand> mainClass, Permissions permissions){
-        for(BotCommand c : global_commands){
-
-            if(c.name.equalsIgnoreCase(name)){
-                System.out.println("Could not register command '" + name + "': Command with this name has already been registered");
-                return null;
-            }
-        }
-
-        BotCommand instance;
-        try{
-            instance = mainClass.newInstance();
-            instance.permissions = permissions == null ? Permissions.SEND_MESSAGES : permissions;
-            instance.name = name;
-            
-            instance.setDebug(debug);
-
-            instance.onRegister();
-
-            global_commands.add(instance);
-        }
-        catch(InstantiationException | IllegalAccessException e){
-            System.err.print("Failed to register command '" + name + "': " + e.getClass().getSimpleName());
-            return null;
-        }
-
-        System.out.println("Command '" + name + "' registered");
-
-        return instance;
-    }
-
-    /**
-     * Register a new command on a bot. Uses the command prefix set by {@link #setCommandPrefix(String)}
-     * @param name Identifier used to execute this command
-     * @param mainClass Main class of your command. Should extend {@link BotCommand}
-     * @return true if the command was successfully registered, otherwise false
-     */
-    public static BotCommand registerCommand(String name, Class<? extends BotCommand> mainClass, Permissions permissions){
-        return registerCommand(false, name, mainClass, permissions);
     }
 
     /**
@@ -127,9 +85,7 @@ public class CommandHandler{
         for(BotCommand c : bot.getCommands()){
             if(command.equalsIgnoreCase(c.getName(bot.getLocale()))){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
-                if(!c.debug()){
-                    DiscordUtil.deleteMessage(message, 2000L);
-                }
+                DiscordUtil.deleteMessage(message, 2000L);
 
                 String[] args = EMPTY;
                 if(content.contains(" ")){
@@ -138,7 +94,7 @@ public class CommandHandler{
 
                 bot.lastEvent = event;
                 try{
-                    c.newInstance().execute(bot, message, args);
+                    c.execute(bot, message, args);
                 }
                 catch(Exception e){
                     bot.logo(Level.ERROR, "Exception while executing command '%s': %s\nMessage: %s\nChannel ID: %s\nUser ID: %s\nAt: %s", 

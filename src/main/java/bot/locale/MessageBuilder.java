@@ -15,6 +15,13 @@ public class MessageBuilder{
         return this;
     }
 
+    /**
+     * Builds a message in this builder's locale. Tokens in the localized message string <i>(Such as $1, $2)</i> are replaced with<br>
+     * the arguments in their respective order. {@link Object#toString()} is used on each argument when replacing.
+     * @param message {@link Message} to build
+     * @param args Objects replacing specific tokens in the string
+     * @return The built message
+     */
     public String buildMessage(Message message, Object... args){
         String localized = message.getLocalizedMessage(this.locale);
 
@@ -27,6 +34,10 @@ public class MessageBuilder{
         return localized;
     }
 
+    /**
+     * Builds a message in this builder's locale
+     * @return The built message
+     */
     public String buildMessage(Message message){
         return message.getLocalizedMessage(this.locale);
     }

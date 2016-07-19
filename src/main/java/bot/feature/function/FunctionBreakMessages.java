@@ -1,6 +1,9 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.event.BotEventSubscriber;
+import bot.event.BotMessageReceivedEvent;
+import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.BooleanSetting;
@@ -10,7 +13,6 @@ import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class FunctionBreakMessages extends BotFunction{
+public class FunctionBreakMessages extends BotFunction implements ToggleableBotFeature{
 
     public static final String BREAKUP_MESSAGE = "-";
     public static final int MAX_MESSAGES = 12;
@@ -35,6 +37,10 @@ public class FunctionBreakMessages extends BotFunction{
     private static MessageReceivedEvent lastEvent = null;
     
     private static String lastFact = "";
+
+    public FunctionBreakMessages(){
+        super("breakwalls");
+    }
 
     @Override
     public void onRegister(){
@@ -67,10 +73,10 @@ public class FunctionBreakMessages extends BotFunction{
 
     @Override
     public void onDisable(DiscordBot bot) {}
-
-    @Override
-    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event){
-        if(bot == null) return;
+    
+    @BotEventSubscriber
+    public void onMessageReceived(BotMessageReceivedEvent event){
+        DiscordBot bot = event.getBot();
 
         if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_WALL_BREAKING)) return;
 
@@ -104,10 +110,7 @@ public class FunctionBreakMessages extends BotFunction{
 
         messages.put(channel, event.getMessage().getAuthor().getID());
     }
-
-    @Override
-    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
-
+    
     private String randomFact(DiscordBot bot) throws IOException{
         MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
 

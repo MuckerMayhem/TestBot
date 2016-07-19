@@ -1,26 +1,25 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 
-public class CommandGame extends BotCommand{
+public class ThreadedCommandGame extends ThreadedCommand implements ToggleableBotFeature{
 
-    @Override
-    public void onRegister(){
-
+    public ThreadedCommandGame(){
+        super("game");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

@@ -1,11 +1,13 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import bot.feature.ToggleableBotFeature;
 import bot.feature.command.sound.Sound;
 import bot.locale.Message;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.audio.AudioPlayer;
 import util.DiscordUtil;
@@ -18,8 +20,12 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandSound extends BotCommand
+public class CommandSound extends BotCommand implements ToggleableBotFeature
 {
+    public CommandSound(){
+        super("sound", Permissions.VOICE_SPEAK);
+    }
+
     public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
         if(channel == null) return;
         
@@ -60,19 +66,13 @@ public class CommandSound extends BotCommand
     }
 
     @Override
-    public void onRegister(){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onEnable(DiscordBot bot) {}
 
     @Override
-    public void onDisable(DiscordBot bot){
-
-    }
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws MissingPermissionsException{

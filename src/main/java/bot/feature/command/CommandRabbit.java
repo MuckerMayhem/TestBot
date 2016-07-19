@@ -9,6 +9,10 @@ public class CommandRabbit extends BotCommand{
 
     private static final StringSetting RABBIT_NAME = new StringSetting("rabbit_room", "");
 
+    public CommandRabbit(){
+        super("rabbit");
+    }
+
     @Override
     public void onRegister(){
         DiscordBot.getUserSettingsHandler().registerNewSetting(RABBIT_NAME);
@@ -19,7 +23,7 @@ public class CommandRabbit extends BotCommand{
 
     @Override
     public void onDisable(DiscordBot bot) {}
-
+    
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         String rabbit = (String) getUserSetting(message.getAuthor().getID(), RABBIT_NAME);

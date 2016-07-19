@@ -1,6 +1,7 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.settings.BooleanSetting;
 import com.google.gson.*;
@@ -18,12 +19,16 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 //TODO: Optimize
-public class CommandWaifu extends BotCommand{
+public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
 
     private static final HashMap<String, WaifuList> waifuLists = new HashMap<>();
     
     //Setting for this command
     private static final BooleanSetting SEE_WAIFU_NOTIFICATIONS = new BooleanSetting("notify_waifu", true);
+
+    public CommandWaifu(){
+        super("waifu");
+    }
 
     @Override
     public void onRegister(){

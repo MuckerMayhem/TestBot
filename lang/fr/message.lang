@@ -16,6 +16,9 @@ command_clear_deleting:Effacement des messages en cours ...
 command_clear_deleted:Effacé $1 de messages
 command_clear_cancel:Annulé
 
+command_feature_list:Voici une list de mes fonctionnalités:
+command_feature_args:Tapez « $1 desactiver # » ou « $1 activer # » pour activer/desativer des functionnalités
+
 command_game_no_home:Aucun salon d'accueil fixé. Veuillez demander un gestionnaire pour fixer
 command_game_nothere:Veuillez exécuter cette command dans le salon « $1 » si vous souhaitez à jouer avec moi :slight_smile:
 command_game_choose_1:Quel jeu voulez-vous jouer? Jeux disponibles :

@@ -3,9 +3,23 @@ package bot.feature.command;
 import bot.DiscordBot;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Permissions;
 
 public abstract class ThreadedCommand extends BotCommand{
 
+    public ThreadedCommand(String name, Permissions permissions){
+        super(name, permissions);
+    }
+    
+    public ThreadedCommand(String name){
+        super(name);
+    }
+
+    @Override
+    public String getTypeName(){
+        return "ThreadedCommand";
+    }
+    
     @Override
     public void execute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         new Thread(() -> {

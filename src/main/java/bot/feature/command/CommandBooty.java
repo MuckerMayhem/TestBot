@@ -1,34 +1,34 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import bot.feature.ToggleableBotFeature;
 import bot.feature.command.sound.Sound;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.Permissions;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CommandBooty extends BotCommand{
+public class CommandBooty extends BotCommand implements ToggleableBotFeature{
 
     private static final String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
     private static final String[] theBooty2x = {"͡⊙", "͜ʖ", "͡⊙)"};
     private static final String[] theBooty3x = {"͡◉", "͜ʖ", "͡◉)"};
     private static final String[] theBootySlow = {"͡o", "͜ʖ", "͡o)"};
 
-    @Override
-    public void onRegister(){
-
+    public CommandBooty(){
+        super("(", Permissions.VOICE_SPEAK);
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

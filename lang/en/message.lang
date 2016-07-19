@@ -16,6 +16,9 @@ command_clear_deleting:Deleting all messages in channel *$1*
 command_clear_deleted:Deleted $1 messages
 command_clear_cancel:Cancelled.
 
+command_feature_list:Here is a list of my features:
+command_feature_args:Use $1 disable # or $1 enable # to disable/enable features
+
 command_game_no_home:No home channel set. Please ask an administrator to set it.
 command_game_nothere:Please run this command in the '$1' channel if you wish to play a game with me :slight_smile:
 command_game_choose_1:Which game would you like to play with me? Available games:

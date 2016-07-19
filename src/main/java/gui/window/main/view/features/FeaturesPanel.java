@@ -36,7 +36,7 @@ public class FeaturesPanel extends AbstractBotPanel{
         Object[][] data = new Object[features.size()][2];
         int index = 0;
         for(BotFeature f : features){
-            data[index] = new Object[]{f.getRegisteredName(), f.getClass().getSuperclass().getSimpleName()};
+            data[index] = new Object[]{f.getRegisteredName(), f.getTypeName()};
             index++;
         }
         

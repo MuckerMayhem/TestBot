@@ -5,6 +5,7 @@ import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.Permissions;
 import util.DiscordUtil;
 
 import java.util.List;
@@ -12,21 +13,21 @@ import java.util.stream.Collectors;
 
 public class CommandPrune extends BotCommand{
 
+    public CommandPrune(){
+        super("prune", Permissions.MANAGE_MESSAGES);
+    }
+
     @Override
     public void onRegister(){
 
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onEnable(DiscordBot bot) {}
 
     @Override
-    public void onDisable(DiscordBot bot){
-
-    }
-
+    public void onDisable(DiscordBot bot) {}
+    
     @Override
     public void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(args.length == 0) return;

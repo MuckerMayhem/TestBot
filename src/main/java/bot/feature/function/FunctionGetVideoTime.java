@@ -1,37 +1,41 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.event.BotEventSubscriber;
+import bot.event.BotMessageReceivedEvent;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import util.YoutubeUtil;
 
 public class FunctionGetVideoTime extends BotFunction{
-
-    private static final String[] IMPORTANT_REGIONS = {"US", "CA", "AU"};
-
+    
+    private static final ArraySetting SETTING_REGIONS = new ArraySetting("important_regions", new String[]{});
     private static final ArraySetting SETTING_YTBLACKLIST = new ArraySetting("blacklist_videoinfo", new String[]{});
+
+    public FunctionGetVideoTime(){
+        super("yttime");
+    }
 
     @Override
     public void onRegister() {}
 
     @Override
     public void onEnable(DiscordBot bot){
-       bot.getServerSettingsHandler().registerNewSetting(SETTING_YTBLACKLIST);
+        bot.getServerSettingsHandler().registerNewSetting(SETTING_REGIONS);
+        bot.getServerSettingsHandler().registerNewSetting(SETTING_YTBLACKLIST);
+        bot.getEventDispatcher().registerListener(this);
     }
-
+    
     @Override
     public void onDisable(DiscordBot bot){
-
+        //TODO: Unregister settings
+        bot.getEventDispatcher().unregisterListener(this);
     }
 
-
-    @EventSubscriber
-    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event) throws Exception{
-        if(bot == null) return;
+    @BotEventSubscriber
+    public void onMessageReceived(BotMessageReceivedEvent event) throws Exception{
+        DiscordBot bot = event.getBot();
 
         for(String s : (String[]) bot.getServerSettingsHandler().getSetting(SETTING_YTBLACKLIST)){
             if(event.getMessage().getChannel().getName().equals(s)) return;
@@ -62,8 +66,9 @@ public class FunctionGetVideoTime extends BotFunction{
 
         StringBuilder builder = new StringBuilder("*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_LENGTH, YoutubeUtil.formatTime(videoInfo[2]))).append("*");
         if(!videoInfo[3].isEmpty()){
-            builder.append("\n*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_BLOCKED, underlineRegions(videoInfo[3]))).append("*");
-            for(String s : IMPORTANT_REGIONS){
+            String[] regions = (String[]) bot.getServerSettingsHandler().getSetting(SETTING_REGIONS);
+            builder.append("\n*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_BLOCKED, underlineRegions(regions, videoInfo[3]))).append("*");
+            for(String s : regions){
                 if(videoInfo[3].contains(s)){
                     builder.append("\n").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_UNBLOCK));
                     break;
@@ -73,14 +78,11 @@ public class FunctionGetVideoTime extends BotFunction{
 
         bot.say(event.getMessage().getChannel(), builder.toString());
     }
-
-    @Override
-    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
-
-    private static String underlineRegions(String regions){
-        for(String s : IMPORTANT_REGIONS){
-            regions = regions.replaceAll("(.*)(" + s + ")(.*)", "$1__$2__$3");
+    
+    private static String underlineRegions(String[] regions, String string){
+        for(String s : regions){
+            string = string.replaceAll("(.*)(" + s + ")(.*)", "$1__$2__$3");
         }
-        return regions;
+        return string;
     }
 }

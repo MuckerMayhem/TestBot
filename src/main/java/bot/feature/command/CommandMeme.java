@@ -1,6 +1,7 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
+import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import sx.blah.discord.handle.obj.IMessage;
@@ -8,22 +9,20 @@ import sx.blah.discord.handle.obj.IMessage;
 import java.util.Random;
 
 //TODO: Meme it up
-public class CommandMeme extends BotCommand{
+public class CommandMeme extends BotCommand implements ToggleableBotFeature{
 
-    @Override
-    public void onRegister(){
-
+    public CommandMeme(){
+        super("meme");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

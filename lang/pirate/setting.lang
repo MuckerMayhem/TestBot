@@ -1,0 +1,22 @@
+rabbit_room.name:Rabb.it room
+rabbit_room.desc:Name of yer rabb.it room
+notify_welcome.name:Welcome notifications
+notify_welcome.desc:Get welcomed back from the AFK channel
+eat_emoji.name:Eat emoji
+eat_emoji.desc:T' bot eats yer emoji
+notify_waifu.name:Matey notifications
+notify_waifu.desc:Tell'ya when some buccaneer adds ye as his matey
+break_walls.name:Break text walls
+break_walls.desc:Break up your walls of text with a fun fact
+clear_whitelist.name:Clear whitelist
+clear_whitelist.desc:Channels that can be cleared by the clear command
+blacklist_videoinfo.name:Video info blacklist
+blacklist_videoinfo.desc:Channels to NOT send video info in
+locale.name:Speak
+locale.desc:Speak o' the bot
+bot_home.name:Captain's quarters
+bot_home.desc:The channel where t' captain speaks
+anonymous_logging.name:Anonymous logging
+anonymous_logging.desc:Display IDs in place of names in t' captain's log
+important_regions.name:Important regions
+important_regions.desc:Regions to be highlighted when a YouTube video is blocked

@@ -1,16 +1,20 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.event.BotMessageReceivedEvent;
+import bot.feature.ToggleableBotFeature;
 import bot.settings.BooleanSetting;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserVoiceChannelMoveEvent;
 import util.DiscordUtil;
 
-public class FunctionEatFood extends BotFunction{
+public class FunctionEatFood extends BotFunction implements ToggleableBotFeature{
 
     //Setting for this function
     private static final BooleanSetting ALLOW_EMOJI_EATING = new BooleanSetting("eat_emoji", true);
+
+    public FunctionEatFood(){
+        super("eat");
+    }
 
     @Override
     public void onRegister(){
@@ -18,14 +22,18 @@ public class FunctionEatFood extends BotFunction{
     }
 
     @Override
-    public void onEnable(DiscordBot bot) {}
+    public void onEnable(DiscordBot bot){
+        bot.getEventDispatcher().registerListener(this);
+    }
 
     @Override
-    public void onDisable(DiscordBot bot) {}
+    public void onDisable(DiscordBot bot){
+        bot.getEventDispatcher().unregisterListener(this);
+    }
 
     @EventSubscriber
-    public void onMessageReceived(DiscordBot bot, MessageReceivedEvent event){
-        if(bot == null) return;
+    public void onMessageReceived(BotMessageReceivedEvent event){
+        DiscordBot bot = event.getBot();
 
         if(!bot.checkSetting(event.getMessage().getAuthor().getID(), ALLOW_EMOJI_EATING)) return;
 
@@ -37,9 +45,6 @@ public class FunctionEatFood extends BotFunction{
             }
         }
     }
-
-    @Override
-    public void onVoiceChannelMove(DiscordBot bot, UserVoiceChannelMoveEvent event) throws Exception {}
 
     public enum Food{
         GREEN_APPLE(false, "apple", "\uD83C\uDF4F", ":kissing:"),

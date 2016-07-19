@@ -1,7 +1,6 @@
 package gui.window.message;
 
 import bot.DiscordBot;
-import bot.event.BotEventListener;
 import bot.event.BotEventSubscriber;
 import gui.AbstractBotPanel;
 import gui.BotGui;
@@ -14,7 +13,7 @@ import javax.swing.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.*;
 
-public class MessagePanel extends AbstractBotPanel implements BotEventListener{
+public class MessagePanel extends AbstractBotPanel{
     
     private final DiscordBot bot;
     

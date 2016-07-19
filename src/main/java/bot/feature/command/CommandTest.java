@@ -9,20 +9,18 @@ import java.util.Arrays;
 //TODO: Remove when bot is published
 public class CommandTest extends BotCommand{
 
-    @Override
-    public void onRegister(){
-
+    public CommandTest(){
+        super("test");
     }
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onDisable(DiscordBot bot){
+    public void onEnable(DiscordBot bot) {}
 
-    }
+    @Override
+    public void onDisable(DiscordBot bot) {}
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){

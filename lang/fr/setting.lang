@@ -18,3 +18,5 @@ bot_home.name:Salon d'accueil
 bot_home.desc:Le salon défaut pour le bot de parler
 anonymous_logging.name:Enregistrement anonyme
 anonymous_logging.desc:Écrire les identifiants au lieu des noms dans le journal du serveur
+important_regions.name:Régions importantes
+important_regions.desc:Des régions être souligné quand une vidéo sur YouTube est bloqué
