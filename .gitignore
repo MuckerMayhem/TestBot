@@ -1,5 +1,5 @@
 target/
 data/
 bot_log.txt
-.idea/
 modules/
+.idea
