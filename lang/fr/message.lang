@@ -17,17 +17,22 @@ command_clear_deleted:Effacé $1 de messages
 command_clear_cancel:Annulé
 
 command_feature_list:Voici une list de mes fonctionnalités:
-command_feature_args:Tapez « $1 desactiver # » ou « $1 activer # » pour activer/desativer des functionnalités
+command_feature_args:Tapez « $1 desactiver # » ou « $1 activer # » pour activer/désativer des functionnalités
+command_feature_enable:La fonctionnalité « $1 » a été activée
+command_feature_already_enabled:La fonctionnalité « $1 » est déjà activée !
+command_feature_disable:La fonctionnalité « $1 » a été désactivée
+command_feature_already_disabled:La fonctionnalité « $1 » est déjà désativée !
 
 command_game_no_home:Aucun salon d'accueil fixé. Veuillez demander un gestionnaire pour fixer
 command_game_nothere:Veuillez exécuter cette command dans le salon « $1 » si vous souhaitez à jouer avec moi :slight_smile:
 command_game_choose_1:Quel jeu voulez-vous jouer? Jeux disponibles :
-command_game_choose_2:Simplement entrez le numéro du jeu que vous voudrais jouer
+command_game_choose_2:Simplement entrez le numéro du jeu lequel vous voudrais jouer
 command_game_choose_3:Entrez « instructions » après le numéro pour afficher les instructions de jeu.
 command_game_start:Compris. Allons-y !
 command_game_thanks:Merci pour jouer !
 
 command_help_details:Entrer $1 < command > pour les détails d'une commande spécifique
+command_help_no_detail:Aucune description détaillée pour cette commande !
 
 command_meme_normal: 
 command_meme_dank:Voici un dank mème pour vous :
@@ -39,15 +44,15 @@ command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la 
 command_restart_restarting:Redémarrer en cours ...
 command_restart_finished:Je suis revenu !
 
-command_setting_list:Voici la liste d'options que vous pouvez changer :
+command_setting_list:Voici la liste d'options lesquelles vous pouvez changer :
 command_setting_more:Aussi, vous avez l'autorisation pour changer les options à serveur suivantes :
 command_setting_reset:Réinitialiser tous vos options à ses valeurs par défaut
 command_setting_invalid_setting:L'option « $1 » est invalide
 command_setting_invalid_value:La valeur « $1 » est invalide
 command_setting_no_access:Vous n'avez pas l'autorisation de changer ces settings !
-command_setting_enter_number:Entrez le numéro de l'option que vous voudrais changer
+command_setting_enter_number:Entrez le numéro de l'option laquelle vous voudrais changer
 command_setting_enter_number_server:Entrez « serveur » après le numéro pour changer des options à serveur
-command_setting_invalid_number:Entrez un numéro valide
+command_setting_invalid_number:Entrez un nombre valide
 command_setting_set:L'option « $1 » a réglé à *$2*
 command_setting_restart_required:Il faut démarrer le bot pour ce changement de prendre effet
 

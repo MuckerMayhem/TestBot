@@ -18,6 +18,10 @@ command_clear_cancel:Cancelled.
 
 command_feature_list:Here be a list o' my features: 
 command_feature_args:Use $1 disable # or $1 enable # to disable/enable features
+command_feature_enable:Feature '$1' enabled
+command_feature_already_enabled:Feature '$1' is already enabled!
+command_feature_disable:Feature '$1' disabled
+command_feature_already_disabled:Feature '$1' is already disabled!
 
 command_game_no_home:Arrrg! Ye have to set the captain's quarters for me to be doin' that!
 command_game_nothere:Ye must run this command in t' '$1' channel if playin' a game with me be what ye want :skull_crossbones:
@@ -28,6 +32,7 @@ command_game_start:Arrr! Let's set sail!
 command_game_thanks:Thanks for playing!
 
 command_help_details:Enter $1 <command> for details on a specific command
+command_help_no_detail:No detailed description for this command!
 
 command_meme_normal: 
 command_meme_dank:Here be a dank meme for you matey: 

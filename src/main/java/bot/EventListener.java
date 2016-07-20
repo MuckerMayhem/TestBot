@@ -9,20 +9,15 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Status;
 import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.Image;
 import sx.blah.discord.util.RateLimitException;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class EventListener{
 
     //https://discordapp.com/oauth2/authorize?client_id=195313542130302977&scope=bot&permissions=8 Bot authorization url
-    
-    private static final String NAME = "Weeb-bot";//Bot's username
-    private static final Image IMAGE = Image.forFile(new File("kirino.png"));//Bot's avatar
-    private static final String GAME = "俺の妹がこんなに可愛いわけがないポータブル";//Game the bot will be displayed as playing
 
+    //俺の妹がこんなに可愛いわけがないポータブル
     private static final ArrayList<IGuild> guildQueue = new ArrayList<>();
 
     @EventSubscriber
@@ -30,20 +25,20 @@ public class EventListener{
         IDiscordClient client = event.getClient();
         
         try{
-            client.changeUsername(NAME);
+            client.changeUsername(DiscordBot.getUsername());
         }
         catch(DiscordException | RateLimitException e){
             System.err.println("Exception occurred while trying to change client username: " + e.getMessage());
         }
 
         try{
-            client.changeAvatar(IMAGE);
+            client.changeAvatar(DiscordBot.getAvatarImg());
         }
         catch(DiscordException | RateLimitException e){
             System.err.println("Exception occurred while trying to change client avatar: " + e.getMessage());
         }
 
-        client.changeStatus(Status.game(GAME));
+        client.changeStatus(Status.game(DiscordBot.getGameStatus()));
 
         System.out.println("Client ready. Initializing DiscordBot instances...");
 
@@ -52,7 +47,9 @@ public class EventListener{
             System.out.printf("Joined guild '%s' (%s)\n", g.getName(), g.getID());
         }
         
-        BotGui.getGui().getGuildPanel().update();
+        if(!BotGui.isDisabled()){
+            BotGui.getGui().getGuildPanel().update();
+        }
     }
 
     @EventSubscriber
@@ -62,6 +59,8 @@ public class EventListener{
     
     @EventSubscriber
     public void onGuildRemove(GuildLeaveEvent event){
-        BotGui.getGui().getGuildPanel().update();
+        if(!BotGui.isDisabled()){
+            BotGui.getGui().getGuildPanel().update();
+        }
     }
 }

@@ -138,7 +138,8 @@ public class CommandSound extends BotCommand implements ToggleableBotFeature
             TimerTask task = new TimerTask(){
                 @Override
                 public void run(){
-                    channel.leave();
+                    if(channel.isConnected()) 
+                        channel.leave();
                 }
             };
 

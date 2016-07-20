@@ -1,10 +1,10 @@
 package bot.feature.function;
 
 import bot.DiscordBot;
+import bot.event.BotEventSubscriber;
 import bot.event.BotMessageReceivedEvent;
 import bot.feature.ToggleableBotFeature;
 import bot.settings.BooleanSetting;
-import sx.blah.discord.api.events.EventSubscriber;
 import util.DiscordUtil;
 
 public class FunctionEatFood extends BotFunction implements ToggleableBotFeature{
@@ -31,7 +31,7 @@ public class FunctionEatFood extends BotFunction implements ToggleableBotFeature
         bot.getEventDispatcher().unregisterListener(this);
     }
 
-    @EventSubscriber
+    @BotEventSubscriber
     public void onMessageReceived(BotMessageReceivedEvent event){
         DiscordBot bot = event.getBot();
 

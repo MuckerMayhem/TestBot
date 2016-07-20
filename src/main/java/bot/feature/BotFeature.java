@@ -4,11 +4,12 @@ import bot.DiscordBot;
 import bot.locale.Locale;
 import org.apache.commons.lang3.Validate;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Move feature registration here
-public abstract class BotFeature{
+//TODO: Find a way to have features in a set registered separately without showing up in the features list
+public abstract class BotFeature implements Comparable<BotFeature>{
     
     private static final ArrayList<BotFeature> features = new ArrayList<>();
     
@@ -17,7 +18,7 @@ public abstract class BotFeature{
     public BotFeature(String name){
         this.name = name;
     }
-
+    
     /**
      * Gets a list containing all features registered via {@link BotFeature#registerFeature(BotFeature)}
      * @return A list containing all registered features
@@ -104,5 +105,10 @@ public abstract class BotFeature{
      */
     public boolean isRegistered(){
         return features.contains(this);
+    }
+    
+    @Override
+    public int compareTo(@Nonnull BotFeature other){
+        return this.name.compareTo(other.name);
     }
 }

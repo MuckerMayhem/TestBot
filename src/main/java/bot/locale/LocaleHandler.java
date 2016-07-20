@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-//TODO: Combine maps into one to simplify value getting
 public class LocaleHandler{
     
     private static final HashMap<Locale, LocaleHandler> locales = new HashMap<>();
@@ -28,6 +27,7 @@ public class LocaleHandler{
     private static final String ARGUMENTS = ".args";
     
     private static final String PRETTY = ".pretty";
+    private static final String DETAIL = ".detail";
 
     private Locale locale;
 
@@ -159,6 +159,15 @@ public class LocaleHandler{
         return this.values.getOrDefault(key, key);
     }
 
+    public String getDetailedDescription(BotCommand command){
+        String key = COMMAND + command.getRegisteredName() + DETAIL;
+        
+        if(this.locale == null)
+            return key;
+        
+        return this.values.getOrDefault(key, getLocalizedMessage(Message.CMD_HELP_NO_DETAIL));
+    }
+    
     public String getLocalizedDescription(BotFunction function){
         String key = FUNCTION + function.getRegisteredName() + DESCRIPTION;
         

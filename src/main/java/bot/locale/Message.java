@@ -22,6 +22,10 @@ public enum Message{
 
     CMD_FEATURE_LIST("command_feature_list"),
     CMD_FEATURE_ARGS("command_feature_args"),
+    CMD_FEATURE_ENABLED("command_feature_enable"),
+    CMD_FEATURE_ALREADY_ENABLED("command_feature_already_enabled"),
+    CMD_FEATURE_DISABLED("command_feature_disable"),
+    CMD_FEATURE_ALREADY_DISABLED("command_feature_already_disabled"),
     
     CMD_GAME_NO_HOME("command_game_no_home"),
     CMD_GAME_NOT_HERE("command_game_nothere"),
@@ -32,6 +36,7 @@ public enum Message{
     CMD_GAME_THANKS("command_game_thanks"),
 
     CMD_HELP_DETAILS("command_help_details"),
+    CMD_HELP_NO_DETAIL("command_help_no_detail"),
 
     CMD_MEME_SEND("command_meme_normal"),
     CMD_MEME_DANK("command_meme_dank"),

@@ -132,7 +132,11 @@ public class Util{
 
         return newArgs;
     }
-
+    
+    public static String realNewLines(String input){
+        return input.replace("\\n", "\n");
+    }
+    
     /**
      * Returns true if array <i>a1</i> contains all strings from array <i>a2</i>
      * Case-insensitive

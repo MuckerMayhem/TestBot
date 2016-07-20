@@ -1,5 +1,7 @@
 package bot.locale;
 
+import util.Util;
+
 public class MessageBuilder{
 
     private Message message;
@@ -23,11 +25,11 @@ public class MessageBuilder{
      * @return The built message
      */
     public String buildMessage(Message message, Object... args){
-        String localized = message.getLocalizedMessage(this.locale);
+        String localized = Util.realNewLines(message.getLocalizedMessage(this.locale));
 
         int index = 1;
         for(Object o : args){
-            localized = localized.replaceAll("\\$" + index, o.toString());
+            localized = localized.replace("$" + index, o.toString());
             index++;
         }
 
@@ -39,6 +41,6 @@ public class MessageBuilder{
      * @return The built message
      */
     public String buildMessage(Message message){
-        return message.getLocalizedMessage(this.locale);
+        return Util.realNewLines(message.getLocalizedMessage(this.locale));
     }
 }

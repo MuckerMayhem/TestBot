@@ -12,12 +12,10 @@ import org.apache.commons.lang3.Validate;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.Permissions;
+import util.Util;
 
 import java.io.File;
 import java.util.InputMismatchException;
-
-//TODO: Re-implement detailed descriptions
-//TODO: Possibly remake with constructor
 
 /**
  * {@link BotCommand} is the root class of all bot commands. When extending this class, only<br>
@@ -30,7 +28,9 @@ import java.util.InputMismatchException;
  * a new instance of your command is created using the default constructor every time the command is executed.
  */
 public abstract class BotCommand extends BotFeature{
-
+    
+    private static final String[] VARS = {"$prefix", "$name", "$handle"};
+    
     private Permissions permissions;
     
     private MessageBuilder builder;
@@ -73,9 +73,9 @@ public abstract class BotCommand extends BotFeature{
     }
     
     /**
-     * Gets the name of this Command in the specified locale
-     * @return The localized name of this command
+     * Gets the name of this command in the specified locale
      * @param locale Locale to localize the name to
+     * @return The localized name of this command
      */
     @Override
     public String getName(Locale locale){
@@ -91,9 +91,9 @@ public abstract class BotCommand extends BotFeature{
         return LocaleHandler.get(locale).getPrettyName(this);
     }
     /**
-     * Gets the description of this Command in the specified locale
-     * @return The description name of this command
+     * Gets the description of this command in the specified locale
      * @param locale Locale to localize the description to
+     * @return The description name of this command
      */
     @Override
     public String getDescription(Locale locale){
@@ -101,17 +101,22 @@ public abstract class BotCommand extends BotFeature{
     }
 
     /**
-     * Gets the handle of this Command in the specified locale
-     * @return The localized handle of this command
+     * Gets the detailed description of this command in the specified locale
+     * @param locale Locale to localize the description to
+     * @return Localized detailed description of this command
+     */
+    public String getDetailedDescription(Locale locale){
+        return getDescription(locale) + "\n" + 
+                Util.realNewLines(replaceVars(LocaleHandler.get(locale).getDetailedDescription(this), locale));
+    }
+    
+    /**
+     * Gets the handle of this command in the specified locale
      * @param locale Locale to localize the handle to
+     * @return The localized handle of this command 
      */
     public String getHandle(Locale locale){
         return CommandHandler.getCommandPrefix() + getName(locale);
-    }
-
-    //TODO: Re-implement and localize descriptions
-    public String getDetailedDescription(){
-        return "No detailed description for this command";
     }
     
     /**
@@ -121,6 +126,9 @@ public abstract class BotCommand extends BotFeature{
         return getName(getLocale());
     }
 
+    /**
+     * @return The 'prettified' name of this command
+     */
     protected String getPrettyName(){
         return getPrettyName(getLocale());
     }
@@ -139,6 +147,13 @@ public abstract class BotCommand extends BotFeature{
         return getDescription(getLocale());
     }
 
+    /**
+     * @return The localized detailed description of this command
+     */
+    protected String getDetailedDescription(){
+        return getDetailedDescription(getLocale());
+    }
+    
     /**
      * @return The localized arguments of this command
      */
@@ -228,6 +243,23 @@ public abstract class BotCommand extends BotFeature{
         instance.construct(this, bot).onExecute(bot, message, args);
     }
 
+    private String replaceVars(String string, Locale locale){
+        StringBuilder builder = new StringBuilder(string);
+        while(builder.indexOf(VARS[0]) != -1){
+            int index = builder.indexOf(VARS[0]);
+            builder.replace(index, index + VARS[0].length(), CommandHandler.getCommandPrefix());
+        }
+        while(builder.indexOf(VARS[1]) != -1){
+            int index = builder.indexOf(VARS[1]);
+            builder.replace(index, index + VARS[1].length(), getName(locale));
+        }
+        while(builder.indexOf(VARS[2]) != -1){
+            int index = builder.indexOf(VARS[2]);
+            builder.replace(index, index + VARS[2].length(), getHandle(locale));
+        }
+        return builder.toString();
+    }
+    
     private BotCommand newInstance(DiscordBot bot){
         try{
             return this.getClass().newInstance();

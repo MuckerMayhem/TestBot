@@ -1,9 +1,10 @@
 package bot;
 
+import bot.ArgumentParser.Flag;
+import bot.ArgumentParser.Value;
 import bot.event.BotEventDispatcher;
 import bot.event.EventRouter;
 import bot.feature.BotFeature;
-import bot.feature.FeatureSet;
 import bot.feature.command.*;
 import bot.feature.function.*;
 import bot.locale.Locale;
@@ -18,11 +19,7 @@ import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.Status.StatusType;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MessageBuilder;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.util.*;
 import util.DiscordUtil;
 
 import java.io.File;
@@ -33,7 +30,6 @@ import java.util.stream.Collectors;
 import static bot.feature.BotFeature.registerFeature;
 
 //TODO: Separate features into sets
-//TODO: Don't immediately register every feature
 @SuppressWarnings("unused")
 public class DiscordBot{
 
@@ -82,11 +78,15 @@ public class DiscordBot{
     public static final BooleanSetting SETTING_ANONYMOUS  = new BooleanSetting("anonymous_logging", true, false);
     
     //Feature sets
-    public static final FeatureSet MEMES = (FeatureSet) BotFeature.registerFeature(new FeatureSet("memes", COMMAND_MEME, COMMAND_BOOTY));
+//    public static final FeatureSet MEMES = (FeatureSet) BotFeature.registerFeature(new FeatureSet("memes", COMMAND_MEME, COMMAND_BOOTY));
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
 
+    private static String username = "TestBot";
+    private static String avatarImg;
+    private static String gameStatus;
+    
     private static IDiscordClient client;
     private static DiscordBot instance;
 
@@ -114,18 +114,47 @@ public class DiscordBot{
         instances.put(guild, this);
         init();
     }
-
-    //TODO: Add more arguments
+    
     public static void main(String[] args) throws Exception{
-        if(args.length >= 2 && args[1].equals("-nogui")){
-            BotGui.disableGui();
-        }
+        new ArgumentParser().withArgument("-username", new Value(){
+            @Override
+            public void handle(Object value){
+                DiscordBot.username = (String) value;
+            }
+        }).withArgument("-avatar", new Value(){
+            @Override
+            public void handle(Object value){
+                DiscordBot.avatarImg = (String) value;
+            }
+        }).withArgument("-game", new Value(){
+            @Override
+            public void handle(Object value){
+                DiscordBot.gameStatus = (String) value;
+            }
+        }).withArgument("-token", -1, new Value(){
+            @Override
+            public void handle(Object value){
+                try{
+                    System.out.println("Client logging in...");
+                    client = login((String) value);
+                }
+                catch(DiscordException e){
+                    System.out.println("Could not log in client, is your token correct?");
+                    System.exit(0);
+                }
+                System.out.println("Client successfully logged in");
+            }
+        }).withArgument("-nogui", new Flag(){
+            @Override
+            public void handle(Object value){
+                BotGui.disableGui();
+            }
+        }).parse(args);
         
-        if(!BotGui.isDisabled()){
-            new BotGui("TestBot").setVisible(true); 
-        }
+        if(!BotGui.isDisabled())
+            new BotGui(getUsername()).setVisible(true);
         
-        if(args.length == 0){
+        if(client == null){
             System.out.println("Please run again with correct arguments... (Missing token)");
             System.exit(0);
         }
@@ -135,17 +164,6 @@ public class DiscordBot{
             if(getGlobalDataFolder().mkdir())
                 System.out.println("Done!");
         }
-
-        try{
-            System.out.println("Client logging in...");
-            client = login(args[0]);
-        }
-        catch(DiscordException e){
-            System.err.print(e.getMessage());
-            return;
-        }
-
-        System.out.println("Client successfully logged in");
 
         client.getDispatcher().registerListener(new EventListener());
         client.getDispatcher().registerListener(new CommandHandler());
@@ -198,7 +216,7 @@ public class DiscordBot{
         
         log(Level.INFO, "Bot initialized.");
     }
-
+    
     public static Set<IGuild> getGuilds(){
         return instances.keySet();
     }
@@ -230,6 +248,18 @@ public class DiscordBot{
 
     public static IDiscordClient getClient(){
         return client;
+    }
+    
+    public static String getUsername(){
+        return username;
+    }
+    
+    public static String getGameStatus(){
+        return gameStatus;
+    }
+    
+    public static Image getAvatarImg(){
+        return Image.forFile(new File(avatarImg));
     }
 
     public static File getGlobalDataFolder(){
@@ -283,18 +313,7 @@ public class DiscordBot{
     public Locale getLocale(){
         return getLocaleHandler().getLocale();
     }
-
-    public String getUsername(){
-        return client.getOurUser().getName();
-    }
-
-    public String getGame(){
-        if(client.getOurUser().getStatus().getType() == StatusType.GAME)
-            return client.getOurUser().getStatus().getStatusMessage();
-
-        return null;
-    }
-
+    
     public IChannel getHome(){
         for(IChannel c : this.guild.getChannels()){
             if(c.getName().equals(this.home)) return c;

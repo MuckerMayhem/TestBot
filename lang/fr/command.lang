@@ -1,21 +1,29 @@
 (.name:(
+(.pretty:Plus de booty !
 (.desc:( ͡° ͜ʖ ͡°)
+(.detail:Utilisation :\n $prefix$name ͡° ͜ʖ ͡°) - Le booty normale\n $prefix$name ͡⊙ ͜ʖ ͡⊙) - Le booty vite\n $prefix$name ͡◉ ͜ʖ ͡◉) - Le booty plus super !\n $prefix$name ͡o ͜ʖ ͡o) - Le booty diabolique
 clear.name:effacer
 clear.desc:Effacer tous les messages
+clear.detail:Utilisation : $handle - Effacer tous les messages dans votre salon actuel
 roll.name:rouler
-roll.desc:Aléatoirement, rouler pour un membre ou un numéro
+roll.desc:Aléatoirement, rouler pour un membre ou un nombre
+roll.detail:Utilisation :\n $handle - Rouler pour un nombre de 1 à 6\n $handle < max > - Rouler pour un nombre de 1 à max\n $handle < @rôle > - Rouler un membre aléatoire de @role
 game.name:jeu
 game.desc:Jouer un jeu
+game.detail:Cette fonctionnalité n'est pas mis en oeuvre en ce moment
 help.name:aide
 help.desc:Afficher d'aide
+help.detail:Utilisation :\n $handle - Afficher le menu d'aide\n $handle < nom de commande > - Afficher les détails d'une commande spécifique
 leave.name:partir
 leave.desc:Forcer le bot à partir de son salon vocal
 meme.name:meme
 meme.desc:Mème
 prune.name:tailler
-prune.desc:Supprimer des messages que correspondre à une phrase
+prune.desc:Supprimer des messages que correspondre à un mot-clé
+prune.detail:Utilisation :\n $handle <« mot-clé »> [ @user ] - Supprimer des messages que correspondre au mot-clé, et, si vous spécifiez — le membre aussi 
 rabbit.name:rabbit
 rabbit.desc:Envoyer un lien à votre salon de rabb.it
+rabbit.detail:Utilisation : !rabbit [ message ] - Envoyer rapidement un lien vers votre salon de rabb.it avec un message optionnel
 setting.name:option
 setting.desc:Changer votre options
 setting.args:liste,reinitialiser,serveur
