@@ -5,6 +5,8 @@ import bot.ArgumentParser.Value;
 import bot.event.BotEventDispatcher;
 import bot.event.EventRouter;
 import bot.feature.BotFeature;
+import bot.feature.FeatureSet;
+import bot.feature.ToggleableFeatureSet;
 import bot.feature.command.*;
 import bot.feature.function.*;
 import bot.locale.Locale;
@@ -13,6 +15,7 @@ import bot.settings.*;
 import gui.BotGui;
 import logging.BotLogger;
 import logging.BotLogger.Level;
+import org.apache.commons.io.FileUtils;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
@@ -21,6 +24,7 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.*;
 import util.DiscordUtil;
+import util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +33,7 @@ import java.util.stream.Collectors;
 
 import static bot.feature.BotFeature.registerFeature;
 
-//TODO: Separate features into sets
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class DiscordBot{
 
     private static final HashMap<IGuild, DiscordBot> instances = new HashMap<>();//All bot instances
@@ -65,7 +68,6 @@ public class DiscordBot{
     
 
     //Functions
-//    public static final BotFunction FUNCTION_HIGHNOON   = (BotFunction) registerFeature(new FunctionAnnounceNoon("highnoon"));
     public static final BotFunction FUNCTION_BREAKWALLS = (BotFunction) registerFeature(new FunctionBreakMessages());
     public static final BotFunction FUNCTION_EAT        = (BotFunction) registerFeature(new FunctionEatFood());
     public static final BotFunction FUNCTION_YTTIME     = (BotFunction) registerFeature(new FunctionGetVideoTime());
@@ -78,7 +80,9 @@ public class DiscordBot{
     public static final BooleanSetting SETTING_ANONYMOUS  = new BooleanSetting("anonymous_logging", true, false);
     
     //Feature sets
-//    public static final FeatureSet MEMES = (FeatureSet) BotFeature.registerFeature(new FeatureSet("memes", COMMAND_MEME, COMMAND_BOOTY));
+    public static final FeatureSet CORE       = (FeatureSet) BotFeature.registerFeature(new FeatureSet("core", COMMAND_HELP, COMMAND_SETTING, COMMAND_FEATURE, COMMAND_RESTART));
+    public static final FeatureSet MANAGEMENT = (FeatureSet) BotFeature.registerFeature(new FeatureSet("management", COMMAND_CLEAR, COMMAND_PRUNE));
+    public static final FeatureSet MEMES      = (FeatureSet) BotFeature.registerFeature(new ToggleableFeatureSet("memes", COMMAND_MEME, COMMAND_BOOTY));
 
     private static final long MESSAGE_TIME_SHORT = 3500L;
     private static final long MESSAGE_TIME_LONG  = 6000L;
@@ -90,11 +94,11 @@ public class DiscordBot{
     private static IDiscordClient client;
     private static DiscordBot instance;
 
+    public MessageReceivedEvent lastEvent;
+    
     private final IGuild guild;
     
     private final ArrayList<BotFeature> features = new ArrayList<>();
-    
-    public MessageReceivedEvent lastEvent;
 
     private BotLogger logger;
     
@@ -194,13 +198,13 @@ public class DiscordBot{
             this.logger.addOutput(BotGui.getGui().getLogPanel().getLogPanel(this.guild));
         
         this.serverSettingsHandler = new SingleSettingsHandler(getDataFile("settings.json"));
-        this.serverSettingsHandler.registerNewSetting(SETTING_LOCALE);
-        this.serverSettingsHandler.registerNewSetting(SETTING_HOME);
-        this.serverSettingsHandler.registerNewSetting(SETTING_ANONYMOUS);
+        this.serverSettingsHandler.addSetting(SETTING_LOCALE);
+        this.serverSettingsHandler.addSetting(SETTING_HOME);
+        this.serverSettingsHandler.addSetting(SETTING_ANONYMOUS);
 
         this.eventDispatcher = new BotEventDispatcher(this);
-                
-        BotFeature.getAllRegisteredFeatures().forEach(this::enableFeature);
+
+        loadFeatures();
 
         try{
             getServerSettingsHandler().loadSettings();
@@ -325,17 +329,11 @@ public class DiscordBot{
         return this.features;
     }
 
-    public List<BotCommand> getCommands(){
+    @SuppressWarnings("unchecked")
+    public <T extends BotFeature> List<T> getFeaturesOfType(Class<T> type){
         return this.features.stream()
-                .filter(f -> f instanceof BotCommand)
-                .map(c -> (BotCommand) c)
-                .collect(Collectors.toList());
-    }
-
-    public List<BotFunction> getFunctions(){
-        return this.features.stream()
-                .filter(f -> f instanceof BotFunction)
-                .map(c -> (BotFunction) c)
+                .filter(f -> type.isAssignableFrom(f.getClass()))
+                .map(f -> (T) f)
                 .collect(Collectors.toList());
     }
 
@@ -464,14 +462,191 @@ public class DiscordBot{
         this.home = home;
     }
 
-    public void enableFeature(BotFeature feature){
+    /**
+     * Enables a feature on this bot. If you need to enable more than one feature<br>
+     * at a time, use {@link DiscordBot#enableFeatures(Collection, boolean, boolean)}
+     * @param feature Feature to enable
+     * @param save If <code>true</code>, immediately save change to file
+     * @param reload If <code>true</code>, immediately reload settings
+     * @see DiscordBot#enableFeatures(Collection, boolean, boolean) 
+     */
+    public void enableFeature(BotFeature feature, boolean save, boolean reload){
         this.features.add(feature);
         feature.onEnable(this);
+
+        if(save) saveFeatures();
+
+        if(reload){
+            try{
+                this.serverSettingsHandler.loadSettings();
+            }
+            catch(IOException e){
+                log(e, "Could not reload server settings");
+            }
+        }
     }
-    
-    public void disableFeature(BotFeature feature){
+
+    /**
+     * Enables a feature on this bot. If you need to enable more than<br>
+     * one feature at a time, use {@link DiscordBot#enableFeatures(Collection)}<br>
+     * <br>
+     * <b>This change is not saved to file, and settings are not reloaded</b><br>
+     * <i>Use {@link DiscordBot#enableFeature(BotFeature)} to control this</i>
+     * @param feature Feature to enable
+     * @see DiscordBot#enableFeature(BotFeature) 
+     */
+    public void enableFeature(BotFeature feature){
+        enableFeature(feature, false, false);
+    }
+
+    /**
+     * Enables a {@link Collection} of features on this bot<br>
+     * All the features in the collection are enabled
+     * @param features Features to enable
+     * @param save If <code>true</code>, immediately save change to file
+     * @param reload If <code>true</code>, immediately reload settings
+     */
+    public void enableFeatures(Collection<BotFeature> features, boolean save, boolean reload){
+        features.forEach(f -> {
+            this.features.add(f);
+            f.onEnable(this);
+        });
+
+        if(save) saveFeatures();
+
+        if(reload){
+            try{
+                this.serverSettingsHandler.loadSettings();
+            }
+            catch(IOException e){
+                log(e, "Could not reload server settings");
+            }
+        }
+    }
+
+    /**
+     * Enables a {@link Collection} of features on this bot<br>
+     * All the features in the collection are enabled<br>
+     * <br>
+     * <b>This change is not saved to file, and settings are not reloaded.</b><br>
+     * <i>Use {@link DiscordBot#enableFeatures(Collection, boolean, boolean)}</i> to control these 
+     * @param features Features to enable
+     * @see DiscordBot#enableFeatures(Collection, boolean, boolean) 
+     */
+    public void enableFeatures(Collection<BotFeature> features){
+        enableFeatures(features, false, false);
+    }
+
+    /**
+     * Disables a feature on this bot. If you need to disable more than one feature<br>
+     * at a time, use {@link DiscordBot#disableFeatures(Collection, boolean, boolean)}
+     * @param feature Feature to disable
+     * @param save If <code>true</code>, immediately save change to file
+     * @param reload If <code>true</code>, immediately reload settings
+     * @see DiscordBot#disableFeatures(Collection, boolean, boolean) 
+     */
+    public void disableFeature(BotFeature feature, boolean save, boolean reload){
         this.features.remove(feature);
         feature.onDisable(this);
+
+        if(save) saveFeatures();
+
+        if(reload){
+            try{
+                this.serverSettingsHandler.loadSettings();
+            }
+            catch(IOException e){
+                log(e, "Could not reload server settings");
+            } 
+        }
+    }
+
+    /**
+     * Disables a feature on this bot. If you need to disable more than<br>
+     * one feature at a time, use {@link DiscordBot#disableFeatures(Collection)}<br>
+     * <br>
+     * <b>This change is not saved to file, and settings are not reloaded</b><br>
+     * <i>Use {@link DiscordBot#disableFeature(BotFeature, boolean, boolean)} to control these</i>
+     * @param feature Feature to disable
+     * @see DiscordBot#disableFeatures(Collection)
+     * @see DiscordBot#disableFeature(BotFeature, boolean, boolean)
+     */
+    public void disableFeature(BotFeature feature){
+        disableFeature(feature, false, false);
+    }
+
+    /**
+     * Disables a {@link Collection} of features on this bot<br>
+     * All the features in the collection are disabled
+     * @param features Features to disable
+     * @param save If <code>true</code>, immediately save change to file
+     * @param reload If <code>true</code>, immediately reload settings
+     */
+    public void disableFeatures(Collection<BotFeature> features, boolean save, boolean reload){
+        features.forEach(f -> {
+            this.features.remove(f);
+            f.onDisable(this);
+        });
+
+        if(save) saveFeatures();
+
+        if(reload){
+            try{
+                this.serverSettingsHandler.loadSettings();
+            }
+            catch(IOException e){
+                log(e, "Could not reload server settings");
+            } 
+        }
+    }
+
+    /**
+     * Disables a {@link Collection} of features on this bot<br>
+     * All the features in the collection are disabled<br>
+     * <b>This change is not saved to file, and settings are not reloaded.</b><br>
+     * <i>Use {@link DiscordBot#disableFeatures(Collection, boolean, boolean)}</i> to control these 
+     * @param features Features to disable
+     * @see DiscordBot#disableFeatures(Collection, boolean, boolean)
+     */
+    public void disableFeatures(Collection<BotFeature> features){
+        disableFeatures(features, false, false);
+    }
+
+    /**
+     * Toggles whether a feature is enabled/disabled on this bot
+     * @param feature Feature to toggle
+     * @param save If <code>true</code>, immediately save change to file
+     * @param reload If <code>true</code>, immediately reload settings
+     * @return <code>true</code> if the feature is now enabled, <code>false</code> otherwise
+     */
+    public boolean toggleFeature(BotFeature feature, boolean save, boolean reload){
+        if(featureEnabled(feature)){
+            disableFeature(feature, save, reload);
+            return false;
+        }
+        else{
+            enableFeature(feature, save, reload);
+            return true;
+        }
+    }
+
+    /**
+     * Toggles whether a feature is enabled/disabled on this bot<br>
+     * <b>This change is not saved to file, and settings are not reloaded</b><br>
+     * <i>Use {@link DiscordBot#toggleFeature(BotFeature, boolean, boolean)} to control these</i>
+     * @param feature Feature to toggle
+     * @return <code>true</code> if the feature is now enabled, <code>false</code> otherwise
+     * @see DiscordBot#toggleFeature(BotFeature, boolean, boolean)
+     */
+    public boolean toggleFeature(BotFeature feature){
+        if(featureEnabled(feature)){
+            disableFeature(feature);
+            return false;
+        }
+        else{
+            enableFeature(feature);
+            return true;
+        }
     }
 
     public void logo(Level level, String message, Object... args){
@@ -508,5 +683,73 @@ public class DiscordBot{
         }
         
         this.logger.log(e);
+    }
+    
+    private void loadFeatures(){
+        File file = getDataFile("features.txt");
+
+        if(!file.exists()){
+            try{
+                FileUtils.writeLines(file, BotFeature.getAllRegisteredFeatures().stream().map(f -> f.getRegisteredName() + " " + f.defaultEnabled()).collect(Collectors.toList()));
+            }
+            catch(IOException e){
+                log(e, "Could not write lines to file");
+                return;
+            }
+        }
+        
+        HashMap<String, Boolean> values = new HashMap<>();
+        try{
+            List<String> lines = FileUtils.readLines(file);
+            for(String s : lines){
+                String[] split = s.split(" ");
+                if(split.length < 2) continue;
+
+                values.put(split[0], Util.parseBoolean(split[1]));
+            }
+        }
+        catch(IOException e){
+            log(e, "Could not read lines from file");
+            return;
+        }
+        
+        BotFeature.getAllRegisteredFeatures().stream()
+                .filter(f -> !values.containsKey(f.getRegisteredName()))
+                .forEach(f -> values.put(f.getRegisteredName(), f.defaultEnabled()));
+
+        values.keySet().forEach(k -> {
+            BotFeature f = BotFeature.getFeatureByName(k);
+            assert f != null;
+            
+            boolean v = values.get(k);
+            if(v){
+                this.features.add(f);
+                f.onEnable(this);
+            }
+        });
+        
+        saveFeatures();
+    }
+
+    private void saveFeatures(){
+        File file = getDataFile("features.txt");
+        if(!file.exists()){
+            try{
+                file.createNewFile();
+            }
+            catch(IOException e){
+                log(e, "Could not create file " + file.getName());
+                return;
+            }
+        }
+
+        try{
+            FileUtils.writeLines(file, BotFeature.getAllRegisteredFeatures()
+                    .stream().map(f -> f.getRegisteredName() + " " + this.features.contains(f))
+                    .collect(Collectors.toList()));
+        }
+        catch(IOException e){
+            log(e, "Could not write lines to file");
+        }
     }
 }

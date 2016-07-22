@@ -38,7 +38,7 @@ public class BotEventDispatcher{
                         if(c == event.getClass()){
                             try{
                                 m.invoke(o, event);
-                                return;
+                                break;
                             }
                             catch(IllegalAccessException | InvocationTargetException e){
                                 this.bot.logf(Level.ERROR, "Could not dispatch event '%s': %s", event.getClass().getSimpleName(), e.getClass().getSimpleName());

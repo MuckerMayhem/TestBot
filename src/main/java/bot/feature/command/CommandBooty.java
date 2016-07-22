@@ -1,7 +1,6 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
-import bot.feature.ToggleableBotFeature;
 import bot.feature.command.sound.Sound;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -10,7 +9,7 @@ import sx.blah.discord.handle.obj.Permissions;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CommandBooty extends BotCommand implements ToggleableBotFeature{
+public class CommandBooty extends BotCommand{
 
     private static final String[] theBooty = {"͡°", "͜ʖ", "͡°)"};
     private static final String[] theBooty2x = {"͡⊙", "͜ʖ", "͡⊙)"};
@@ -20,7 +19,7 @@ public class CommandBooty extends BotCommand implements ToggleableBotFeature{
     public CommandBooty(){
         super("(", Permissions.VOICE_SPEAK);
     }
-
+    
     @Override
     public void onRegister() {}
 
@@ -40,11 +39,5 @@ public class CommandBooty extends BotCommand implements ToggleableBotFeature{
         else if(Arrays.equals(theBooty2x, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTY2X);
         else if(Arrays.equals(theBooty3x, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTY3X);
         else if(Arrays.equals(theBootySlow, args)) CommandSound.playSound(bot, channel.orElseGet(null), Sound.BOOTYSLOW);
-    }
-
-    @Override
-    public String getDetailedDescription(){
-        return "Acquires the booty\n" +
-                "Usage: " + CommandHandler.getCommandPrefix() + "( ͡° ͜ʖ ͡°)";
     }
 }

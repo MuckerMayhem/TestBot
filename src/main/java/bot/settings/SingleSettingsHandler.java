@@ -88,7 +88,7 @@ public class SingleSettingsHandler extends SettingsHandler{
                 this.values.set(setting, setting.parse(e1.getAsJsonObject().get("value").getAsString()));
             }
             //For any settings that are registered but were not found in the file, add them with the default value
-            this.getRegisteredSettings().stream().filter(s -> !this.values.hasValueFor(s)).forEach(s -> this.values.set(s, s.getDefaultValue()));
+            this.getAddedSettings().stream().filter(s -> !this.values.hasValueFor(s)).forEach(s -> this.values.set(s, s.getDefaultValue()));
         }
         else file.createNewFile();
     }

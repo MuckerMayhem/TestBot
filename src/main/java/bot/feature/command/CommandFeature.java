@@ -15,76 +15,71 @@ public class CommandFeature extends BotCommand{
     public CommandFeature(){
         super("feature", Permissions.MANAGE_SERVER);
     }
-
+    
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(args.length == 0) return;
 
-        List<BotFeature> features = BotFeature.getAllRegisteredFeatures().stream().filter(t -> t instanceof ToggleableBotFeature).sorted().collect(Collectors.toList());
+        List<BotFeature> features = BotFeature.getAllRegisteredFeatures().stream().sorted().collect(Collectors.toList());
         
         if(args[0].equalsIgnoreCase(getLocalArgs()[0])){
             StringBuilder builder = new StringBuilder(buildMessage(Message.CMD_FEATURE_LIST)).append("\n");
             int index = 1;
             for(BotFeature f : features){
-                builder.append(index)
+                builder.append(f instanceof ToggleableBotFeature ? index : "X")
                         .append(". ")
                         .append(f instanceof BotCommand ? ((BotCommand) f).getPrettyName(getLocale()) : f.getName(getLocale()))
                         .append(" - ")
                         .append(f.getDescription(getLocale()))
+                        .append(" (")
+                        .append(bot.featureEnabled(f) ? 'O' : 'X')
+                        .append(")")
                         .append("\n");
                 index++;
             }
 
-            bot.respond(builder.toString(), 8000L);
+            bot.respond(builder.toString(), features.size() * 2000L);
+            return;
         }
         
         if(args.length < 2){
             bot.respond(getDetailedDescription());
             return;
         }
-
-        BotFeature feature;
-        try{
-            feature = features.get(Integer.parseInt(args[1]) - 1);
-        }
-        catch(NumberFormatException e){
-            bot.respond(buildMessage(Message.CMD_SETTING_INVALID_NUMBER, args[1]));
-            return;
-        }
         
         if(args[0].equalsIgnoreCase(getLocalArgs()[1])){
-            if(bot.featureEnabled(feature))
-                bot.respond(buildMessage(Message.CMD_FEATURE_ALREADY_ENABLED, feature.getName(getLocale())));
-            else{
-                bot.enableFeature(feature);
+            BotFeature feature;
+            try{
+                feature = features.get(Integer.parseInt(args[1]) - 1);
+            }
+            catch(ArrayIndexOutOfBoundsException | NumberFormatException e){
+                bot.respond(buildMessage(Message.CMD_SETTING_INVALID_NUMBER, args[1]));
+                return;
+            }
+
+            if(!(feature instanceof ToggleableBotFeature)){
+                bot.respond(buildMessage(Message.CMD_FEATURE_NO_DISABLE, feature.getName(getLocale())));
+                return;
+            }
+            
+            boolean toggledOn = bot.toggleFeature(feature, true, true);
+            
+            if(toggledOn){
                 bot.respond(buildMessage(Message.CMD_FEATURE_ENABLED, feature.getName(getLocale())));
             }
-        }
-        else if(args[0].equalsIgnoreCase(getLocalArgs()[2])){
-            if(!bot.featureEnabled(feature))
-                bot.respond(buildMessage(Message.CMD_FEATURE_ALREADY_DISABLED, feature.getName(getLocale())));
             else{
-                bot.disableFeature(feature);
-                bot.respond(buildMessage(Message.CMD_FEATURE_DISABLED, feature.getName(getLocale()))); 
+                bot.respond(buildMessage(Message.CMD_FEATURE_DISABLED, feature.getName(getLocale())));
             }
         }
-        else{
-            bot.respond(getDetailedDescription());
-        }
+        else bot.respond(getDetailedDescription());
     }
 
     @Override
-    public void onRegister(){
-
-    }
+    public void onRegister() {}
 
     @Override
-    public void onEnable(DiscordBot bot){
-
-    }
+    public void onEnable(DiscordBot bot) {}
 
     @Override
-    public void onDisable(DiscordBot bot){
-
-    }
+    public void onDisable(DiscordBot bot) {}
 }

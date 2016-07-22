@@ -24,7 +24,7 @@ public class Settings implements Iterable<Setting>{
     }
 
     public Settings(SettingsHandler handler){
-        for(Setting s : handler.getRegisteredSettings()){
+        for(Setting s : handler.getAddedSettings()){
             values.put(s, s.defaultValue);
         }
 
@@ -55,6 +55,12 @@ public class Settings implements Iterable<Setting>{
         if(!this.canModify) return;
 
         values.put(setting, value);
+    }
+    
+    public void remove(Setting setting){
+        if(!this.canModify) return;
+        
+        values.remove(setting);
     }
 
     public boolean hasValueFor(Setting s){

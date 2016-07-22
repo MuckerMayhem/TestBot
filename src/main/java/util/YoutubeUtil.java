@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class YoutubeUtil{
+public final class YoutubeUtil{
     public static String[] getVideoInfo(String videoId) throws IOException{
         
         YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {}).setApplicationName("video-test").build();

@@ -5,6 +5,7 @@ import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.settings.BooleanSetting;
 import com.google.gson.*;
+import logging.BotLogger.Level;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import sx.blah.discord.handle.obj.IMessage;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-//TODO: Optimize
+//TODO: Optimize ?
 public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
 
     private static final HashMap<String, WaifuList> waifuLists = new HashMap<>();
@@ -31,8 +32,13 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
     }
 
     @Override
+    public boolean defaultEnabled(){
+        return false;
+    }
+    
+    @Override
     public void onRegister(){
-        DiscordBot.getUserSettingsHandler().registerNewSetting(SEE_WAIFU_NOTIFICATIONS);
+        DiscordBot.getUserSettingsHandler().addSetting(SEE_WAIFU_NOTIFICATIONS);
     }
 
     @Override
@@ -46,7 +52,9 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
     }
 
     @Override
-    public void onDisable(DiscordBot bot) {}
+    public void onDisable(DiscordBot bot){
+        
+    }
 
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
@@ -59,7 +67,7 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
 
         WaifuList list = waifuLists.get(bot.getGuild().getID());
         if(list == null){
-            bot.respond(buildMessage(Message.MSG_ERROR, "List is null"));
+            bot.log(Level.WARN, "Waifu list is null");
             return;
         }
 
@@ -85,8 +93,9 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
             return;
         }
 
+        IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
+        
         if(args[0].equalsIgnoreCase(getLocalArgs()[1])){
-            IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
                 bot.info(buildMessage(Message.CMD_INVALID_USER));
             }
@@ -103,7 +112,6 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
             }
         }
         else if(args[0].equalsIgnoreCase(getLocalArgs()[2])){
-            IUser user = DiscordUtil.getUserByMention(message.getGuild(), args[1]);
             if(user == null){
                 bot.info(buildMessage(Message.CMD_INVALID_USER));
             }
@@ -140,7 +148,6 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
                     ArrayList<String> waifuList = new ArrayList<>();
                     for(JsonElement e1 : waifuArray){
                         waifuList.add(e1.getAsString());
-                        System.out.println(":" + e1.getAsString());
                     }
 
                     waifus.setWaifus(userId, waifuList);
@@ -175,19 +182,6 @@ public class CommandWaifu extends BotCommand implements ToggleableBotFeature{
             bot.log(e, "Failed to save waifus");
         }
     }
-    /*
-    @Override
-    public String getDetailedDescription(){
-        return "Manage your waifus!\n" +
-                "Usage:\n" +
-                " " + this.getHandle() + " list\n" +
-                "  *Lists users you have on your waifu list*\n" +
-                " " + this.getHandle() + " add <user>\n" +
-                "  *Add a user to your waifu list*\n" +
-                " " + this.getHandle() + " remove <user>\n" +
-                "  *Remove a user from your waifu list*";
-    }
-    */
 
     public static class WaifuList{
 

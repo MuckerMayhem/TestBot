@@ -22,12 +22,12 @@ public class ThreadedCommandClear extends ThreadedCommand{
 
     @Override
     public void onEnable(DiscordBot bot){
-        bot.getServerSettingsHandler().registerNewSetting(WHITELIST_CLEAR);
+        bot.getServerSettingsHandler().addSetting(WHITELIST_CLEAR);
     }
 
     @Override
     public void onDisable(DiscordBot bot){
-        //TODO: Unregister setting
+        bot.getServerSettingsHandler().removeSetting(WHITELIST_CLEAR);
     }
 
     @Override

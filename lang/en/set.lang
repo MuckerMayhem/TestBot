@@ -1,2 +1,6 @@
+core.name:Core commands
+core.desc:Core commands (help, setting, feature, restart)
+management.name:Management commands
+management.desc:Commands for managing messages (clear, prune)
 memes.name:Memes
 memes.desc:Meme-related commands and features

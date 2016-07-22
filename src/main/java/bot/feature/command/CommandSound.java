@@ -1,7 +1,6 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
-import bot.feature.ToggleableBotFeature;
 import bot.feature.command.sound.Sound;
 import bot.locale.Message;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
@@ -20,7 +19,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandSound extends BotCommand implements ToggleableBotFeature
+public class CommandSound extends BotCommand
 {
     public CommandSound(){
         super("sound", Permissions.VOICE_SPEAK);
@@ -146,22 +145,6 @@ public class CommandSound extends BotCommand implements ToggleableBotFeature
             new Timer().schedule(task, (duration * times) + 400L);
         }
     }
-
-    /*
-    @Override
-    public String getDetailedDescription(){
-        return "Plays a sound\n" +
-                "Usage: " + this.commandHandler.getCommandPrefix() + this.name + " <sound> [times] [volume]\n" +
-                "Will play a sound the specified number of times at the specified volume.\n" +
-                "Times can be any integer greater than zero and volume is the volume of the sound, as a percentage value from 0-300.\n" +
-                "The following are valid sounds:```python\n" +
-                String.join("\n", Arrays.stream(Sound.values())
-                        .filter(s -> s.getName() != null)
-                        .map(Sound::getName)
-                        .sorted()
-                        .collect(Collectors.toList())) + "```";
-    }
-    */
 
     private static long getDuration(Sound sound){
         AudioFileFormat format;

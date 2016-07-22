@@ -18,7 +18,7 @@ public class FunctionEatFood extends BotFunction implements ToggleableBotFeature
 
     @Override
     public void onRegister(){
-        DiscordBot.getUserSettingsHandler().registerNewSetting(ALLOW_EMOJI_EATING);
+        DiscordBot.getUserSettingsHandler().addSetting(ALLOW_EMOJI_EATING);
     }
 
     @Override

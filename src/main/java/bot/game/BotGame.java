@@ -3,7 +3,8 @@ package bot.game;
 import bot.DiscordBot;
 
 //TODO: Do something with this
-public abstract class Game{
+//TODO: Make BotFeature
+public abstract class BotGame{
 
     protected DiscordBot bot;
 

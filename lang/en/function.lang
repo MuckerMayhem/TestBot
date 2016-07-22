@@ -2,7 +2,7 @@ breakwalls.name:Wall breaking
 breakwalls.desc:Break walls of text up with a random fact
 eat.name:Emoji eating
 eat.desc:Eat messages containing a single food emoji
-ytttime.name:Video length
+yttime.name:Video length
 yttime.desc:Display the length of posted YouTube videos, and blocked regions
 welcome.name:Welcome
 welcome.desc:Welcome users back from the AFK Channel

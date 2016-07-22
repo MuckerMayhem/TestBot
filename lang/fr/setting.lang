@@ -1,7 +1,7 @@
 rabbit_room.name:Salon de rabb.it
 rabbit_room.desc:Nom de votre salon de rabb.it
 notify_welcome.name:Notifications accueil
-notify_welcome.desc:Accueillir vous quand vous revenez du salon AFK
+notify_welcome.desc:Accueillir vous du salon AFK
 eat_emoji.name:Manger des emojis
 eat_emoji.desc:Le bot mange vos emojis
 notify_waifu.name:Notifications waifu
@@ -15,7 +15,7 @@ blacklist_videoinfo.desc:Les salons textuels auxquels le bot n'envoyer pas les d
 locale.name:Langue
 locale.desc:Langue du bot
 bot_home.name:Salon d'accueil
-bot_home.desc:Le salon défaut pour le bot de parler
+bot_home.desc:Le salon par défaut dans lequel le bot parle
 anonymous_logging.name:Enregistrement anonyme
 anonymous_logging.desc:Écrire les identifiants au lieu des noms dans le journal du serveur
 important_regions.name:Régions importantes

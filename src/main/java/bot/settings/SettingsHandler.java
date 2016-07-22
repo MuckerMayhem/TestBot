@@ -41,7 +41,7 @@ public abstract class SettingsHandler{
      * Gets all settings registered to this SettingsHandler instance
      * @return an {@link java.util.ArrayList} containing all {@link bot.settings.Setting}s registered to this SettingsHandler
      */
-    public ArrayList<Setting> getRegisteredSettings(){
+    public ArrayList<Setting> getAddedSettings(){
         return this.settings;
     }
 
@@ -69,11 +69,15 @@ public abstract class SettingsHandler{
      * Registers a new {@link bot.settings.Setting} to be used by some function of the bot
      * @param setting New {@link bot.settings.Setting} to register
      */
-    public void registerNewSetting(Setting setting){
+    public void addSetting(Setting setting){
         this.settings.add(setting);
         if(!global_settings.contains(setting)){
             global_settings.add(setting);
             System.out.println("Registering new setting: " + setting.getName());
         }
+    }
+    
+    public void removeSetting(Setting setting){
+        this.settings.remove(setting);
     }
 }

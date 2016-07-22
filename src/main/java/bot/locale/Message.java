@@ -3,6 +3,7 @@ package bot.locale;
 public enum Message{
 
     MSG_ERROR("message_error"),
+    MSG_RESTART_REQUIRED("message_restart_required"),
 
 
     CMD_INVALID_ROLE("command_role_invalid"),
@@ -23,9 +24,8 @@ public enum Message{
     CMD_FEATURE_LIST("command_feature_list"),
     CMD_FEATURE_ARGS("command_feature_args"),
     CMD_FEATURE_ENABLED("command_feature_enable"),
-    CMD_FEATURE_ALREADY_ENABLED("command_feature_already_enabled"),
     CMD_FEATURE_DISABLED("command_feature_disable"),
-    CMD_FEATURE_ALREADY_DISABLED("command_feature_already_disabled"),
+    CMD_FEATURE_NO_DISABLE("command_feature_no_disable"),
     
     CMD_GAME_NO_HOME("command_game_no_home"),
     CMD_GAME_NOT_HERE("command_game_nothere"),
@@ -58,7 +58,6 @@ public enum Message{
     CMD_SETTING_ENTER_NUMBER_SERVER("command_setting_enter_number_server"),
     CMD_SETTING_INVALID_NUMBER("command_setting_invalid_number"),
     CMD_SETTING_SET("command_setting_set"),
-    CMD_SETTING_RESTART_REQUIRED("command_setting_restart_required"),
 
     CMD_SOUND_INVALID("command_sound_invalid"),
     CMD_SOUND_NOCHANNEL("command_sound_nochannel"),

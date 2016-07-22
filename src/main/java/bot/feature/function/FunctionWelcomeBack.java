@@ -19,7 +19,7 @@ public class FunctionWelcomeBack extends BotFunction implements ToggleableBotFea
 
     @Override
     public void onRegister(){
-        DiscordBot.getUserSettingsHandler().registerNewSetting(SEE_WELCOME_NOTIFICATIONS);
+        DiscordBot.getUserSettingsHandler().addSetting(SEE_WELCOME_NOTIFICATIONS);
     }
 
     @Override

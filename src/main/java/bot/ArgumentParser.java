@@ -95,7 +95,7 @@ public class ArgumentParser{
      * Represents a command-line argument with a value.<br>
      * The value is always interpreted as a string.
      */
-    public static  abstract class Value extends Argument{
+    public static abstract class Value extends Argument{
         @Override
         public String parse(Iterator<String> argsIterator){
             if(argsIterator.hasNext())

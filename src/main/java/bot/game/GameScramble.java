@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class GameScramble extends Game{
+public class GameScramble extends BotGame{
 
     private int difficulty;
 
@@ -41,7 +41,7 @@ public class GameScramble extends Game{
                 "five difficulty levels. Guess enough words\n" +
                 "in one level to move on to the next.";
     }
-
+    
     @Override
     public boolean isMultiplayer(){
         return false;

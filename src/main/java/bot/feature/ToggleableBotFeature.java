@@ -1,3 +1,8 @@
 package bot.feature;
 
-public interface ToggleableBotFeature{}
+import bot.DiscordBot;
+
+public interface ToggleableBotFeature{
+
+    public void onDisable(DiscordBot bot);
+}

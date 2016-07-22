@@ -7,16 +7,32 @@ import org.apache.commons.lang3.Validate;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-//TODO: Find a way to have features in a set registered separately without showing up in the features list
 public abstract class BotFeature implements Comparable<BotFeature>{
     
     private static final ArrayList<BotFeature> features = new ArrayList<>();
     
     public String name;
 
+    public BotFeature() {}
+
     public BotFeature(String name){
         this.name = name;
+    }
+
+    /**
+     * Gets a list of all registered features of the specified type
+     * @param type Class of the BotFeatures to return
+     * @return A list containing all registered bot features of the specified type
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends BotFeature> List<T> getRegisteredFeaturesOfType(Class<T> type){
+        return features.stream()
+                .filter(f -> type.isAssignableFrom(f.getClass()))
+                .map(f -> (T) f)
+                .collect(Collectors.toList());
     }
     
     /**
@@ -27,6 +43,11 @@ public abstract class BotFeature implements Comparable<BotFeature>{
         return features;
     }
 
+    public static BotFeature getFeatureByName(String name){
+        Optional<BotFeature> optional = features.stream().filter(f -> f.getRegisteredName().equals(name)).findFirst();
+        return optional.isPresent() ? optional.get() : null;
+    }
+    
     /**
      * Registers this feature so that it can be enabled on a {@link DiscordBot}
      * @param feature Feature to register
@@ -47,12 +68,12 @@ public abstract class BotFeature implements Comparable<BotFeature>{
      */
     public static void unregisterFeature(BotFeature feature){
         features.remove(feature);
-
+        
         DiscordBot.getInstances().stream()
                 .filter(b -> b.featureEnabled(feature))
-                .forEach(b -> b.disableFeature(feature));
+                .forEach(b -> b.getFeatures().remove(feature));
     }
-
+    
     /**
      * Gets the name of this feature in the specified locale
      * @return The localized name of this feature
@@ -86,10 +107,22 @@ public abstract class BotFeature implements Comparable<BotFeature>{
     public abstract void onEnable(DiscordBot bot);
 
     /**
-     * Called when this feature is disabled on a bot via {@link DiscordBot#disableFeature(BotFeature)}
-     * @param bot Bot this feature is being enabled on
+     * Called when this feature is disabled on a bot either:<ul>
+     *     <li>Programmatically</li>
+     *     <li>Through a {@link FeatureSet}</li>
+     *     <li>When disabled, if it is a {@link ToggleableBotFeature}</li>
+     * </ul>
+     * @param bot Bot this feature is being disabled on
      */
     public abstract void onDisable(DiscordBot bot);
+    
+    /**
+     * Gets whether this feature is enabled by default
+     * @return Whether this feature is enabled by default
+     */
+    public boolean defaultEnabled(){
+        return true;
+    }
     
     /**
      * Gets the name this feature was registered under
@@ -100,7 +133,7 @@ public abstract class BotFeature implements Comparable<BotFeature>{
     }
     
     /**
-     * Gets whether this feature has been registered yet
+     * Gets whether this feature is currently registered
      * @return Whether this feature is registered
      */
     public boolean isRegistered(){

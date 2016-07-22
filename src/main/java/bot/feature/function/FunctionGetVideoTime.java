@@ -3,12 +3,15 @@ package bot.feature.function;
 import bot.DiscordBot;
 import bot.event.BotEventSubscriber;
 import bot.event.BotMessageReceivedEvent;
+import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
 import util.YoutubeUtil;
 
-public class FunctionGetVideoTime extends BotFunction{
+import java.io.IOException;
+
+public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFeature{
     
     private static final ArraySetting SETTING_REGIONS = new ArraySetting("important_regions", new String[]{});
     private static final ArraySetting SETTING_YTBLACKLIST = new ArraySetting("blacklist_videoinfo", new String[]{});
@@ -18,23 +21,29 @@ public class FunctionGetVideoTime extends BotFunction{
     }
 
     @Override
+    public boolean defaultEnabled(){
+        return true;
+    }
+    
+    @Override
     public void onRegister() {}
 
     @Override
     public void onEnable(DiscordBot bot){
-        bot.getServerSettingsHandler().registerNewSetting(SETTING_REGIONS);
-        bot.getServerSettingsHandler().registerNewSetting(SETTING_YTBLACKLIST);
+        bot.getServerSettingsHandler().addSetting(SETTING_REGIONS);
+        bot.getServerSettingsHandler().addSetting(SETTING_YTBLACKLIST);
         bot.getEventDispatcher().registerListener(this);
     }
     
     @Override
     public void onDisable(DiscordBot bot){
-        //TODO: Unregister settings
+        bot.getServerSettingsHandler().removeSetting(SETTING_REGIONS);
+        bot.getServerSettingsHandler().removeSetting(SETTING_YTBLACKLIST);
         bot.getEventDispatcher().unregisterListener(this);
     }
 
     @BotEventSubscriber
-    public void onMessageReceived(BotMessageReceivedEvent event) throws Exception{
+    public void onMessageReceived(BotMessageReceivedEvent event) throws IOException{
         DiscordBot bot = event.getBot();
 
         for(String s : (String[]) bot.getServerSettingsHandler().getSetting(SETTING_YTBLACKLIST)){
@@ -42,7 +51,7 @@ public class FunctionGetVideoTime extends BotFunction{
         }
 
         MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
-        
+
         String content = event.getMessage().getContent();
 
         //Accounts for most youtube links that Discord can expand

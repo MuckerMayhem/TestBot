@@ -12,10 +12,10 @@ public class CommandRabbit extends BotCommand{
     public CommandRabbit(){
         super("rabbit");
     }
-
+    
     @Override
     public void onRegister(){
-        DiscordBot.getUserSettingsHandler().registerNewSetting(RABBIT_NAME);
+        DiscordBot.getUserSettingsHandler().addSetting(RABBIT_NAME);
     }
 
     @Override

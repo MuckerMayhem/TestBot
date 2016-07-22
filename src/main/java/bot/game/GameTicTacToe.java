@@ -3,16 +3,16 @@ package bot.game;
 import java.util.Random;
 import java.util.Scanner;
 
-public class TicTacToe extends Game{
+public class GameTicTacToe extends BotGame{
 
     private int size;
     private int[][] board;
 
-    public TicTacToe(int size){
+    public GameTicTacToe(int size){
         this.size = size;
     }
 
-    public TicTacToe(){
+    public GameTicTacToe(){
         this.size = 3;
     }
 

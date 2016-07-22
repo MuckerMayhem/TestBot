@@ -1,12 +1,24 @@
 package bot.feature.function;
 
-//TODO: Re-implement this
-/*
+import bot.DiscordBot;
+import bot.feature.command.CommandSound;
+import bot.feature.command.sound.Sound;
+import sx.blah.discord.handle.obj.IVoiceChannel;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class FunctionHighNoon extends BotFunction{
 
     private static final String CHANNEL = "General";
 
     private boolean active;
+
+    public FunctionHighNoon(String name){
+        super(name);
+    }
 
     public static long timeUntilNextNoon(){
         LocalDateTime now = LocalDateTime.now();
@@ -44,7 +56,7 @@ public class FunctionHighNoon extends BotFunction{
                     return;
                 }
 
-                DiscordBot bot = FunctionHighNoon.this.bot;
+                DiscordBot bot = null;//FunctionHighNoon.this.bot;
                 for(IVoiceChannel v : bot.getGuild().getVoiceChannels()){
                     if(v.getName().equals(CHANNEL)){
                         CommandSound.playSound(bot, v, Sound.HIGHNOON);
@@ -65,12 +77,9 @@ public class FunctionHighNoon extends BotFunction{
 
     @Override
     public void onEnable(DiscordBot bot){
-
+        checkTime(timeUntilNextNoon());
     }
-
+    
     @Override
-    public void onDisable(DiscordBot bot){
-
-    }
+    public void onDisable(DiscordBot bot) {}
 }
-*/

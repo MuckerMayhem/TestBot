@@ -80,12 +80,13 @@ public class CommandHandler{
 
         if(!content.startsWith(commandPrefix)) return;
 
+        DiscordUtil.deleteMessage(message, 2000L);
+        
         String command = content.split(" ")[0].substring(1);
 
-        for(BotCommand c : bot.getCommands()){
+        for(BotCommand c : bot.getFeaturesOfType(BotCommand.class)){
             if(command.equalsIgnoreCase(c.getName(bot.getLocale()))){
                 if(!DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions())) return;
-                DiscordUtil.deleteMessage(message, 2000L);
 
                 String[] args = EMPTY;
                 if(content.contains(" ")){

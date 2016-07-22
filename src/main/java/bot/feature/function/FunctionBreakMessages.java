@@ -29,6 +29,7 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
 
     private static final HashMap<IChannel, String> messages = new HashMap<>();
     private static final HashMap<IChannel, Integer> counts = new HashMap<>();
+    private static final HashMap<IChannel, String> last = new HashMap<>();
     private static final HashMap<String, String> facts = new HashMap<>();
     
     //Setting for this function
@@ -36,15 +37,13 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
 
     private static MessageReceivedEvent lastEvent = null;
     
-    private static String lastFact = "";
-
     public FunctionBreakMessages(){
         super("breakwalls");
     }
 
     @Override
     public void onRegister(){
-        DiscordBot.getUserSettingsHandler().registerNewSetting(ALLOW_WALL_BREAKING);
+        DiscordBot.getUserSettingsHandler().addSetting(ALLOW_WALL_BREAKING);
 
         if(facts.isEmpty()){
             Document doc;
@@ -61,7 +60,25 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
                 JsonObject object = e.getAsJsonObject();
                 String fact = object.get("nid").getAsString().replace("\\\\", "");
                 String author = object.get("submitted by").getAsString();
-                facts.put(fact, author);
+                facts.put(fact, "http://mentalfloss.com/");
+            }
+            
+            try{
+                doc = Jsoup.connect("http://catfacts-api.appspot.com/api/facts?number=100").ignoreContentType(true).get();
+            }
+            catch(IOException e){
+                System.err.println("Failed to load cat facts! :(");
+                return;
+            }
+            
+            element = new JsonParser().parse(doc.body().text());
+            if(!element.isJsonObject()) return;
+            
+            JsonElement factArray = element.getAsJsonObject().get("facts");
+            if(!factArray.isJsonArray()) return;
+            
+            for(JsonElement e : factArray.getAsJsonArray()){
+                facts.put(e.getAsString(), "https://catfacts-api.appspot.com/credit.html");
             }
         }
 
@@ -69,10 +86,14 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
     }
 
     @Override
-    public void onEnable(DiscordBot bot) {}
+    public void onEnable(DiscordBot bot){
+        bot.getEventDispatcher().registerListener(this);
+    }
 
     @Override
-    public void onDisable(DiscordBot bot) {}
+    public void onDisable(DiscordBot bot){
+        bot.getEventDispatcher().unregisterListener(this);
+    }
     
     @BotEventSubscriber
     public void onMessageReceived(BotMessageReceivedEvent event){
@@ -92,10 +113,10 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
                 try{
                     String fact = randomFact(bot);
                     DiscordBot.getGuildlessInstance().say(event.getMessage().getChannel(), fact);
-                    if(fact.equalsIgnoreCase(lastFact)){
+                    if(fact.equals(last.get(channel))){
                         DiscordBot.getGuildlessInstance().type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
                     }
-                    lastFact = fact;
+                    last.put(channel, fact);
                 }
                 catch(IOException e){
                     DiscordBot.getGuildlessInstance().say(BREAKUP_MESSAGE);
@@ -118,13 +139,11 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
         String fact = new ArrayList<>(facts.keySet()).get(new Random().nextInt(facts.size()));
 
         builder.append(msgBuilder.buildMessage(Message.FUNC_BREAK_INTRO))
-                .append(fact).append("\n")
-                .append(msgBuilder.buildMessage(Message.FUNC_BREAK_FROM, " http://mentalfloss.com/"));
-
-        if(!facts.get(fact).isEmpty()){
-            builder.append(" ").append(msgBuilder.buildMessage(Message.FUNC_BREAK_SUBMITTED, facts.get(fact)));
-        }
-        builder.append("*");
+                .append(" ")
+                .append(fact)
+                .append("\n*")
+                .append(msgBuilder.buildMessage(Message.FUNC_BREAK_FROM, facts.get(fact)))
+                .append("*");
 
         return builder.toString();
     }

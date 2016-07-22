@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * Registering a FeatureSet unregisters all of its contained {@link BotFeature}s, effectively<br>
  * taking control of their enabling and disabling—they can only be enabled or disabled when the set is.
  */
-public class FeatureSet extends BotFeature implements Iterable<BotFeature>, ToggleableBotFeature{
+public class FeatureSet extends BotFeature implements Iterable<BotFeature>{
 
     private final List<BotFeature> features;
     
@@ -45,21 +45,21 @@ public class FeatureSet extends BotFeature implements Iterable<BotFeature>, Togg
 
     @Override
     public void onRegister(){
-        forEach(BotFeature::unregisterFeature);
+        forEach(BotFeature.getAllRegisteredFeatures()::remove);
     }
 
     @Override
     public void onEnable(DiscordBot bot){
-        forEach(bot::enableFeature);
+        bot.enableFeatures(this.features);
     }
 
     @Override
     public void onDisable(DiscordBot bot){
-        this.features.forEach(bot::disableFeature);
+        bot.disableFeatures(this.features);
     }
     
     @Override
-    public Iterator<BotFeature> iterator(){
+    public  Iterator<BotFeature> iterator(){
         return this.features.iterator();
     }
 

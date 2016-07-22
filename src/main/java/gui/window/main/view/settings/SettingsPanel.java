@@ -35,9 +35,9 @@ public class SettingsPanel extends AbstractBotPanel{
         
         //Settings
         SingleSettingsHandler handler = bot.getServerSettingsHandler();
-        Object[][] data = new Object[handler.getRegisteredSettings().size()][2];
+        Object[][] data = new Object[handler.getAddedSettings().size()][2];
         int index = 0;
-        for(Setting s : handler.getSettings()){
+        for(Setting s : handler.getAddedSettings()){
             data[index] = new Object[]{s.getName(), s.getValueAsString(handler.getSetting(s))};
             index++;
         }

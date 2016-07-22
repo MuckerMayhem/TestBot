@@ -1,7 +1,6 @@
 package bot.feature.command;
 
 import bot.DiscordBot;
-import bot.feature.BotFeature;
 import bot.locale.Message;
 import sx.blah.discord.handle.obj.IMessage;
 import util.DiscordUtil;
@@ -28,18 +27,14 @@ public class CommandHelp extends BotCommand{
     protected void onExecute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(args.length == 0){
             bot.respond("\n" + buildMessage(Message.CMD_HELP_DETAILS, getHandle()) + "\n" +
-                    String.join("\n", BotFeature.getAllRegisteredFeatures().stream()
-                            .filter(f -> f instanceof BotCommand)
-                            .map(c -> (BotCommand) c)
+                    String.join("\n", bot.getFeaturesOfType(BotCommand.class).stream()
                             .filter(c -> DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions()))
                             .map(c -> c.getHandle(bot.getLocale()) + " - " + c.getDescription(bot.getLocale()))
                             .sorted()
                             .collect(Collectors.toList())));
         }
         else{
-            Optional<BotCommand> optional = BotFeature.getAllRegisteredFeatures().stream()
-                    .filter(f -> f instanceof BotCommand)
-                    .map(c -> (BotCommand) c)
+            Optional<BotCommand> optional = bot.getFeaturesOfType(BotCommand.class).stream()
                     .filter(c -> c.getName(bot.getLocale()).equalsIgnoreCase(args[0]))
                     .filter(c -> DiscordUtil.userHasPermission(message.getAuthor(), message.getGuild(), c.getRequiredPermissions()))
                     .findFirst();

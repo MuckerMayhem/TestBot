@@ -22,7 +22,7 @@ public class CommandSetting extends BotCommand{
 
     @Override
     public void onDisable(DiscordBot bot) {}
-
+    
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         String userId = message.getAuthor().getID();
@@ -45,7 +45,7 @@ public class CommandSetting extends BotCommand{
             builder.append("\n").append(buildMessage(Message.CMD_SETTING_ENTER_NUMBER));
             if(serverAccess) builder.append("\n").append(buildMessage(Message.CMD_SETTING_ENTER_NUMBER_SERVER));
 
-            bot.respond(builder.toString(), 5000L * DiscordBot.getUserSettingsHandler().getRegisteredSettings().size());
+            bot.respond(builder.toString(), 5000L * DiscordBot.getUserSettingsHandler().getAddedSettings().size());
 
             return;
         }
@@ -98,18 +98,8 @@ public class CommandSetting extends BotCommand{
 
         handler.setSetting(userId, setting, value);
         bot.info(buildMessage(Message.CMD_SETTING_SET, setting.getName(bot.getLocale()), setting.getValueAsString(value)));
-        if(setting.requiresRestart()) bot.info(buildMessage(Message.CMD_SETTING_RESTART_REQUIRED), true);
+        
+        if(setting.requiresRestart())
+            bot.info(buildMessage(Message.MSG_RESTART_REQUIRED), true);
     }
-
-    /*
-    @Override
-    public String getDetailedDescription(){
-        return "Change your personal settings\n" +
-                "Usage:\n" +
-                " " + this.getHandle() + " list\n" +
-                "  *List all settings and their current value*\n" +
-                " " + this.getHandle() + " <setting> <value>\n" +
-                "  *Change a setting*";
-    }
-    */
 }

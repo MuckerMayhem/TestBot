@@ -25,10 +25,10 @@ public class CommandDiceRoll extends BotCommand{
 
     @Override
     public void onEnable(DiscordBot bot) {}
-    
+
     @Override
     public void onDisable(DiscordBot bot) {}
-
+    
     @Override
     protected void onExecute(DiscordBot bot, IMessage message, String[] args){
         int value = 6;

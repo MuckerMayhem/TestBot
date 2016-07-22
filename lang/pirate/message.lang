@@ -1,4 +1,5 @@
 message_error:`Avast! An error be occurrin': $1. If ye happen upon this again submit it to https://github.com/ColeTheKing/TestBot/issues and include a description o' what ye was doin'.`
+message_restart_required:Aye! Ye have t' restart fer this change t' take effect, y'hear?
 
 
 command_role_invalid:Arrrg! Invalid role '$1'
@@ -19,9 +20,8 @@ command_clear_cancel:Cancelled.
 command_feature_list:Here be a list o' my features: 
 command_feature_args:Use $1 disable # or $1 enable # to disable/enable features
 command_feature_enable:Feature '$1' enabled
-command_feature_already_enabled:Feature '$1' is already enabled!
 command_feature_disable:Feature '$1' disabled
-command_feature_already_disabled:Feature '$1' is already disabled!
+command_feature_no_disable:Feature '$1' can not be disabled.
 
 command_game_no_home:Arrrg! Ye have to set the captain's quarters for me to be doin' that!
 command_game_nothere:Ye must run this command in t' '$1' channel if playin' a game with me be what ye want :skull_crossbones:
@@ -54,7 +54,6 @@ command_setting_enter_number:Enter t' number of t' settin' ye wanna change
 command_setting_enter_number_server:Enter 'server' before t' number to change server settings
 command_setting_invalid_number:Arrrg! That not be a number ye scallywag!
 command_setting_set:Settin' "$1" set to *$2*
-command_setting_restart_required:Aye! Ye have t' restart fer this change t' take effect, y'hear?
 
 command_sound_invalid:Arrrg! Invalid sound '$1'
 command_sound_nochannel:You be not in a voice channel!

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DiscordUtil{
+public final class DiscordUtil{
 
     public static boolean userHasPermission(IUser user, IGuild guild, @Nonnull Permissions permission){
         for(IRole r : user.getRolesForGuild(guild)){

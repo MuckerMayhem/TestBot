@@ -1,7 +1,7 @@
 (.name:(
 (.pretty:Plus de booty !
 (.desc:( ͡° ͜ʖ ͡°)
-(.detail:Utilisation :\n $prefix$name ͡° ͜ʖ ͡°) - Le booty normale\n $prefix$name ͡⊙ ͜ʖ ͡⊙) - Le booty vite\n $prefix$name ͡◉ ͜ʖ ͡◉) - Le booty plus super !\n $prefix$name ͡o ͜ʖ ͡o) - Le booty diabolique
+(.detail:Utilisation :\n $prefix$name ͡° ͜ʖ ͡°) - Le booty normale\n $prefix$name ͡⊙ ͜ʖ ͡⊙) - Le booty vite\n $prefix$name ͡◉ ͜ʖ ͡◉) - Le booty super !\n $prefix$name ͡o ͜ʖ ͡o) - Le booty diabolique
 clear.name:effacer
 clear.desc:Effacer tous les messages
 clear.detail:Utilisation : $handle - Effacer tous les messages dans votre salon actuel
@@ -25,7 +25,7 @@ rabbit.name:rabbit
 rabbit.desc:Envoyer un lien à votre salon de rabb.it
 rabbit.detail:Utilisation : !rabbit [ message ] - Envoyer rapidement un lien vers votre salon de rabb.it avec un message optionnel
 setting.name:option
-setting.desc:Changer votre options
+setting.desc:Changer vos options
 setting.args:liste,reinitialiser,serveur
 showhelp.name:aider
 showhelp.desc:Afficher la description détaillé pour une commande
@@ -36,10 +36,10 @@ test.desc:Commande test
 type.name:taper
 type.desc:Taper un message en tant que le bot
 waifu.name:waifu
-waifu.desc:Gérer les waifus!
+waifu.desc:Gérer vos waifus!
 waifu.args:liste,ajoute,supprime
 restart.name:redemarrer
 restart.desc:Redémarrer le bot
 feature.name:fonction
 feature.desc:Gérer les fonctionnalités du bot
-feature.args:liste,activer,desactiver
+feature.args:liste,basculer

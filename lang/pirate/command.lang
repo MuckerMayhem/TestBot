@@ -42,4 +42,4 @@ restart.name:restart
 restart.desc:Restart the bot
 feature.name:feature
 feature.desc:Manage bot features
-feature.args:list,enable,disable
+feature.args:list,toggle

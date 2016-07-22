@@ -27,7 +27,7 @@ import java.util.InputMismatchException;
  * one used to invoke {@link BotCommand#onExecute(DiscordBot, IMessage, String[])},<br>
  * a new instance of your command is created using the default constructor every time the command is executed.
  */
-public abstract class BotCommand extends BotFeature{
+public abstract class BotCommand extends BotFeature implements Cloneable{
     
     private static final String[] VARS = {"$prefix", "$name", "$handle"};
     
@@ -36,19 +36,13 @@ public abstract class BotCommand extends BotFeature{
     private MessageBuilder builder;
     
     private DiscordBot bot;
-
-    /**
-     * @apiNote <i>Do not use this constructor. Use the default constructor and call super to this one</i>
-     */
+    
     public BotCommand(String name, Permissions permissions){
         super(name);
         Validate.notNull(permissions, "Permissions can not be null");
         this.permissions = permissions;
     }
-
-    /**
-     * @apiNote <i>Do not use this constructor. Use the default constructor and call super to this one</i>
-     */
+    
      public BotCommand(String name){
         super(name);
         this.permissions = Permissions.SEND_MESSAGES;
@@ -117,6 +111,10 @@ public abstract class BotCommand extends BotFeature{
      */
     public String getHandle(Locale locale){
         return CommandHandler.getCommandPrefix() + getName(locale);
+    }
+    
+    public boolean defaultEnabled(){
+        return true;
     }
     
     /**
@@ -235,12 +233,11 @@ public abstract class BotCommand extends BotFeature{
     void execute(DiscordBot bot, IMessage message, String[] args) throws Exception{
         if(!bot.getGuild().getID().equals(message.getGuild().getID()))
             throw new InputMismatchException("Guild mismatch between bot and message");
-          
         
-        BotCommand instance = newInstance(bot);
+        BotCommand instance = this.clone();
         if(instance == null) return;
         
-        instance.construct(this, bot).onExecute(bot, message, args);
+        instance.construct(bot).onExecute(bot, message, args);
     }
 
     private String replaceVars(String string, Locale locale){
@@ -260,20 +257,20 @@ public abstract class BotCommand extends BotFeature{
         return builder.toString();
     }
     
-    private BotCommand newInstance(DiscordBot bot){
-        try{
-            return this.getClass().newInstance();
-        }
-        catch(IllegalAccessException | InstantiationException e){
-            bot.log(e, "Could not create new " + this.getClass().getSimpleName() + " instance");
-            return null;
-        }
-    }
-    
-    private BotCommand construct(BotCommand base, DiscordBot executor){
+    private BotCommand construct(DiscordBot executor){
         this.bot = executor;
         this.builder = new MessageBuilder(executor.getLocale());
         
         return this;
+    }
+    
+    @Override
+    public BotCommand clone(){
+        try{
+            return (BotCommand) super.clone();
+        }
+        catch(CloneNotSupportedException e){
+            return null;
+        }
     }
 }

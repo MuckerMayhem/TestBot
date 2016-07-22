@@ -1,6 +1,6 @@
 package util;
 
-public class Util{
+public final class Util{
 
     /**
      * Parses an array of Strings, grouping together words in quotation marks.<br>
@@ -135,6 +135,12 @@ public class Util{
     
     public static String realNewLines(String input){
         return input.replace("\\n", "\n");
+    }
+    
+    public static Boolean parseBoolean(String string){
+        if(string.equalsIgnoreCase("true")) return true;
+        else if(string.equalsIgnoreCase("false")) return false;
+        return null;
     }
     
     /**
