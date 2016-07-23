@@ -1,26 +1,18 @@
 package bot.settings;
 
-import bot.DiscordBot;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class SettingsHandler{
 
-    public static final File DEFAULT_FILE = new File(DiscordBot.getDataFolder() + File.separator + "usersettings.json");
+    private static final ArrayList<Setting> global_settings = new ArrayList<>();
 
-    private static ArrayList<Setting> global_settings = new ArrayList<>();
-
-    protected ArrayList<Setting> settings = new ArrayList<>();
-    protected File file;
+    protected final ArrayList<Setting> settings = new ArrayList<>();
+    protected final File file;
 
     public SettingsHandler(File file){
         this.file = file;
-    }
-
-    public SettingsHandler(){
-        this(DEFAULT_FILE);
     }
 
     /**
@@ -49,7 +41,7 @@ public abstract class SettingsHandler{
      * Gets all settings registered to this SettingsHandler instance
      * @return an {@link java.util.ArrayList} containing all {@link bot.settings.Setting}s registered to this SettingsHandler
      */
-    public ArrayList<Setting> getRegisteredSettings(){
+    public ArrayList<Setting> getAddedSettings(){
         return this.settings;
     }
 
@@ -77,8 +69,15 @@ public abstract class SettingsHandler{
      * Registers a new {@link bot.settings.Setting} to be used by some function of the bot
      * @param setting New {@link bot.settings.Setting} to register
      */
-    public void registerNewSetting(Setting setting){
+    public void addSetting(Setting setting){
         this.settings.add(setting);
-        global_settings.add(setting);
+        if(!global_settings.contains(setting)){
+            global_settings.add(setting);
+            System.out.println("Registering new setting: " + setting.getName());
+        }
+    }
+    
+    public void removeSetting(Setting setting){
+        this.settings.remove(setting);
     }
 }

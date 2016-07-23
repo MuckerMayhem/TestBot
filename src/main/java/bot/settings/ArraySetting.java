@@ -4,8 +4,12 @@ import java.util.Arrays;
 
 public class ArraySetting extends Setting{
 
-    public ArraySetting(String name, String description, Object defaultValue){
-        super(name, description, defaultValue);
+    public ArraySetting(String name, Object defaultValue, boolean requiresRestart){
+        super(name, defaultValue, requiresRestart);
+    }
+    
+    public ArraySetting(String name, Object defaultValue){
+        super(name, defaultValue);
     }
 
     @Override

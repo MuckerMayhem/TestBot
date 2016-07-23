@@ -2,8 +2,12 @@ package bot.settings;
 
 public class BooleanSetting extends Setting{
 
-    public BooleanSetting(String name, String description, boolean defaultValue){
-        super(name, description, defaultValue);
+    public BooleanSetting(String name, Object defaultValue, boolean requiresRestart){
+        super(name, defaultValue, requiresRestart);
+    }
+    
+    public BooleanSetting(String name, boolean defaultValue){
+        super(name, defaultValue);
     }
 
     @Override

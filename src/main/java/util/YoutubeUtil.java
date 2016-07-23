@@ -1,8 +1,6 @@
 package util;
 
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -13,12 +11,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class YoutubeUtil{
+public final class YoutubeUtil{
     public static String[] getVideoInfo(String videoId) throws IOException{
-
-        YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer(){
-            public void initialize(HttpRequest request) throws IOException{}
-        }).setApplicationName("video-test").build();
+        
+        YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), request -> {}).setApplicationName("video-test").build();
 
         YouTube.Videos.List videoRequest = youtube.videos().list("snippet,statistics,contentDetails");
         videoRequest.setId(videoId);

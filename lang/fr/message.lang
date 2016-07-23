@@ -1,0 +1,87 @@
+message_error:`Il y avait une error pendant cette action: $1. Si elle se reproduire, le soumettre à https://github.com/ColeTheKing/TestBot/issues avec une description ce que vous faisiez`
+message_restart_required:Il faut démarrer le bot pour ce changement de prendre effet
+
+
+command_role_invalid:Le rôle « $1 » est invalide
+command_user_invalid:Le membre « $1 » est invalide
+command_command_invalid:La commande « $1 » est invalide
+
+command_clear_nothere:Cette commande ne peut pas exécuter ici !
+command_clear_1a:Êtes-vous sûr que vous voulez faire ça? **Tous les messages** dans ce salon textuel serons effacé !
+command_clear_1b:Tapez *oui* si vous êtes vraiment sûr
+command_clear_response_1:oui
+command_clear_2a:Vous êtes ***ABSOLUMENT SÛR*** de ceci ? Les messages effacé *ne sont pas* recouvrable !
+command_clear_2b:Tapez *Oui, je voudrais* si vous êtes vraiment sûr que vous voulez effacer **__tous les messages__** dans ce salon
+command_clear_response_2:Oui, je voudrais
+command_clear_deleting:Effacement des messages en cours ...
+command_clear_deleted:Effacé $1 de messages
+command_clear_cancel:Annulé
+
+command_feature_list:Voici une list de mes fonctionnalités:
+command_feature_enable:La fonctionnalité « $1 » a été activée
+command_feature_disable:La fonctionnalité « $1 » a été désactivée
+command_feature_no_disable:La fonctionnalité « $1 » ne peut pas être désactivé.
+command_feature_info:Tapez $1 basculer < numéro > pour basculer une fonctionnalité marche / arrêt
+
+command_game_no_home:Aucun salon d'accueil fixé. Veuillez demander un gestionnaire pour fixer
+command_game_nothere:Veuillez exécuter cette command dans le salon « $1 » si vous souhaitez à jouer avec moi :slight_smile:
+command_game_choose_1:Quel jeu voulez-vous jouer? Jeux disponibles :
+command_game_choose_2:Simplement entrez le numéro du jeu lequel vous voudrais jouer
+command_game_choose_3:Entrez « instructions » après le numéro pour afficher les instructions de jeu.
+command_game_start:Compris. Allons-y !
+command_game_thanks:Merci pour jouer !
+
+command_help_details:Entrez $1 < command > pour les détails d'une commande spécifique
+command_help_no_detail:Aucune description détaillée pour cette commande !
+
+command_meme_normal: 
+command_meme_dank:Voici un dank mème pour vous :
+
+command_prune_deleted:$1 messages effacé
+
+command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la commande option pour fixer
+
+command_restart_restarting:Redémarrer en cours ...
+command_restart_finished:Je suis revenu !
+
+command_setting_list:Voici la liste d'options lesquelles vous pouvez changer :
+command_setting_more:Aussi, vous avez l'autorisation pour changer les options à serveur suivantes :
+command_setting_reset:Réinitialiser tous vos options à ses valeurs par défaut
+command_setting_invalid_setting:L'option « $1 » est invalide
+command_setting_invalid_value:La valeur « $1 » est invalide
+command_setting_no_access:Vous n'avez pas l'autorisation de changer ces settings !
+command_setting_enter_number:Entrez le numéro de l'option laquelle vous voudrais changer
+command_setting_enter_number_server:Entrez « serveur » après le numéro pour changer des options à serveur
+command_setting_invalid_number:Entrez un nombre valide
+command_setting_set:L'option « $1 » a réglé à *$2*
+
+command_sound_invalid:Le son « $1 » est invalide
+command_sound_nochannel:Vous n'êtes pas dans un salon vocal !
+
+command_test:Bonjour, $1 ( $2 )
+
+command_waifu_list:Les waifus de $1 :
+command_waifu_add:Le membre « $1 » a été ajouté à votre liste de waifus
+command_waifu_remove:Le membre « $1 » a été supprimé de votre liste de waifus
+command_waifu_already_on:Ce membre est déjà sur votre liste de waifus !
+command_waifu_not_on:Ce membre n'est pas sur votre liste de waifus !
+command_waifu_notify_add:Hé, $1 ! $2 vous a ajouté à sa liste de waifus !
+command_waifu_notify_remove:$1, $2 vous a supprimé de sa liste de waifus ! b-baka !
+
+
+function_break_intro:Saviez-vous ? 
+function_break_submitted:Soumis par : 
+function_break_from:Origine : $1
+
+function_eat_message:*J'ai mangé votre $1*
+function_eat_message_drink:*J'ai bu votre $1*
+
+function_vidtime_length:Durée de la vidéo : $1
+function_vidtime_blocked:Cette vidéo est bloqué dans les régions suivantes : $1
+function_vidtime_unblock:Est-ce bloqué dans votre région ? Utilisez http://www.unblockyoutube.co.uk/ pour l'éviter !
+
+function_welcome_message:Bon retour parmi nous, $1 !
+
+
+game_tictactoe:Tic-tac-toe
+game_scramble:Brouillant

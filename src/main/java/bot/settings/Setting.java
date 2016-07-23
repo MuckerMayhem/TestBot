@@ -1,15 +1,24 @@
 package bot.settings;
 
-public abstract class Setting{
+import bot.locale.Locale;
+import bot.locale.LocaleHandler;
 
-    protected String name;
-    protected String description;
-    protected Object defaultValue;
+import javax.annotation.Nonnull;
 
-    public Setting(String name, String description, Object defaultValue){
+public abstract class Setting implements Comparable<Setting>{
+
+    protected final String name;
+    protected final Object defaultValue;
+    protected final boolean requiresRestart;
+
+    public Setting(String name, Object defaultValue, boolean requiresRestart){
         this.name = name;
-        this.description = description;
         this.defaultValue = defaultValue;
+        this.requiresRestart = requiresRestart;
+    }
+    
+    public Setting(String name, Object defaultValue){
+        this(name, defaultValue, false);
     }
 
     public abstract Object getDefaultValue();
@@ -19,9 +28,17 @@ public abstract class Setting{
     public String getName(){
         return this.name;
     }
+    
+    public boolean requiresRestart(){
+        return this.requiresRestart;
+    }
 
-    public String getDescription(){
-        return this.description;
+    public String getName(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedName(this);
+    }
+
+    public String getDescription(Locale locale){
+        return LocaleHandler.get(locale).getLocalizedDescription(this);
     }
 
     public String getValueAsString(Object value){
@@ -29,7 +46,7 @@ public abstract class Setting{
     }
 
     @Override
-    public String toString(){
-        return this.name + ": " + this.description + " (Default: " + this.defaultValue + ")";
+    public int compareTo(@Nonnull Setting other){
+        return this.name.compareTo(other.name);
     }
 }

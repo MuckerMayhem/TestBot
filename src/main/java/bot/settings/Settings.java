@@ -1,16 +1,21 @@
 package bot.settings;
 
+import bot.locale.Locale;
+
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Represents a set of {@link bot.settings.Setting}s and their values
  */
 public class Settings implements Iterable<Setting>{
 
-    private static HashMap<SettingsHandler, Settings> defaults = new HashMap<>();
+    private static final HashMap<SettingsHandler, Settings> defaults = new HashMap<>();
 
-    private HashMap<Setting, Object> values = new HashMap<>();
+    private final TreeMap<Setting, Object> values = new TreeMap<>();
 
     private boolean canModify;
 
@@ -19,8 +24,8 @@ public class Settings implements Iterable<Setting>{
     }
 
     public Settings(SettingsHandler handler){
-        for(Setting s : handler.getRegisteredSettings()){
-            values.put(s, s.getDefaultValue());
+        for(Setting s : handler.getAddedSettings()){
+            values.put(s, s.defaultValue);
         }
 
         this.canModify = true;
@@ -38,8 +43,12 @@ public class Settings implements Iterable<Setting>{
         return defaults.get(handler);
     }
 
+    public List<Setting> getSettings(){
+        return this.values.keySet().stream().collect(Collectors.toList());
+    }
+
     public Object get(Setting setting){
-        return values.getOrDefault(setting, setting.getDefaultValue());
+        return values.getOrDefault(setting, setting.defaultValue);
     }
 
     public void set(Setting setting, Object value){
@@ -47,19 +56,24 @@ public class Settings implements Iterable<Setting>{
 
         values.put(setting, value);
     }
+    
+    public void remove(Setting setting){
+        if(!this.canModify) return;
+        
+        values.remove(setting);
+    }
 
     public boolean hasValueFor(Setting s){
         return this.values.containsKey(s);
     }
 
-    @Override
-    public String toString(){
+    public String toString(Locale locale){
 
         int leftPadding = 0;
         int rightPadding = 0;
 
         for(Setting s : this){
-            int left = s.getName().length();
+            int left = s.getName(locale).length();
             if(left > leftPadding) leftPadding = left;
 
             int right = s.getValueAsString(get(s)).length();
@@ -68,18 +82,23 @@ public class Settings implements Iterable<Setting>{
 
         StringBuilder builder = new StringBuilder("```");
 
-        for(Setting s : this){
+        int index = 1;
+        for(Setting s : getSettings()){
             String value = s.getValueAsString(get(s));
 
-            builder.append(s.getName())
+            builder.append(index)
+                    .append(". ")
+                    .append(s.getName(locale))
                     .append(": ")
-                    .append(pad(value, leftPadding - s.getName().length(), rightPadding - value.length()))
+                    .append(pad(value, leftPadding - s.getName(locale).length(), rightPadding - value.length()))
                     .append(" | ")
-                    .append(s.getDescription())
+                    .append(s.getDescription(locale))
                     .append(" (Default: ")
                     .append(s.getValueAsString(s.getDefaultValue()))
                     .append(")")
                     .append("\n");
+
+            index++;
         }
 
         return builder.append("```").toString();

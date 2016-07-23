@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class GameScramble extends Game{
+public class GameScramble extends BotGame{
 
     private int difficulty;
 
     private int lives;
     private int correct;
 
-    private static String[][] words = {
+    private static final String[][] words = {
             {"apple", "cancer", "earth", "hotel", "road"},//Easy
             {"always", "computer", "ocean", "rifle", "under"},//Medium
             {"helicopter", "mechanic", "telephone"},//Hard
@@ -20,20 +20,18 @@ public class GameScramble extends Game{
             {"conditioning", "distasteful", "hitchhikers"}//Impossible
     };
 
-    private static String[] intros = {
+    private static final String[] intros = {
             "Ready to move on to something a little harder? (Reached level 2)",
             "Was that too easy? Well they're about to get harder! (Reached level 3)",
             "Excellent! Think you can handle these ones? (Reached level 4)",
             "You're amazing! But these next words are the hardest of the hard! (Reached level 5)"
     };
 
-    public GameScramble(GameBot bot, int lives){
-        super(bot);
+    public GameScramble(int lives){
         this.lives = lives;
     }
 
-    public GameScramble(GameBot bot){
-        super(bot);
+    public GameScramble(){
         this.lives = 3;
     }
 
@@ -43,7 +41,7 @@ public class GameScramble extends Game{
                 "five difficulty levels. Guess enough words\n" +
                 "in one level to move on to the next.";
     }
-
+    
     @Override
     public boolean isMultiplayer(){
         return false;
@@ -85,7 +83,7 @@ public class GameScramble extends Game{
 
             this.bot.say("Unscramble this word: " + scrambled);
 
-            if(this.bot.nextLine().equalsIgnoreCase(word)){
+            if(/*this.bot.nextLine()*/"".equalsIgnoreCase(word)){
                 correct++;
                 this.bot.say("Correct! (" + correct + "/" + 4 + ")");
             }

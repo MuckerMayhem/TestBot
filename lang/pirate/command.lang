@@ -1,0 +1,45 @@
+(.name:(
+(.pretty:Extra booty
+(.desc:( ͡° ͜ʖ ͡°)
+(.detail:Usage:\n $prefix$name ͡° ͜ʖ ͡°) - Normal booty\n $prefix$name ͡⊙ ͜ʖ ͡⊙) - Frantic booty\n $prefix$name ͡◉ ͜ʖ ͡◉) - Super booty\n $prefix$name ͡o ͜ʖ ͡o) - Demonic booty
+clear.name:clear
+clear.desc:Clear messages
+clear.detail:Usage: $handle - Clear all messages in the current channel
+roll.name:roll
+roll.desc:Roll a random number or buccaneer
+roll.detail:Usage:\n $handle - Roll a number from 1-6\n $handle <max> - Roll a number from 1-max\n $handle <@group> - Roll a random user from @group
+game.name:game
+game.desc:Play a game
+game.detail:This feature is not currently implemented
+help.name:help
+help.desc:Show help
+help.detail:Usage:\n $handle - Show help\n $handle <command name> - Show help for a specific command
+leave.name:leave
+leave.desc:Leave command
+meme.name:meme
+meme.desc:meme
+prune.name:prune
+prune.desc:Prune messages matching a certain keyword
+prune.detail:Usage:\n $handle <"keyword"> [@user] - Delete messages matching t' keyword, and, if specified—t' user
+rabbit.name:rabbit
+rabbit.desc:Show your rabbit room
+rabbit.detail:Usage: !rabbit [message] - Quickly send a link to your rabb.it room with an optional message
+setting.name:setting
+setting.desc:Change a setting
+setting.args:list,reset,server
+showhelp.name:showhelp
+showhelp.desc:Show t' detailed description of a command
+sound.name:sound
+sound.desc:Play a sound
+test.name:test
+test.desc:Test command
+type.name:type
+type.desc:Make t' bot type a message
+waifu.name:matey
+waifu.desc:Manage yer mateys
+waifu.args:list,add,remove
+restart.name:restart
+restart.desc:Restart the bot
+feature.name:feature
+feature.desc:Manage bot features
+feature.args:list,toggle
