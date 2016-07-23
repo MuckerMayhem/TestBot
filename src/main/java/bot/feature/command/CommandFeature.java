@@ -23,7 +23,7 @@ public class CommandFeature extends BotCommand{
         List<BotFeature> features = BotFeature.getAllRegisteredFeatures().stream().sorted().collect(Collectors.toList());
         
         if(args[0].equalsIgnoreCase(getLocalArgs()[0])){
-            StringBuilder builder = new StringBuilder(buildMessage(Message.CMD_FEATURE_LIST)).append("\n");
+            StringBuilder builder = new StringBuilder(buildMessage(Message.CMD_FEATURE_LIST)).append("\n").append("```");
             int index = 1;
             for(BotFeature f : features){
                 builder.append(f instanceof ToggleableBotFeature ? index : "X")
@@ -37,6 +37,7 @@ public class CommandFeature extends BotCommand{
                         .append("\n");
                 index++;
             }
+            builder.append("```").append(buildMessage(Message.CMD_FEATURE_INFO, getHandle()));
 
             bot.respond(builder.toString(), features.size() * 2000L);
             return;

@@ -729,6 +729,12 @@ public class DiscordBot{
         });
         
         saveFeatures();
+        try{
+            getServerSettingsHandler().loadSettings();
+        }
+        catch(IOException e){
+            log(e, "Failed to reload server settings.");
+        }
     }
 
     private void saveFeatures(){

@@ -22,10 +22,10 @@ public enum Message{
     CMD_CLEAR_CANCELLED("command_clear_cancel"),
 
     CMD_FEATURE_LIST("command_feature_list"),
-    CMD_FEATURE_ARGS("command_feature_args"),
     CMD_FEATURE_ENABLED("command_feature_enable"),
     CMD_FEATURE_DISABLED("command_feature_disable"),
     CMD_FEATURE_NO_DISABLE("command_feature_no_disable"),
+    CMD_FEATURE_INFO("command_feature_info"),
     
     CMD_GAME_NO_HOME("command_game_no_home"),
     CMD_GAME_NOT_HERE("command_game_nothere"),

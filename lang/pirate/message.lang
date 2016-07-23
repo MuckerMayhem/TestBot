@@ -18,10 +18,10 @@ command_clear_deleted:Deleted $1 messages, arrr!
 command_clear_cancel:Cancelled.
 
 command_feature_list:Here be a list o' my features: 
-command_feature_args:Use $1 disable # or $1 enable # to disable/enable features
 command_feature_enable:Feature '$1' enabled
 command_feature_disable:Feature '$1' disabled
 command_feature_no_disable:Feature '$1' can not be disabled.
+command_feature_info:Use $1 toggle <number> to toggle a feature on/off
 
 command_game_no_home:Arrrg! Ye have to set the captain's quarters for me to be doin' that!
 command_game_nothere:Ye must run this command in t' '$1' channel if playin' a game with me be what ye want :skull_crossbones:

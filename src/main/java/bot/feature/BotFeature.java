@@ -142,6 +142,8 @@ public abstract class BotFeature implements Comparable<BotFeature>{
     
     @Override
     public int compareTo(@Nonnull BotFeature other){
+        if(other instanceof ToggleableBotFeature) return 1;
+        else if(this instanceof ToggleableBotFeature) return -1;
         return this.name.compareTo(other.name);
     }
 }
