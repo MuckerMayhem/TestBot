@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class FunctionBreakMessages extends BotFunction implements ToggleableBotFeature{
-
-    public static final String BREAKUP_MESSAGE = "-";
+    
     public static final int MAX_MESSAGES = 12;
 
     private static final Random RANDOM = new Random();
@@ -110,17 +109,12 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
             else counts.put(channel, 0);
 
             if(counts.get(channel) >= MAX_MESSAGES + RANDOM.nextInt(7) - 3){
-                try{
-                    String fact = randomFact(bot);
-                    DiscordBot.getGuildlessInstance().say(event.getMessage().getChannel(), fact);
-                    if(fact.equals(last.get(channel))){
-                        DiscordBot.getGuildlessInstance().type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
-                    }
-                    last.put(channel, fact);
+                String fact = randomFact(bot);
+                DiscordBot.getGuildlessInstance().say(event.getMessage().getChannel(), fact);
+                if(fact.equals(last.get(channel))){
+                    DiscordBot.getGuildlessInstance().type(event.getMessage().getChannel(), "...but you probably already knew that! \uD83D\uDE04", 3000L);
                 }
-                catch(IOException e){
-                    DiscordBot.getGuildlessInstance().say(BREAKUP_MESSAGE);
-                }
+                last.put(channel, fact);
                 counts.put(channel, 0);
             }
         }
@@ -132,7 +126,7 @@ public class FunctionBreakMessages extends BotFunction implements ToggleableBotF
         messages.put(channel, event.getMessage().getAuthor().getID());
     }
     
-    private String randomFact(DiscordBot bot) throws IOException{
+    private String randomFact(DiscordBot bot){
         MessageBuilder msgBuilder = new MessageBuilder(bot.getLocale());
 
         StringBuilder builder = new StringBuilder();

@@ -1,6 +1,6 @@
 # TestBot
 
-### ***This is the beta branch of TestBot. Most of this information may be inaccurate.*** *[Return to master](https://github.com/ColeTheKing/TestBot)*
+### ***This information is currently fairly innacurrate and will be fixed soon™.***
 
 A now somewhat but not really sooper dooper bot.  
 This bot is currently a private bot designed specifically for one server, but this may change in the future.  

@@ -119,7 +119,7 @@ public class DiscordBot{
         init();
     }
     
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
         new ArgumentParser().withArgument("-username", new Value(){
             @Override
             public void handle(Object value){
@@ -181,6 +181,18 @@ public class DiscordBot{
         catch(IOException e){
             getGuildlessInstance().log(e, "Failed to load user settings.");
         }
+        
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run(){
+                if(!getClient().isReady()){
+                    System.out.println("Bot is no longer responsive. Restarting...");
+                    main(args);
+                    this.cancel();
+                }
+                
+            }
+        }, 1800000L, 1800000L);
     }
 
     public void init(){
@@ -263,7 +275,7 @@ public class DiscordBot{
     }
     
     public static Image getAvatarImg(){
-        return Image.forFile(new File(avatarImg));
+        return avatarImg == null ? null : Image.forFile(new File(avatarImg));
     }
 
     public static File getGlobalDataFolder(){
@@ -399,8 +411,8 @@ public class DiscordBot{
      * No message will be sent if the home channel is not found
      * @param message Message to send
      */
-    public IMessage say(IChannel channel, String message){
-        return say(channel, message, 0L);
+    public void say(IChannel channel, String message){
+        say(channel, message, 0L);
     }
 
     /**

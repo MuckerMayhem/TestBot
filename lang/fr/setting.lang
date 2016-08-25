@@ -5,7 +5,7 @@ notify_welcome.desc:Accueillir vous du salon AFK
 eat_emoji.name:Manger des emojis
 eat_emoji.desc:Le bot mange vos emojis
 notify_waifu.name:Notifications waifu
-notify_waify.desc:Recevoir un notification quand vous êtes ajouté à un liste de waifus
+notify_waifu.desc:Recevoir un notification quand vous êtes ajouté à un liste de waifus
 break_walls.name:Interruption de texte
 break_walls.desc:Interrompre votre mur de texte avec un fait aléatoire
 clear_whitelist.name:Whitelist de la commande effacer

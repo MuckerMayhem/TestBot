@@ -24,22 +24,28 @@ public class EventListener{
     public void onReady(ReadyEvent event){
         IDiscordClient client = event.getClient();
         
-        try{
-            client.changeUsername(DiscordBot.getUsername());
-        }
-        catch(DiscordException | RateLimitException e){
-            System.err.println("Exception occurred while trying to change client username: " + e.getMessage());
-        }
-
-        try{
-            client.changeAvatar(DiscordBot.getAvatarImg());
-        }
-        catch(DiscordException | RateLimitException e){
-            System.err.println("Exception occurred while trying to change client avatar: " + e.getMessage());
+        if(!(DiscordBot.getUsername() == null || DiscordBot.getUsername().isEmpty())){
+            try{
+                client.changeUsername(DiscordBot.getUsername());
+            }
+            catch(DiscordException | RateLimitException e){
+                System.err.println("Exception occurred while trying to change client username: " + e.getMessage());
+            }
         }
 
-        client.changeStatus(Status.game(DiscordBot.getGameStatus()));
-
+        if(DiscordBot.getAvatarImg() != null){
+            try{
+                client.changeAvatar(DiscordBot.getAvatarImg());
+            }
+            catch(DiscordException | RateLimitException e){
+                System.err.println("Exception occurred while trying to change client avatar: " + e.getMessage());
+            }
+        }
+        
+        if(DiscordBot.getGameStatus() != null){
+            client.changeStatus(Status.game(DiscordBot.getGameStatus()));
+        }
+        
         System.out.println("Client ready. Initializing DiscordBot instances...");
 
         for(IGuild g : guildQueue){

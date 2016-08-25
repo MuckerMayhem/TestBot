@@ -7,6 +7,7 @@ import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
+import util.DiscordUtil;
 import util.YoutubeUtil;
 
 import java.io.IOException;
@@ -56,20 +57,9 @@ public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFe
 
         //Accounts for most youtube links that Discord can expand
         if(!content.matches(".*http[s]?://(www.)?(?:youtube.com/watch\\?v=|youtu.be/)([\\w-]{11})[^\\w-]?.*")) return;
-
+        
         //Single out dat id
         String videoId = content.replaceAll(".*http[s]?://(www.)?(?:youtube.com/watch\\?v=|youtu.be/)([\\w-]{11})[^\\w-]?.*", "$2");
-
-        /*Keeping this here to fall back on in case something goes horribly wrong
-        String videoId;
-        if(content.contains("https://www.youtube.com/watch?v=")){
-            videoId = content.replaceAll(".*(http[s]?://.*)[ ].*", "$1").split("=")[1];
-        }
-        else if(content.contains("https://youtu.be/")){
-            videoId = content.replaceAll(".*(http[s]?://.*)[ ].*", "$1").split("be/")[1];
-        }
-        else return;
-        */
 
         String[] videoInfo = YoutubeUtil.getVideoInfo(videoId);
 
@@ -79,7 +69,11 @@ public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFe
             builder.append("\n*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_BLOCKED, underlineRegions(regions, videoInfo[3]))).append("*");
             for(String s : regions){
                 if(videoInfo[3].contains(s)){
-                    builder.append("\n").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_UNBLOCK));
+                    //New message; sent if video is blocked
+                    String unblocked = content.replaceAll("(.*)http[s]?://(www.)?(?:youtube.com/watch\\?v=|youtu.be/)([\\w-]{11})[^\\w-]?(.*)", "$1http://youpak.com/watch?v=$3 $4");
+
+                    builder.append("\n").append(event.getMessage().getAuthor().mention()).append(" ").append(unblocked);
+                    DiscordUtil.deleteMessage(event.getMessage());
                     break;
                 }
             }

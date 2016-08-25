@@ -6,9 +6,9 @@ import sx.blah.discord.handle.obj.IVoiceChannel;
 
 public class BotVoiceChannelMoveEvent extends BotEvent{
     
-    private IUser user;
-    private IVoiceChannel from;
-    private IVoiceChannel to;
+    private final IUser user;
+    private final IVoiceChannel from;
+    private final IVoiceChannel to;
     
     public BotVoiceChannelMoveEvent(DiscordBot bot, IUser user, IVoiceChannel from, IVoiceChannel to){
         super(bot);

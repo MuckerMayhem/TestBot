@@ -4,7 +4,8 @@ import bot.DiscordBot;
 
 public abstract class BotEvent{
     
-    private DiscordBot bot;
+    private final DiscordBot bot;
+    
     private boolean cancelled;
     
     public BotEvent(DiscordBot bot){

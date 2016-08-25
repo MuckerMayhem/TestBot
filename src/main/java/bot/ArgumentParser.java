@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ArgumentParser{
 
-    private TreeMap<String, Argument> validArgs = new TreeMap<>();
+    private final TreeMap<String, Argument> validArgs = new TreeMap<>();
     
     public ArgumentParser() {};
 
