@@ -45,7 +45,6 @@ public class DiscordBot{
     public static final BotCommand COMMAND_PRUNE    = (BotCommand) registerFeature(new CommandPrune());
     public static final BotCommand COMMAND_LEAVE    = (BotCommand) registerFeature(new CommandLeave());
     public static final BotCommand COMMAND_TYPE     = (BotCommand) registerFeature(new CommandType());
-    public static final BotCommand COMMAND_SHOWHELP = (BotCommand) registerFeature(new CommandShowHelp());
     public static final BotCommand COMMAND_RESTART  = (BotCommand) registerFeature(new CommandRestart());
     public static final BotCommand COMMAND_FEATURE  = (BotCommand) registerFeature(new CommandFeature());
 
@@ -61,6 +60,7 @@ public class DiscordBot{
     public static final BotCommand COMMAND_WAIFU    = (BotCommand) registerFeature(new CommandWaifu());
     public static final BotCommand COMMAND_SOUND    = (BotCommand) registerFeature(new CommandSound());
     public static final BotCommand COMMAND_BOOTY    = (BotCommand) registerFeature(new CommandBooty());
+    public static final BotCommand  COMMAND_WOT     = (BotCommand) registerFeature(new CommandWot());
 
     //Threaded commands
     public static final ThreadedCommand COMMAND_GAME  = (ThreadedCommand) registerFeature(new ThreadedCommandGame());
@@ -731,10 +731,9 @@ public class DiscordBot{
 
         values.keySet().forEach(k -> {
             BotFeature f = BotFeature.getFeatureByName(k);
-            assert f != null;
             
             boolean v = values.get(k);
-            if(v){
+            if(f != null && v){
                 this.features.add(f);
                 f.onEnable(this);
             }

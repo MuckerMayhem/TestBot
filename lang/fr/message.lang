@@ -6,11 +6,11 @@ command_role_invalid:Le rôle « $1 » est invalide
 command_user_invalid:Le membre « $1 » est invalide
 command_command_invalid:La commande « $1 » est invalide
 
-command_clear_nothere:Cette commande ne peut pas exécuter ici !
-command_clear_1a:Êtes-vous sûr que vous voulez faire ça? **Tous les messages** dans ce salon textuel serons effacé !
+command_clear_nothere:Impossible d'exécuter cette commande ici !
+command_clear_1a:Êtes-vous sûr que vous voulez faire ça? **Tous les messages** dans ce salon textuel seront effacé !
 command_clear_1b:Tapez *oui* si vous êtes vraiment sûr
 command_clear_response_1:oui
-command_clear_2a:Vous êtes ***ABSOLUMENT SÛR*** de ceci ? Les messages effacé *ne sont pas* recouvrable !
+command_clear_2a:Vous êtes ***ABSOLUMENT SÛR*** de ceci ? Les messages effacés *ne sont pas* recouvrable !
 command_clear_2b:Tapez *Oui, je voudrais* si vous êtes vraiment sûr que vous voulez effacer **__tous les messages__** dans ce salon
 command_clear_response_2:Oui, je voudrais
 command_clear_deleting:Effacement des messages en cours ...
@@ -35,13 +35,13 @@ command_help_details:Entrez $1 < command > pour les détails d'une commande spé
 command_help_no_detail:Aucune description détaillée pour cette commande !
 
 command_meme_normal: 
-command_meme_dank:Voici un dank mème pour vous :
+command_meme_dank:Voici un dank meme pour vous :
 
 command_prune_deleted:$1 messages effacé
 
 command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la commande option pour fixer
 
-command_restart_restarting:Redémarrer en cours ...
+command_restart_restarting:Redémarrage en cours ...
 command_restart_finished:Je suis revenu !
 
 command_setting_list:Voici la liste d'options lesquelles vous pouvez changer :
@@ -80,7 +80,7 @@ function_vidtime_length:Durée de la vidéo : $1
 function_vidtime_blocked:Cette vidéo est bloqué dans les régions suivantes : $1
 function_vidtime_unblock:Est-ce bloqué dans votre région ? Utilisez http://www.unblockyoutube.co.uk/ pour l'éviter !
 
-function_welcome_message:Bon retour parmi nous, $1 !
+function_welcome_message:Bon retour, $1 !
 
 
 game_tictactoe:Tic-tac-toe

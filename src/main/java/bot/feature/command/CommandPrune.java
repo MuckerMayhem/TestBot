@@ -34,6 +34,7 @@ public class CommandPrune extends BotCommand{
         
         MessageBuilder builder = new MessageBuilder(bot.getLocale());
         
+        message.getChannel().getMessages().load(100);
         List<IMessage> affectedMessages = message.getChannel().getMessages().stream()
                 .filter(m -> m.getContent().toLowerCase().contains(args[0].toLowerCase()))
                 .filter(m -> target == null || target == m.getAuthor())

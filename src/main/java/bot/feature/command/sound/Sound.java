@@ -40,7 +40,8 @@ public enum Sound{
     MAGNUMDONG("magnumdong", new File("sound/magnumdong.mp3"), "monstercondom"),
     NOOT("noot", new File("sound/noot.mp3")),
     NYAT("nyat", new File("sound/NYAT.mp3")),
-    FUCKINGNOOT("fuckingnoot", new File("sound/fuckingnoot.mp3"));
+    FUCKINGNOOT("fuckingnoot", new File("sound/fuckingnoot.mp3")),
+    WOT("wot", new File("sound/wot.mp3"));
 
     private final String name;
     private final String[] aliases;

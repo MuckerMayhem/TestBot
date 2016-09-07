@@ -43,3 +43,5 @@ restart.desc:Redémarrer le bot
 feature.name:fonction
 feature.desc:Gérer les fonctionnalités du bot
 feature.args:liste,basculer
+wot.name:wot
+wot.desc:wot

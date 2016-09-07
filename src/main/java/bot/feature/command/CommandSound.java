@@ -24,8 +24,8 @@ public class CommandSound extends BotCommand
     public CommandSound(){
         super("sound", Permissions.VOICE_SPEAK);
     }
-
-    public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
+    
+    public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound, float volume){
         if(channel == null) return;
         
         long duration = getDuration(sound);
@@ -42,6 +42,7 @@ public class CommandSound extends BotCommand
         }
 
         AudioPlayer player = new AudioPlayer(channel.getGuild());
+        player.setVolume(volume);
         try{
             if(sound.getPath() == null){
                 player.queue(sound.getUrl());
@@ -62,6 +63,10 @@ public class CommandSound extends BotCommand
         };
 
         new Timer().schedule(task, duration + 400L);
+    }
+    
+    public static void playSound(DiscordBot bot, IVoiceChannel channel, Sound sound){
+        playSound(bot, channel, sound, 1.0F);
     }
 
     @Override
