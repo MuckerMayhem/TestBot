@@ -40,8 +40,17 @@ public class CommandPrune extends BotCommand{
                 .filter(m -> target == null || target == m.getAuthor())
                 .collect(Collectors.toList());
         
-        message.getChannel().getMessages().bulkDelete(affectedMessages);
-        
-        bot.say(message.getChannel(), message.getAuthor().mention() + " " + builder.buildMessage(Message.CMD_PRUNE_DELETED, affectedMessages.size()), 3000L);
+        //TODO: Improve this
+        if(affectedMessages.size() == 0){
+            bot.say(message.getChannel(), builder.buildMessage(Message.CMD_PRUNE_NONE_FOUND), 3000L);
+        }
+        else if(affectedMessages.size() == 1){
+            message.delete();
+            bot.say(message.getChannel(), message.getAuthor().mention() + " " + builder.buildMessage(Message.CMD_PRUNE_DELETED_SINGLE), 3000L);
+        }
+        else{
+            message.getChannel().getMessages().bulkDelete(affectedMessages);
+            bot.say(message.getChannel(), message.getAuthor().mention() + " " + builder.buildMessage(Message.CMD_PRUNE_DELETED, affectedMessages.size()), 3000L);
+        }
     }
 }

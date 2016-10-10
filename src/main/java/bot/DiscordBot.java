@@ -225,6 +225,8 @@ public class DiscordBot{
             log(e, "Could not load server settings");
         }
 
+        this.onInitialize();
+        
         Locale locale = Locale.getFromCode((String) getServerSettingsHandler().getSetting(SETTING_LOCALE));
         this.localeHandler = LocaleHandler.get(locale == null ? Locale.ENGLISH : locale);
 
@@ -232,6 +234,27 @@ public class DiscordBot{
         
         log(Level.INFO, "Bot initialized.");
     }
+
+    /**
+     * Called during the initialization of the bot. This runs AFTER the following processes:
+     * <ul>
+     *     <li>Guild data folder creation</li>
+     *     <li>Logger initialization</li></li>
+     *     <li>Settings initialization</li>
+     *     <li>Event dispatcher initialization</li>
+     *     <li>Initialization of all registered features</li>
+     *     <li>Settings initialization</li>
+     * </ul>
+     * The following processes are <b>NOT</b> run before this method is called.<br>
+     * Be careful if you are modifying any of the following processes in this method:
+     * <ul>
+     *     <li>Bot locale handler is set</li>
+     *     <li>Bot home is set</li>
+     * </ul>
+     * <i>Note: It is both safe and recommended to add external sources to the locale handler in this method.<br>
+     * (Using {@link LocaleHandler#addExternalSource(File)})</i>
+     */
+    public void onInitialize(){}
     
     public static Set<IGuild> getGuilds(){
         return instances.keySet();

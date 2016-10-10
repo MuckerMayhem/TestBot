@@ -7,6 +7,7 @@ import bot.feature.ToggleableBotFeature;
 import bot.locale.Message;
 import bot.locale.MessageBuilder;
 import bot.settings.ArraySetting;
+import bot.settings.BooleanSetting;
 import util.DiscordUtil;
 import util.YoutubeUtil;
 
@@ -16,6 +17,8 @@ public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFe
     
     private static final ArraySetting SETTING_REGIONS = new ArraySetting("important_regions", new String[]{});
     private static final ArraySetting SETTING_YTBLACKLIST = new ArraySetting("blacklist_videoinfo", new String[]{});
+    
+    private static final BooleanSetting SETTING_KEEP_ORIGINAL = new BooleanSetting("keep_original_videos", false);
 
     public FunctionGetVideoTime(){
         super("yttime");
@@ -27,7 +30,9 @@ public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFe
     }
     
     @Override
-    public void onRegister() {}
+    public void onRegister(){
+        DiscordBot.getUserSettingsHandler().addSetting(SETTING_KEEP_ORIGINAL);
+    }
 
     @Override
     public void onEnable(DiscordBot bot){
@@ -69,11 +74,23 @@ public class FunctionGetVideoTime extends BotFunction implements ToggleableBotFe
             builder.append("\n*").append(msgBuilder.buildMessage(Message.FUNC_YTTIME_BLOCKED, underlineRegions(regions, videoInfo[3]))).append("*");
             for(String s : regions){
                 if(videoInfo[3].contains(s)){
+                    //Whether or not the user sending the video has chosen to keep the original video link rather than deleting it
+                    boolean keepOriginal = (boolean) bot.getUserSetting(event.getMessage().getAuthor().getID(), SETTING_KEEP_ORIGINAL);
+                    
+                    String message;
+                    if(keepOriginal)
+                        message = "http://youpak.com/watch?v=$3";
+                    else
+                        message = "$1http://youpak.com/watch?v=$3 $4";
+                    
                     //New message; sent if video is blocked
-                    String unblocked = content.replaceAll("(.*)http[s]?://(www.)?(?:youtube.com/watch\\?v=|youtu.be/)([\\w-]{11})[^\\w-]?(.*)", "$1http://youpak.com/watch?v=$3 $4");
+                    String unblocked = content.replaceAll("(.*)http[s]?://(www.)?(?:youtube.com/watch\\?v=|youtu.be/)([\\w-]{11})[^\\w-]?(.*)", message);
 
                     builder.append("\n").append(event.getMessage().getAuthor().mention()).append(" ").append(unblocked);
-                    DiscordUtil.deleteMessage(event.getMessage());
+                    
+                    if(!(boolean) bot.getUserSetting(event.getMessage().getAuthor().getID(), SETTING_KEEP_ORIGINAL)) 
+                        DiscordUtil.deleteMessage(event.getMessage());
+                    
                     break;
                 }
             }

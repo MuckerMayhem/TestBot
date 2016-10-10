@@ -37,6 +37,8 @@ command_help_no_detail:Aucune description détaillée pour cette commande !
 command_meme_normal: 
 command_meme_dank:Voici un dank meme pour vous :
 
+command_prune_none_found:Aucun message pareil trouvé
+command_prune_deleted_single:1 message effacé
 command_prune_deleted:$1 messages effacé
 
 command_rabbit_not_found:Vous n'avez pas de salon de rabb.it fixé. Utilisez la commande option pour fixer

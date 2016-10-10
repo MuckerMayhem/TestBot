@@ -41,7 +41,13 @@ public enum Sound{
     NOOT("noot", new File("sound/noot.mp3")),
     NYAT("nyat", new File("sound/NYAT.mp3")),
     FUCKINGNOOT("fuckingnoot", new File("sound/fuckingnoot.mp3")),
-    WOT("wot", new File("sound/wot.mp3"));
+    WOT("wot", new File("sound/wot.mp3")),
+    HEYBABY("heybaby", new File("sound/heybaby.mp3")),
+    HEYBABYR("ybabyeh", new File("sound/heybaby3.mp3")),
+    HEYBABYDEMONIC("heybab", new File("sound/heybaby2.mp3")),
+    KNOCK("knock", new File("sound/knock.mp3")),
+    IWILLKILLYOU("iwillkillyou", new File("sound/iwillkillyou.mp3")),
+    NERFTHIS("nerfthis", new File("sound/nerfthis.mp3"));
 
     private final String name;
     private final String[] aliases;

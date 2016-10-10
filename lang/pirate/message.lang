@@ -37,6 +37,8 @@ command_help_no_detail:No detailed description for this command!
 command_meme_normal: 
 command_meme_dank:Here be a dank meme for you matey: 
 
+command_prune_none_found:Ahoy! There be no matchin' messages found!
+command_prune_deleted_single:1 message deleted.
 command_prune_deleted:$1 messages deleted.
 
 command_rabbit_not_found:Ye don't have a rabb.it room set. Use t' settin's command to set one.

@@ -23,6 +23,7 @@ public class EventListener{
     @EventSubscriber
     public void onReady(ReadyEvent event){
         IDiscordClient client = event.getClient();
+        client.getDispatcher().registerListener(this);
         
         if(!(DiscordBot.getUsername() == null || DiscordBot.getUsername().isEmpty())){
             try{
@@ -48,10 +49,17 @@ public class EventListener{
         
         System.out.println("Client ready. Initializing DiscordBot instances...");
 
+        for(IGuild g : client.getGuilds()){
+            new DiscordBot(g);
+            System.out.printf("Joined guild '%s' (%s)\n", g.getName(), g.getID());
+        }
+        
+        /*
         for(IGuild g : guildQueue){
             new DiscordBot(g);
             System.out.printf("Joined guild '%s' (%s)\n", g.getName(), g.getID());
         }
+        */
         
         if(!BotGui.isDisabled()){
             BotGui.getGui().getGuildPanel().update();

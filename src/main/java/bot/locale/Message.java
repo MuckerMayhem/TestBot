@@ -41,6 +41,8 @@ public enum Message{
     CMD_MEME_SEND("command_meme_normal"),
     CMD_MEME_DANK("command_meme_dank"),
 
+    CMD_PRUNE_NONE_FOUND("command_prune_none_found"),
+    CMD_PRUNE_DELETED_SINGLE("command_prune_deleted_single"),
     CMD_PRUNE_DELETED("command_prune_deleted"),
 
     CMD_RABBIT_NOT_FOUND("command_rabbit_not_found"),

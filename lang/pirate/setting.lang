@@ -20,3 +20,5 @@ anonymous_logging.name:Anonymous logging
 anonymous_logging.desc:Display IDs in place of names in t' captain's log
 important_regions.name:Important regions
 important_regions.desc:Regions to be highlighted when a YouTube video is blocked
+keep_original_videos.name:Keep original videos
+keep_original_videos.desc:Keep original links to blocked videos when providing t' new link

@@ -10,9 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class LocaleHandler{
+
+    private static final LinkedList<String> sources = new LinkedList<>();
     
     private static final HashMap<Locale, LocaleHandler> locales = new HashMap<>();
     
@@ -33,41 +36,57 @@ public class LocaleHandler{
 
     private HashMap<String, String> values = new HashMap<>();
     
+    static{
+        sources.add(new File("lang").getAbsolutePath());
+    }
+    
+    public static void addExternalSource(File folder){
+        sources.add(folder.getAbsolutePath());
+    }
+    
     public static LocaleHandler load(Locale locale) throws FileNotFoundException{
-        File file = new File("lang" + File.separator + locale.getCode());
-        if(!file.isDirectory()) return null;
-
+        
         LocaleHandler localeHandler = new LocaleHandler();
         localeHandler.locale = locale;
 
         HashMap<String, String> values = new HashMap<>();
-
-        int ln;
-
-        for(File f : file.listFiles((dir, name) -> {
-            return name.toLowerCase().endsWith(".lang");
-        })){
+        
+        for(String s : sources){
+            File source = new File(s);
+            if(!source.isDirectory()) return null;
             
-            System.out.println("Loading " + f.getName() + " for locale '" + locale.getCode() + "'");
+            File file = new File(source + File.separator + locale.getCode());
+            if(!file.isDirectory()) return null;
 
-            Scanner input = new Scanner(f);
+            System.out.println("Loading localization files from directory " + file.getAbsolutePath());
+            
+            int ln;
 
-            ln = 0;
-            while(input.hasNextLine()){
-                String line = input.nextLine();
-                ln++;
-                if(line.isEmpty()) continue;
+            for(File f : file.listFiles((dir, name) -> {
+                return name.toLowerCase().endsWith(".lang");
+            })){
 
-                String[] split = line.split(":", 2);
-                try{
-                    values.put(FilenameUtils.getBaseName(f.getName()) + "." + split[0], split[1]);
+                System.out.println("Loading " + f.getName() + " for locale '" + locale.getCode() + "'");
+
+                Scanner input = new Scanner(f);
+
+                ln = 0;
+                while(input.hasNextLine()){
+                    String line = input.nextLine();
+                    ln++;
+                    if(line.isEmpty()) continue;
+
+                    String[] split = line.split(":", 2);
+                    try{
+                        values.put(FilenameUtils.getBaseName(f.getName()) + "." + split[0], split[1]);
+                    }
+                    catch(ArrayIndexOutOfBoundsException e){
+                        System.err.println("Invalid string found in file '" + f.getPath() + "' (Line: " + ln + ")");
+                        values.put(split[0], "");
+                    }
                 }
-                catch(ArrayIndexOutOfBoundsException e){
-                    System.err.println("Invalid string found in file '" + f.getPath() + "' (Line: " + ln + ")");
-                    values.put(split[0], "");
-                }
+                input.close();
             }
-            input.close();
         }
 
         localeHandler.values = values;
@@ -91,7 +110,7 @@ public class LocaleHandler{
             return new LocaleHandler();
         }
     }
-
+    
     public Locale getLocale(){
         return this.locale;
     }

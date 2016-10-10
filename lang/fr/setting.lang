@@ -19,4 +19,7 @@ bot_home.desc:Le salon par défaut dans lequel le bot parle
 anonymous_logging.name:Enregistrement anonyme
 anonymous_logging.desc:Écrire les identifiants au lieu des noms dans le journal du serveur
 important_regions.name:Régions importantes
-important_regions.desc:Les régions être souligné quand une vidéo sur YouTube est bloqué
+important_regions.desc:Les régions soulignées dessous une vidéo bloqué
+keep_original_videos.name:Conserver les liens vers vidéos originales
+keep_original_videos.desc:Keep original links to blocked videos when providing the new link
+keep_original_videos.desc:Conserver les liens originales vers vidéos bloqués après fournissant de nouveau lien
